@@ -379,6 +379,10 @@
   <div class="modal" id="commentsModal">
     <div class="modal-content" id="commentsContent"></div>
   </div>
+
+  <div class="modal" id="editProfileModal">
+    <div class="modal-content" id="editProfileContent"></div>
+  </div>
 </div>
 
 <script>
@@ -398,17 +402,16 @@
 
   const getData = key => JSON.parse(localStorage.getItem(key) || '[]');
   const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+  const getProfiles = () => JSON.parse(localStorage.getItem(STORAGE.PROFILES) || '{}');
+  const setProfiles = data => localStorage.setItem(STORAGE.PROFILES, JSON.stringify(data));
+
   let currentUser = JSON.parse(localStorage.getItem(STORAGE.CURRENT) || 'null');
-  let feedMode = 'all'; // 'all' или 'following'
+  let feedMode = 'all';
   let activeChatId = null;
 
-  // Инициализация профилей
   if (!localStorage.getItem(STORAGE.PROFILES)) {
-    setData(STORAGE.PROFILES, {});
+    setProfiles({});
   }
-
-  function getProfiles() { return JSON.parse(localStorage.getItem(STORAGE.PROFILES) || '{}'); }
-  function setProfiles(data) { localStorage.setItem(STORAGE.PROFILES, JSON.stringify(data)); }
 
   // ========== UI NAVIGATION ==========
   function showSection(id) {
@@ -422,7 +425,6 @@
     if (id === 'direct') { renderDialogList(); backToDialogList(); }
     if (id === 'profile') loadProfile(currentUser.id);
   }
-
   function navigateTo(section) { showSection(section); }
   function toggleAuth(form) {
     document.getElementById('login-form').style.display = form === 'login' ? 'block' : 'none';
@@ -444,7 +446,6 @@
     };
     users.push(user);
     setData(STORAGE.USERS, users);
-    // Создаём профиль
     const profiles = getProfiles();
     profiles[user.id] = { avatar: '', cover: '', bio: '' };
     setProfiles(profiles);
@@ -592,7 +593,6 @@
       likes.splice(idx, 1);
     } else {
       likes.push({ postId, userId: currentUser.id, createdAt: new Date().toISOString() });
-      // Уведомление автору поста
       const post = getData(STORAGE.POSTS).find(p => p.id === postId);
       if (post && post.userId !== currentUser.id) {
         addNotification(post.userId, 'like', currentUser.id, postId);
@@ -642,7 +642,7 @@
     });
     setData(STORAGE.COMMENTS, comments);
     input.value = '';
-    openComments(postId); // обновить
+    openComments(postId);
     const post = getData(STORAGE.POSTS).find(p => p.id === postId);
     if (post && post.userId !== currentUser.id) {
       addNotification(post.userId, 'comment', currentUser.id, postId, text);
@@ -667,7 +667,7 @@
     }).join('');
   }
 
-  // ========== PROFILE ==========
+  // ========== PROFILE & EDIT ==========
   function loadProfile(userId) {
     const user = getData(STORAGE.USERS).find(u => u.id === userId);
     if (!user) return;
@@ -677,9 +677,10 @@
     const followersCount = follows.filter(f => f.followingId === userId).length;
     const followingCount = follows.filter(f => f.followerId === userId).length;
     const isOwnProfile = userId === currentUser.id;
+    const avatarStyle = profile.avatar ? `background-image:url(${profile.avatar})` : '';
 
     document.getElementById('profileInfo').innerHTML = `
-      <div class="profile-avatar" style="${profile.avatar ? `background-image:url(${profile.avatar})` : ''}">${profile.avatar ? '' : user.username.charAt(0).toUpperCase()}</div>
+      <div class="profile-avatar" style="${avatarStyle}">${profile.avatar ? '' : user.username.charAt(0).toUpperCase()}</div>
       <h2 style="font-family:var(--font-title); color:var(--accent);">${escapeHtml(user.username)}</h2>
       ${profile.bio ? `<p style="color:var(--text-secondary); margin:8px 0;">${escapeHtml(profile.bio)}</p>` : ''}
       <div class="profile-id">🆔 ${user.id}</div>
@@ -688,13 +689,12 @@
         <div class="stat"><div class="stat-number">${followersCount}</div><div class="stat-label">Подписчики</div></div>
         <div class="stat"><div class="stat-number">${followingCount}</div><div class="stat-label">Подписки</div></div>
       </div>
-      ${!isOwnProfile ? `
-        <button class="btn" style="width:auto; margin-top:8px;" onclick="toggleFollow('${user.id}')">
+      ${isOwnProfile ? 
+        `<button class="btn" style="width:auto;" onclick="openEditProfileModal()">✏️ Редактировать профиль</button>` :
+        `<button class="btn" style="width:auto;" onclick="toggleFollow('${user.id}')">
           ${isFollowing(user.id) ? 'Отписаться' : 'Подписаться'}
-        </button>
-      ` : `
-        <button class="btn-outline" onclick="editProfile()">Редактировать профиль</button>
-      `}
+        </button>`
+      }
     `;
     document.getElementById('profilePosts').innerHTML = posts.map(p => `<img src="${p.imageUrl}" onclick="openImageModal('${p.imageUrl}')">`).join('');
   }
@@ -714,45 +714,118 @@
     }
     setData(STORAGE.FOLLOWS, follows);
     loadProfile(userId);
-    loadFeed(); // обновление ленты на случай переключения режима
+    loadFeed();
   }
 
-  function editProfile() {
-    const profile = getProfiles()[currentUser.id] || {};
-    const avatarInput = document.createElement('input');
-    avatarInput.type = 'file';
-    avatarInput.accept = 'image/*';
-    avatarInput.onchange = () => {
+  // NEW: Открыть модальное окно редактирования профиля
+  function openEditProfileModal() {
+    const modal = document.getElementById('editProfileModal');
+    const content = document.getElementById('editProfileContent');
+    const user = currentUser;
+    const profile = getProfiles()[user.id] || {};
+    content.innerHTML = `
+      <h3>Редактировать профиль</h3>
+      <div class="form-group">
+        <label style="color:var(--text-secondary); font-size:14px;">Никнейм</label>
+        <input type="text" id="editUsername" value="${escapeHtml(user.username)}" placeholder="Новый ник">
+      </div>
+      <div class="form-group">
+        <label style="color:var(--text-secondary); font-size:14px;">О себе</label>
+        <textarea id="editBio" placeholder="Расскажите о себе" style="width:100%; padding:12px; border-radius:16px; border:1px solid var(--border); background:var(--bg); color:var(--text);">${escapeHtml(profile.bio || '')}</textarea>
+      </div>
+      <div class="form-group">
+        <label style="color:var(--text-secondary); font-size:14px;">Аватар (изображение)</label>
+        <input type="file" id="editAvatar" accept="image/*">
+        <img id="avatarPreview" src="${profile.avatar || ''}" style="max-width:100px; border-radius:50%; margin-top:8px; display:${profile.avatar ? 'inline-block' : 'none'}">
+      </div>
+      <div style="display:flex; gap:8px; justify-content:flex-end;">
+        <button class="btn-outline" onclick="closeEditProfileModal()">Отмена</button>
+        <button class="btn" style="width:auto;" onclick="saveProfileChanges()">Сохранить</button>
+      </div>
+    `;
+    // Превью аватара при выборе файла
+    document.getElementById('editAvatar').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          document.getElementById('avatarPreview').src = ev.target.result;
+          document.getElementById('avatarPreview').style.display = 'inline-block';
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    modal.classList.add('active');
+  }
+
+  function closeEditProfileModal() {
+    document.getElementById('editProfileModal').classList.remove('active');
+  }
+
+  async function saveProfileChanges() {
+    const newUsername = document.getElementById('editUsername').value.trim();
+    const newBio = document.getElementById('editBio').value.trim();
+    const avatarFile = document.getElementById('editAvatar').files[0];
+
+    if (!newUsername) return alert('Никнейм не может быть пустым');
+
+    // Проверка уникальности нового ника (исключая себя)
+    const users = getData(STORAGE.USERS);
+    if (users.some(u => u.username === newUsername && u.id !== currentUser.id)) {
+      return alert('Этот ник уже занят');
+    }
+
+    // Обновляем имя пользователя в USERS
+    const userIdx = users.findIndex(u => u.id === currentUser.id);
+    const oldUsername = users[userIdx].username;
+    users[userIdx].username = newUsername;
+    setData(STORAGE.USERS, users);
+    currentUser.username = newUsername;
+    localStorage.setItem(STORAGE.CURRENT, JSON.stringify(currentUser));
+
+    // Обновляем ник во всех постах, комментариях
+    updateUsernameInData(oldUsername, newUsername);
+
+    // Обновляем профиль (аватар и био)
+    const profiles = getProfiles();
+    profiles[currentUser.id] = profiles[currentUser.id] || {};
+    profiles[currentUser.id].bio = newBio;
+    if (avatarFile) {
       const reader = new FileReader();
-      reader.onload = () => {
-        profile.avatar = reader.result;
-        updateProfile();
+      reader.onload = (e) => {
+        profiles[currentUser.id].avatar = e.target.result;
+        setProfiles(profiles);
+        closeEditProfileModal();
+        loadProfile(currentUser.id);
+        loadFeed();
+        renderStories();
       };
-      reader.readAsDataURL(avatarInput.files[0]);
-    };
-    const bio = prompt('О себе:', profile.bio || '');
-    if (bio !== null) {
-      profile.bio = bio;
-      avatarInput.click();
+      reader.readAsDataURL(avatarFile);
+    } else {
+      setProfiles(profiles);
+      closeEditProfileModal();
+      loadProfile(currentUser.id);
+      loadFeed();
+      renderStories();
     }
   }
 
-  function updateProfile() {
-    const profiles = getProfiles();
-    profiles[currentUser.id] = profiles[currentUser.id] || {};
-    setProfiles(profiles);
-    loadProfile(currentUser.id);
-  }
+  function updateUsernameInData(oldName, newName) {
+    // Посты
+    let posts = getData(STORAGE.POSTS);
+    posts = posts.map(p => {
+      if (p.username === oldName) p.username = newName;
+      return p;
+    });
+    setData(STORAGE.POSTS, posts);
 
-  function showUserProfile(userId) {
-    const modal = document.getElementById('userProfileModal');
-    const content = document.getElementById('userProfileContent');
-    const user = getData(STORAGE.USERS).find(u => u.id === userId);
-    if (!user) return;
-    loadProfile(userId); // повторно загружает в profile-section, но мы покажем в модалке
-    content.innerHTML = document.getElementById('profileInfo').innerHTML + '<hr style="border-color:var(--border); margin:12px 0;">' + document.getElementById('profilePosts').innerHTML;
-    modal.classList.add('active');
-    modal.onclick = (e) => { if (e.target === modal) modal.classList.remove('active'); };
+    // Комментарии
+    let comments = getData(STORAGE.COMMENTS);
+    comments = comments.map(c => {
+      if (c.username === oldName) c.username = newName;
+      return c;
+    });
+    setData(STORAGE.COMMENTS, comments);
   }
 
   // ========== NOTIFICATIONS ==========
@@ -794,7 +867,6 @@
         </div>
       `;
     }).join('');
-    // Отмечаем все как прочитанные после отображения
     markAllNotificationsRead();
   }
 
@@ -828,7 +900,7 @@
     }
   }
 
-  // ========== DIRECT (чат) ==========
+  // ========== DIRECT ==========
   function showNewChatSearch() {
     const div = document.getElementById('newChatSearch');
     div.style.display = div.style.display === 'flex' ? 'none' : 'flex';
@@ -850,7 +922,6 @@
     document.getElementById('chatPartnerName').textContent = user.username;
     loadMessages();
     markRead(chatId);
-    backToDialogList(); // сразу вернуться? нет, оставим чат
   }
 
   function getDialogs() {

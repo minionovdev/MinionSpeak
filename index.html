@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>MinionSpeak / X</title>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #15202B;
+      --card-bg: #192734;
+      --border: #38444D;
+      --text: #FFFFFF;
+      --text-secondary: #8899A6;
+      --accent: #1DA1F2;
+      --accent-hover: #1a91da;
+      --danger: #E0245E;
+      --font-title: 'Luckiest Guy', cursive;
+      --font-body: 'Inter', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    #app {
+      width: 100%;
+      max-width: 420px;
+      height: 90vh;
+      max-height: 800px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
+    .app-header {
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: var(--font-title);
+      font-size: 22px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo span {
+      background: var(--accent);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: white;
+    }
+    .header-actions { display: flex; gap: 12px; }
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text);
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s;
+    }
+    .icon-btn:hover { background: rgba(29,161,242,0.1); }
+    .main-content { flex: 1; overflow-y: auto; background: var(--bg); }
+    .section { display: none; }
+    .section.active { display: block; height: 100%; }
+    /* Нижняя навигация Twitter */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      padding: 8px 0;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 0;
+      transition: color 0.2s;
+    }
+    .nav-item.active { color: var(--accent); }
+    .nav-item span { display: block; font-size: 10px; font-weight: 600; margin-top: 2px; }
+    /* Авторизация */
+    .auth-container {
+      padding: 32px 20px;
+      background: var(--card-bg);
+      border-radius: 16px;
+      margin: 24px 16px;
+      border: 1px solid var(--border);
+    }
+    .auth-container h2 {
+      font-family: var(--font-title);
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 24px;
+      font-size: 28px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group input, .form-group textarea {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      font-size: 15px;
+      outline: none;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      transition: 0.2s;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--accent);
+      border: none;
+      border-radius: 24px;
+      font-family: var(--font-title);
+      font-size: 18px;
+      color: white;
+      cursor: pointer;
+      letter-spacing: 0.5px;
+      transition: 0.2s;
+      font-weight: 600;
+    }
+    .btn:hover { background: var(--accent-hover); }
+    .link { text-align: center; margin-top: 16px; color: var(--accent); cursor: pointer; font-weight: 600; }
+    .link:hover { text-decoration: underline; }
+    /* Пост (Twitter card) */
+    .post {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 16px;
+    }
+    .post-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .post-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 18px;
+    }
+    .post-user-info {
+      flex: 1;
+    }
+    .post-username {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 15px;
+    }
+    .post-handle {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+    .post-caption {
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .post-image {
+      width: 100%;
+      border-radius: 16px;
+      margin-bottom: 8px;
+      max-height: 300px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+    }
+    .post-actions {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-secondary);
+      font-size: 16px;
+      margin-top: 8px;
+    }
+    .post-actions span {
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: 0.2s;
+    }
+    .post-actions span:hover { color: var(--accent); }
+    .post-actions span.liked { color: var(--danger); }
+    /* Stories (Trends) */
+    .stories {
+      display: flex;
+      gap: 12px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--border);
+    }
+    .story { display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 56px; }
+    .story-avatar {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: white;
+    }
+    .story-username { font-size: 11px; margin-top: 4px; color: var(--text-secondary); }
+    /* Messages */
+    .direct-container {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: var(--bg);
+    }
+    .chat-search {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 8px;
+    }
+    .chat-search input {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-family: var(--font-body);
+    }
+    .chat-search button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      border-radius: 20px;
+      padding: 0 16px;
+      font-family: var(--font-title);
+      font-size: 14px;
+      cursor: pointer;
+    }
+    .chat-list {
+      padding: 8px 16px;
+    }
+    .chat-list select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      color: var(--text);
+      font-family: var(--font-body);
+    }
+    .messages-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      background: var(--bg);
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 10px 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .msg-bubble {
+      max-width: 75%;
+      padding: 10px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+    .msg-sent {
+      align-self: flex-end;
+      background: var(--accent);
+      color: white;
+    }
+    .msg-received {
+      align-self: flex-start;
+      background: var(--border);
+      color: var(--text);
+    }
+    .msg-sender { font-size: 12px; opacity: 0.8; margin-bottom: 2px; }
+    .chat-input-area {
+      display: flex;
+      padding: 8px 16px;
+      gap: 8px;
+      border-top: 1px solid var(--border);
+      background: var(--card-bg);
+    }
+    .chat-input-area input {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 24px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      outline: none;
+    }
+    .chat-input-area button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    /* Profile */
+    .profile-header {
+      background: var(--card-bg);
+      padding: 24px 16px 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: white;
+      font-weight: bold;
+      border: 3px solid var(--bg);
+    }
+    .profile-stats { display: flex; justify-content: space-around; margin: 16px 0; }
+    .stat { text-align: center; }
+    .stat-number { font-weight: 700; font-size: 18px; }
+    .stat-label { font-size: 12px; color: var(--text-secondary); }
+    .profile-id {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 6px 12px;
+      border-radius: 16px;
+      display: inline-block;
+      margin: 8px 0;
+      font-family: monospace;
+    }
+    .profile-posts {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 12px;
+    }
+    .profile-posts img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      cursor: pointer;
+    }
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+    }
+    .modal.active { display: flex; }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid var(--border);
+    }
+    .modal-content h3 { color: var(--accent); margin-bottom: 16px; }
+    .modal-content textarea { margin-bottom: 12px; }
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 20px;
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <header class="app-header">
+    <div class="logo"><span>𝕏</span> MinionSpeak</div>
+    <div class="header-actions" id="headerUserActions" style="display: none;">
+      <button class="icon-btn" onclick="showSection('profile')" title="Профиль">👤</button>
+      <button class="icon-btn" onclick="logout()" title="Выйти">🚪</button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <!-- Auth -->
+    <div id="auth-section" class="section active">
+      <div class="auth-container">
+        <h2>MinionSpeak</h2>
+        <div id="login-form">
+          <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
+          <div class="form-group"><input type="password" id="loginPassword" placeholder="Пароль"></div>
+          <button class="btn" onclick="login()">Войти</button>
+          <p class="link" onclick="toggleAuth('register')">Зарегистрироваться</p>
+        </div>
+        <div id="register-form" style="display: none;">
+          <div class="form-group"><input type="email" id="regEmail" placeholder="Email"></div>
+          <div class="form-group"><input type="text" id="regUsername" placeholder="Логин"></div>
+          <div class="form-group"><input type="password" id="regPassword" placeholder="Пароль"></div>
+          <button class="btn" onclick="register()">Создать аккаунт</button>
+          <p class="link" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Feed -->
+    <div id="feed-section" class="section">
+      <div class="stories" id="storiesContainer"></div>
+      <div id="postsContainer"></div>
+    </div>
+
+    <!-- Messages -->
+    <div id="direct-section" class="section">
+      <div class="direct-container">
+        <div class="chat-search">
+          <input type="text" id="searchUserId" placeholder="Введите ID пользователя">
+          <button onclick="searchUserAndChat()">Найти</button>
+        </div>
+        <div class="chat-list">
+          <select id="userSelect" onchange="openChat(this.value)">
+            <option value="">Выберите собеседника</option>
+          </select>
+        </div>
+        <div id="chatArea" class="messages-area" style="display: none;">
+          <div id="chatMessages" class="chat-messages"></div>
+          <div class="chat-input-area">
+            <input type="text" id="messageInput" placeholder="Написать сообщение...">
+            <button onclick="sendMessage()">➤</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile -->
+    <div id="profile-section" class="section">
+      <div class="profile-header" id="profileInfo"></div>
+      <div class="profile-posts" id="profilePosts"></div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav" id="bottomNav" style="display: none;">
+    <div class="nav-item active" data-section="feed" onclick="navigateTo('feed')">
+      🏠 <span>Главная</span>
+    </div>
+    <div class="nav-item" data-section="direct" onclick="navigateTo('direct')">
+      ✉️ <span>Сообщения</span>
+    </div>
+    <div class="nav-item" onclick="openNewPostModal()">
+      ➕ <span>Твитнуть</span>
+    </div>
+    <div class="nav-item" data-section="profile" onclick="navigateTo('profile')">
+      👤 <span>Профиль</span>
+    </div>
+  </nav>
+
+  <!-- New Post Modal -->
+  <div class="modal" id="newPostModal">
+    <div class="modal-content">
+      <h3>Новый пост</h3>
+      <div class="form-group"><textarea id="newPostCaption" placeholder="Что происходит?"></textarea></div>
+      <div class="form-group"><input type="file" id="newPostImage" accept="image/*"></div>
+      <div class="modal-actions">
+        <button class="btn-outline" onclick="closeNewPostModal()">Отмена</button>
+        <button class="btn" style="width: auto; padding: 8px 24px;" onclick="createPost()">Опубликовать</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ========== STORAGE (localStorage) ==========
+  const STORAGE = {
+    USERS: 'ms_users',
+    POSTS: 'ms_posts',
+    LIKES: 'ms_likes',
+    MESSAGES: 'ms_messages',
+    CURRENT: 'ms_current'
+  };
+
+  const getData = key => JSON.parse(localStorage.getItem(key) || '[]');
+  const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+  const getCurrentUser = () => JSON.parse(localStorage.getItem(STORAGE.CURRENT) || 'null');
+  const setCurrentUser = user => localStorage.setItem(STORAGE.CURRENT, JSON.stringify(user));
+
+  let currentUser = getCurrentUser();
+
+  // ========== UI NAVIGATION ==========
+  function showSection(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id + '-section').classList.add('active');
+    document.querySelectorAll('.nav-item[data-section]').forEach(el => {
+      el.classList.toggle('active', el.dataset.section === id);
+    });
+    if (id === 'feed') { renderStories(); loadFeed(); }
+    if (id === 'direct') { loadUsersList(); closeChat(); }
+    if (id === 'profile') loadProfile();
+  }
+
+  function navigateTo(section) { showSection(section); }
+
+  function toggleAuth(form) {
+    document.getElementById('login-form').style.display = form === 'login' ? 'block' : 'none';
+    document.getElementById('register-form').style.display = form === 'register' ? 'block' : 'none';
+  }
+
+  // ========== AUTH ==========
+  function register() {
+    const email = document.getElementById('regEmail').value.trim();
+    const username = document.getElementById('regUsername').value.trim();
+    const password = document.getElementById('regPassword').value;
+    if (!email || !username || !password) return alert('Заполни все поля');
+    const users = getData(STORAGE.USERS);
+    if (users.some(u => u.email === email)) return alert('Email занят');
+    if (users.some(u => u.username === username)) return alert('Логин занят');
+    const user = {
+      id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+      email, username, password
+    };
+    users.push(user);
+    setData(STORAGE.USERS, users);
+    onLoginSuccess(user);
+  }
+
+  function login() {
+    const email = document.getElementById('loginEmail').value.trim();
+    const password = document.getElementById('loginPassword').value;
+    const user = getData(STORAGE.USERS).find(u => u.email === email && u.password === password);
+    if (!user) return alert('Неверные данные');
+    onLoginSuccess(user);
+  }
+
+  function onLoginSuccess(user) {
+    currentUser = user;
+    setCurrentUser(user);
+    document.getElementById('auth-section').classList.remove('active');
+    document.getElementById('bottomNav').style.display = 'flex';
+    document.getElementById('headerUserActions').style.display = 'flex';
+    showSection('feed');
+    ['loginEmail','loginPassword','regEmail','regUsername','regPassword'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+  }
+
+  function logout() {
+    currentUser = null;
+    localStorage.removeItem(STORAGE.CURRENT);
+    document.getElementById('auth-section').classList.add('active');
+    document.getElementById('bottomNav').style.display = 'none';
+    document.getElementById('headerUserActions').style.display = 'none';
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  }
+
+  if (currentUser) {
+    document.getElementById('auth-section').classList.remove('active');
+    document.getElementById('bottomNav').style.display = 'flex';
+    document.getElementById('headerUserActions').style.display = 'flex';
+    showSection('feed');
+  }
+
+  // ========== FEED ==========
+  function openNewPostModal() {
+    document.getElementById('newPostModal').classList.add('active');
+  }
+  function closeNewPostModal() {
+    document.getElementById('newPostModal').classList.remove('active');
+    document.getElementById('newPostCaption').value = '';
+    document.getElementById('newPostImage').value = '';
+  }
+
+  function createPost() {
+    const caption = document.getElementById('newPostCaption').value.trim();
+    const fileInput = document.getElementById('newPostImage');
+    const file = fileInput.files[0];
+    if (!file) return alert('Прикрепи изображение');
+    const reader = new FileReader();
+    reader.onload = e => {
+      const post = {
+        id: Date.now().toString(36) + Math.random().toString(36).substr(2),
+        userId: currentUser.id,
+        username: currentUser.username,
+        caption,
+        imageUrl: e.target.result,
+        createdAt: new Date().toISOString()
+      };
+      const posts = getData(STORAGE.POSTS);
+      posts.unshift(post);
+      setData(STORAGE.POSTS, posts);
+      closeNewPostModal();
+      if (document.getElementById('feed-section').classList.contains('active')) loadFeed();
+      if (document.getElementById('profile-section').classList.contains('active')) loadProfile();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function loadFeed() {
+    const posts = getData(STORAGE.POSTS);
+    const likes = getData(STORAGE.LIKES);
+    const container = document.getElementById('postsContainer');
+    if (!posts.length) {
+      container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-secondary);">Лента пуста</div>';
+      return;
+    }
+    container.innerHTML = posts.map(post => {
+      const postLikes = likes.filter(l => l.postId === post.id);
+      const liked = postLikes.some(l => l.userId === currentUser.id);
+      return `
+        <div class="post">
+          <div class="post-header">
+            <div class="post-avatar" style="background:${stringToColor(post.username)};">${post.username.charAt(0).toUpperCase()}</div>
+            <div class="post-user-info">
+              <div class="post-username">${escapeHtml(post.username)}</div>
+              <div class="post-handle">@${escapeHtml(post.username.toLowerCase().replace(/\s/g, ''))}</div>
+            </div>
+          </div>
+          ${post.caption ? `<div class="post-caption">${escapeHtml(post.caption)}</div>` : ''}
+          <img class="post-image" src="${post.imageUrl}" alt="">
+          <div class="post-actions">
+            <span>💬 0</span>
+            <span>🔁 0</span>
+            <span onclick="toggleLike('${post.id}')" class="${liked ? 'liked' : ''}">
+              ${liked ? '❤️' : '🤍'} ${postLikes.length}
+            </span>
+            <span>↗️</span>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function toggleLike(postId) {
+    const likes = getData(STORAGE.LIKES);
+    const idx = likes.findIndex(l => l.postId === postId && l.userId === currentUser.id);
+    if (idx > -1) likes.splice(idx, 1);
+    else likes.push({ postId, userId: currentUser.id });
+    setData(STORAGE.LIKES, likes);
+    loadFeed();
+  }
+
+  function renderStories() {
+    const users = getData(STORAGE.USERS);
+    document.getElementById('storiesContainer').innerHTML = users.map(u => `
+      <div class="story">
+        <div class="story-avatar" style="background:${stringToColor(u.username)};">${u.username.charAt(0).toUpperCase()}</div>
+        <div class="story-username">${escapeHtml(u.username)}</div>
+      </div>
+    `).join('');
+  }
+
+  // ========== DIRECT ==========
+  function loadUsersList() {
+    const select = document.getElementById('userSelect');
+    const users = getData(STORAGE.USERS).filter(u => u.id !== currentUser.id);
+    select.innerHTML = '<option value="">Выберите собеседника</option>';
+    users.forEach(u => {
+      const o = document.createElement('option');
+      o.value = u.id;
+      o.textContent = u.username || u.email;
+      select.appendChild(o);
+    });
+  }
+
+  function searchUserAndChat() {
+    const searchId = document.getElementById('searchUserId').value.trim();
+    if (!searchId) return alert('Введите ID');
+    if (searchId === currentUser.id) return alert('Нельзя писать себе');
+    const user = getData(STORAGE.USERS).find(u => u.id === searchId);
+    if (!user) return alert('Пользователь не найден');
+    openChat(user.id);
+    document.getElementById('searchUserId').value = '';
+  }
+
+  let activeChatId = null;
+  function openChat(userId) {
+    if (!userId) return;
+    activeChatId = [currentUser.id, userId].sort().join('_');
+    document.getElementById('chatArea').style.display = 'flex';
+    loadMessages();
+  }
+  function closeChat() {
+    activeChatId = null;
+    document.getElementById('chatArea').style.display = 'none';
+  }
+
+  function loadMessages() {
+    if (!activeChatId) return;
+    const msgs = getData(STORAGE.MESSAGES).filter(m => m.chatId === activeChatId).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = msgs.map(m => {
+      const sender = getData(STORAGE.USERS).find(u => u.id === m.senderId);
+      const name = sender ? sender.username : '?';
+      const cls = m.senderId === currentUser.id ? 'msg-sent' : 'msg-received';
+      return `<div class="msg-bubble ${cls}">
+        ${m.senderId !== currentUser.id ? `<div class="msg-sender">${escapeHtml(name)}</div>` : ''}
+        ${escapeHtml(m.text)}
+      </div>`;
+    }).join('');
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function sendMessage() {
+    const input = document.getElementById('messageInput');
+    const text = input.value.trim();
+    if (!text || !activeChatId) return;
+    const msgs = getData(STORAGE.MESSAGES);
+    msgs.push({
+      id: Date.now().toString(),
+      chatId: activeChatId,
+      senderId: currentUser.id,
+      text,
+      createdAt: new Date().toISOString()
+    });
+    setData(STORAGE.MESSAGES, msgs);
+    input.value = '';
+    loadMessages();
+  }
+
+  setInterval(() => {
+    if (activeChatId && document.getElementById('direct-section').classList.contains('active')) loadMessages();
+  }, 2000);
+
+  // ========== PROFILE ==========
+  function loadProfile() {
+    const infoDiv = document.getElementById('profileInfo');
+    const postsDiv = document.getElementById('profilePosts');
+    const posts = getData(STORAGE.POSTS).filter(p => p.userId === currentUser.id);
+    const likes = getData(STORAGE.LIKES).filter(l => l.userId === currentUser.id);
+    infoDiv.innerHTML = `
+      <div class="profile-avatar">${currentUser.username.charAt(0).toUpperCase()}</div>
+      <h2 style="font-family:var(--font-title);color:var(--accent);">${escapeHtml(currentUser.username)}</h2>
+      <div class="profile-id">🆔 ${currentUser.id}</div>
+      <div class="profile-stats">
+        <div class="stat"><div class="stat-number">${posts.length}</div><div class="stat-label">Постов</div></div>
+        <div class="stat"><div class="stat-number">${likes.length}</div><div class="stat-label">Лайков</div></div>
+      </div>
+    `;
+    postsDiv.innerHTML = posts.map(p => `<img src="${p.imageUrl}" alt="">`).join('');
+  }
+
+  // ========== HELPERS ==========
+  function escapeHtml(text) {
+    const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
+    return String(text).replace(/[&<>"']/g, m => map[m]);
+  }
+  function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
+    return '#' + '00000'.substring(0, 6 - c.length) + c;
+  }
+</script>
+</body>
+</html>

@@ -288,6 +288,7 @@
   </header>
 
   <div class="main-content">
+    <!-- Авторизация -->
     <div id="auth-section" class="section active">
       <div class="auth-container">
         <h2>MinionSpeak</h2>
@@ -307,6 +308,7 @@
       </div>
     </div>
 
+    <!-- Лента -->
     <div id="feed-section" class="section">
       <div class="feed-toggle" id="feedToggle">
         <button class="active" onclick="setFeedMode('all')">Все</button>
@@ -316,11 +318,13 @@
       <div id="postsContainer"></div>
     </div>
 
+    <!-- Уведомления -->
     <div id="notifications-section" class="section">
       <h2 style="padding:12px 16px; border-bottom:1px solid var(--border); font-family:var(--font-title); color:var(--accent);">🔔 Уведомления</h2>
       <div id="notificationsList"></div>
     </div>
 
+    <!-- Сообщения -->
     <div id="direct-section" class="section">
       <div class="direct-container">
         <div class="direct-header">
@@ -346,9 +350,34 @@
       </div>
     </div>
 
+    <!-- Профиль -->
     <div id="profile-section" class="section">
       <div class="profile-header" id="profileInfo"></div>
       <div class="profile-posts" id="profilePosts"></div>
+    </div>
+
+    <!-- NEW: Страница редактирования профиля (как секция) -->
+    <div id="edit-profile-section" class="section">
+      <div style="padding:16px; border-bottom:1px solid var(--border);">
+        <button class="icon-btn" onclick="showSection('profile')" style="font-size:22px;">←</button>
+        <span style="font-family:var(--font-title); color:var(--accent); font-size:20px; margin-left:8px;">Редактировать профиль</span>
+      </div>
+      <div style="padding:20px;">
+        <div class="form-group">
+          <label style="color:var(--text-secondary); font-size:14px;">Никнейм</label>
+          <input type="text" id="editUsername" placeholder="Новый ник">
+        </div>
+        <div class="form-group">
+          <label style="color:var(--text-secondary); font-size:14px;">О себе</label>
+          <textarea id="editBio" placeholder="Расскажите о себе" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label style="color:var(--text-secondary); font-size:14px;">Аватар (изображение)</label>
+          <input type="file" id="editAvatar" accept="image/*">
+          <img id="avatarPreview" src="" style="max-width:100px; border-radius:50%; margin-top:8px; display:none;">
+        </div>
+        <button class="btn" onclick="saveProfileChanges()">Сохранить</button>
+      </div>
     </div>
   </div>
 
@@ -360,6 +389,7 @@
     <div class="nav-item" data-section="profile" onclick="navigateTo('profile')">👤<span>Профиль</span></div>
   </nav>
 
+  <!-- Модальные окна (только для поста и комментариев, не для профиля) -->
   <div class="modal" id="newPostModal">
     <div class="modal-content">
       <h3>Новый пост</h3>
@@ -378,10 +408,6 @@
 
   <div class="modal" id="commentsModal">
     <div class="modal-content" id="commentsContent"></div>
-  </div>
-
-  <div class="modal" id="editProfileModal">
-    <div class="modal-content" id="editProfileContent"></div>
   </div>
 </div>
 
@@ -424,6 +450,7 @@
     if (id === 'notifications') loadNotifications();
     if (id === 'direct') { renderDialogList(); backToDialogList(); }
     if (id === 'profile') loadProfile(currentUser.id);
+    if (id === 'edit-profile') initEditProfileForm();
   }
   function navigateTo(section) { showSection(section); }
   function toggleAuth(form) {
@@ -667,7 +694,7 @@
     }).join('');
   }
 
-  // ========== PROFILE & EDIT ==========
+  // ========== PROFILE ==========
   function loadProfile(userId) {
     const user = getData(STORAGE.USERS).find(u => u.id === userId);
     if (!user) return;
@@ -690,7 +717,7 @@
         <div class="stat"><div class="stat-number">${followingCount}</div><div class="stat-label">Подписки</div></div>
       </div>
       ${isOwnProfile ? 
-        `<button class="btn" style="width:auto;" onclick="openEditProfileModal()">✏️ Редактировать профиль</button>` :
+        `<button class="btn" style="width:auto;" onclick="showSection('edit-profile')">✏️ Редактировать профиль</button>` :
         `<button class="btn" style="width:auto;" onclick="toggleFollow('${user.id}')">
           ${isFollowing(user.id) ? 'Отписаться' : 'Подписаться'}
         </button>`
@@ -717,65 +744,50 @@
     loadFeed();
   }
 
-  // NEW: Открыть модальное окно редактирования профиля
-  function openEditProfileModal() {
-    const modal = document.getElementById('editProfileModal');
-    const content = document.getElementById('editProfileContent');
+  // NEW: Инициализация формы редактирования профиля
+  function initEditProfileForm() {
     const user = currentUser;
     const profile = getProfiles()[user.id] || {};
-    content.innerHTML = `
-      <h3>Редактировать профиль</h3>
-      <div class="form-group">
-        <label style="color:var(--text-secondary); font-size:14px;">Никнейм</label>
-        <input type="text" id="editUsername" value="${escapeHtml(user.username)}" placeholder="Новый ник">
-      </div>
-      <div class="form-group">
-        <label style="color:var(--text-secondary); font-size:14px;">О себе</label>
-        <textarea id="editBio" placeholder="Расскажите о себе" style="width:100%; padding:12px; border-radius:16px; border:1px solid var(--border); background:var(--bg); color:var(--text);">${escapeHtml(profile.bio || '')}</textarea>
-      </div>
-      <div class="form-group">
-        <label style="color:var(--text-secondary); font-size:14px;">Аватар (изображение)</label>
-        <input type="file" id="editAvatar" accept="image/*">
-        <img id="avatarPreview" src="${profile.avatar || ''}" style="max-width:100px; border-radius:50%; margin-top:8px; display:${profile.avatar ? 'inline-block' : 'none'}">
-      </div>
-      <div style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn-outline" onclick="closeEditProfileModal()">Отмена</button>
-        <button class="btn" style="width:auto;" onclick="saveProfileChanges()">Сохранить</button>
-      </div>
-    `;
-    // Превью аватара при выборе файла
-    document.getElementById('editAvatar').addEventListener('change', (e) => {
-      const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-          document.getElementById('avatarPreview').src = ev.target.result;
-          document.getElementById('avatarPreview').style.display = 'inline-block';
-        };
-        reader.readAsDataURL(file);
-      }
-    });
-    modal.classList.add('active');
+    document.getElementById('editUsername').value = user.username;
+    document.getElementById('editBio').value = profile.bio || '';
+    const avatarPreview = document.getElementById('avatarPreview');
+    if (profile.avatar) {
+      avatarPreview.src = profile.avatar;
+      avatarPreview.style.display = 'inline-block';
+    } else {
+      avatarPreview.style.display = 'none';
+    }
+    document.getElementById('editAvatar').value = ''; // очищаем file input
   }
 
-  function closeEditProfileModal() {
-    document.getElementById('editProfileModal').classList.remove('active');
-  }
+  // Обработчик выбора файла аватара для превью
+  document.getElementById('editAvatar')?.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        document.getElementById('avatarPreview').src = ev.target.result;
+        document.getElementById('avatarPreview').style.display = 'inline-block';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
-  async function saveProfileChanges() {
+  // Сохранение изменений профиля
+  function saveProfileChanges() {
     const newUsername = document.getElementById('editUsername').value.trim();
     const newBio = document.getElementById('editBio').value.trim();
     const avatarFile = document.getElementById('editAvatar').files[0];
 
     if (!newUsername) return alert('Никнейм не может быть пустым');
 
-    // Проверка уникальности нового ника (исключая себя)
+    // Проверка уникальности
     const users = getData(STORAGE.USERS);
     if (users.some(u => u.username === newUsername && u.id !== currentUser.id)) {
       return alert('Этот ник уже занят');
     }
 
-    // Обновляем имя пользователя в USERS
+    // Обновляем имя в USERS
     const userIdx = users.findIndex(u => u.id === currentUser.id);
     const oldUsername = users[userIdx].username;
     users[userIdx].username = newUsername;
@@ -783,28 +795,34 @@
     currentUser.username = newUsername;
     localStorage.setItem(STORAGE.CURRENT, JSON.stringify(currentUser));
 
-    // Обновляем ник во всех постах, комментариях
+    // Обновляем ник в постах и комментариях
     updateUsernameInData(oldUsername, newUsername);
 
     // Обновляем профиль (аватар и био)
     const profiles = getProfiles();
     profiles[currentUser.id] = profiles[currentUser.id] || {};
     profiles[currentUser.id].bio = newBio;
+
     if (avatarFile) {
       const reader = new FileReader();
       reader.onload = (e) => {
         profiles[currentUser.id].avatar = e.target.result;
         setProfiles(profiles);
-        closeEditProfileModal();
-        loadProfile(currentUser.id);
-        loadFeed();
-        renderStories();
+        finishProfileEdit();
       };
       reader.readAsDataURL(avatarFile);
     } else {
       setProfiles(profiles);
-      closeEditProfileModal();
-      loadProfile(currentUser.id);
+      finishProfileEdit();
+    }
+  }
+
+  function finishProfileEdit() {
+    // Вернуться к профилю
+    showSection('profile');
+    loadProfile(currentUser.id);
+    // Обновить ленту и stories (мог измениться ник/аватар)
+    if (document.getElementById('feed-section').classList.contains('active')) {
       loadFeed();
       renderStories();
     }

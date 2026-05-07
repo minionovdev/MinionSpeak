@@ -6,6 +6,7 @@
   <title>MinionSpeak / X</title>
   <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ... весь CSS без изменений, как в предыдущем ответе ... */
     :root {
       --bg: #15202B;
       --card-bg: #192734;
@@ -719,7 +720,7 @@
   }
 
   function loadFeed() {
-    const posts = getData(STORAGE.POSTS);  // Все посты, без фильтрации
+    const posts = getData(STORAGE.POSTS);
     const likes = getData(STORAGE.LIKES);
     const container = document.getElementById('postsContainer');
     if (!posts.length) {
@@ -772,7 +773,7 @@
     `).join('');
   }
 
-  // ========== DIRECT ==========
+  // ========== DIRECT (исправленный поиск) ==========
   function showNewChatSearch() {
     const searchDiv = document.getElementById('newChatSearch');
     searchDiv.style.display = searchDiv.style.display === 'flex' ? 'none' : 'flex';
@@ -875,12 +876,14 @@
     renderDialogList();
   }
 
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ ПОИСКА
   function searchUserAndChat() {
-    const searchId = document.getElementById('searchUserId').value.trim();
-    if (!searchId) return alert('Введите ID');
-    if (searchId === currentUser.id) return alert('Нельзя писать себе');
+    const rawSearchId = document.getElementById('searchUserId').value;
+    const searchId = rawSearchId.replace(/\s/g, ''); // удаляем все пробелы
+    if (!searchId) return alert('Введите ID пользователя');
+    if (searchId === currentUser.id) return alert('Нельзя написать самому себе');
     const user = getData(STORAGE.USERS).find(u => u.id === searchId);
-    if (!user) return alert('Пользователь не найден');
+    if (!user) return alert('Пользователь с таким ID не найден. Проверьте, что ID скопирован без лишних символов.');
     const chatId = [currentUser.id, user.id].sort().join('_');
     activeChatId = chatId;
     document.getElementById('searchUserId').value = '';
@@ -944,11 +947,11 @@
     }
   }
 
-  // Периодическое обновление (для межвкладочной синхронизации)
+  // Периодическое обновление
   setInterval(() => {
     if (!currentUser) return;
     if (document.getElementById('feed-section').classList.contains('active')) {
-      loadFeed();  // Обновляем ленту каждые 2 секунды, чтобы подхватывать посты от других вкладок
+      loadFeed();
     }
     if (document.getElementById('direct-section').classList.contains('active')) {
       if (!activeChatId) renderDialogList();

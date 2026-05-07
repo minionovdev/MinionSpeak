@@ -103,9 +103,27 @@
       cursor: pointer;
       padding: 6px 0;
       transition: color 0.2s;
+      position: relative;
     }
     .nav-item.active { color: var(--accent); }
     .nav-item span { display: block; font-size: 10px; font-weight: 600; margin-top: 2px; }
+    /* Бейдж непрочитанных сообщений */
+    .badge {
+      position: absolute;
+      top: 2px;
+      right: calc(50% - 24px);
+      background: var(--danger);
+      color: white;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+    }
     /* Авторизация */
     .auth-container {
       padding: 32px 20px;
@@ -176,31 +194,11 @@
       color: white;
       font-size: 18px;
     }
-    .post-user-info {
-      flex: 1;
-    }
-    .post-username {
-      font-weight: 700;
-      color: var(--text);
-      font-size: 15px;
-    }
-    .post-handle {
-      color: var(--text-secondary);
-      font-size: 13px;
-    }
-    .post-caption {
-      font-size: 15px;
-      line-height: 1.4;
-      margin-bottom: 8px;
-    }
-    .post-image {
-      width: 100%;
-      border-radius: 16px;
-      margin-bottom: 8px;
-      max-height: 300px;
-      object-fit: cover;
-      border: 1px solid var(--border);
-    }
+    .post-user-info { flex: 1; }
+    .post-username { font-weight: 700; color: var(--text); font-size: 15px; }
+    .post-handle { color: var(--text-secondary); font-size: 13px; }
+    .post-caption { font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
+    .post-image { width: 100%; border-radius: 16px; margin-bottom: 8px; max-height: 300px; object-fit: cover; border: 1px solid var(--border); }
     .post-actions {
       display: flex;
       justify-content: space-between;
@@ -208,16 +206,10 @@
       font-size: 16px;
       margin-top: 8px;
     }
-    .post-actions span {
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      transition: 0.2s;
-    }
+    .post-actions span { cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
     .post-actions span:hover { color: var(--accent); }
     .post-actions span.liked { color: var(--danger); }
-    /* Stories (Trends) */
+    /* Stories */
     .stories {
       display: flex;
       gap: 12px;
@@ -240,15 +232,41 @@
       color: white;
     }
     .story-username { font-size: 11px; margin-top: 4px; color: var(--text-secondary); }
-    /* Messages */
+    /* ========== НОВЫЙ ДИЗАЙН СООБЩЕНИЙ ========== */
     .direct-container {
       display: flex;
       flex-direction: column;
       height: 100%;
       background: var(--bg);
     }
-    .chat-search {
+    .direct-header {
       padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .direct-header h2 {
+      font-family: var(--font-title);
+      color: var(--accent);
+      font-size: 22px;
+      margin: 0;
+    }
+    .new-chat-btn {
+      background: var(--accent);
+      border: none;
+      color: white;
+      border-radius: 50%;
+      width: 36px;
+      height: 36px;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .chat-search {
+      padding: 8px 16px;
       border-bottom: 1px solid var(--border);
       display: flex;
       gap: 8px;
@@ -272,23 +290,88 @@
       font-size: 14px;
       cursor: pointer;
     }
-    .chat-list {
-      padding: 8px 16px;
+    .dialog-list {
+      flex: 1;
+      overflow-y: auto;
     }
-    .chat-list select {
-      width: 100%;
-      padding: 10px;
-      border-radius: 20px;
-      border: 1px solid var(--border);
-      background: var(--card-bg);
+    .dialog-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .dialog-item:hover { background: rgba(29,161,242,0.05); }
+    .dialog-item.unread { background: rgba(29,161,242,0.08); }
+    .dialog-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 18px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .dialog-info { flex: 1; min-width: 0; }
+    .dialog-name {
+      font-weight: 600;
       color: var(--text);
-      font-family: var(--font-body);
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .messages-area {
+    .unread-badge {
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      width: 8px;
+      height: 8px;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+    .dialog-last-msg {
+      color: var(--text-secondary);
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .dialog-time {
+      color: var(--text-secondary);
+      font-size: 12px;
+      margin-left: 8px;
+    }
+    /* Область чата */
+    .chat-view {
       flex: 1;
       display: flex;
       flex-direction: column;
       background: var(--bg);
+    }
+    .chat-header {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .chat-header .back-btn {
+      background: none;
+      border: none;
+      color: var(--accent);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .chat-header .chat-partner {
+      font-weight: 700;
+      font-size: 16px;
     }
     .chat-messages {
       flex: 1;
@@ -343,7 +426,7 @@
       font-size: 18px;
       cursor: pointer;
     }
-    /* Profile */
+    /* Профиль */
     .profile-header {
       background: var(--card-bg);
       padding: 24px 16px 16px;
@@ -390,7 +473,7 @@
       object-fit: cover;
       cursor: pointer;
     }
-    /* Modal */
+    /* Модалка нового поста */
     .modal {
       display: none;
       position: fixed;
@@ -411,11 +494,7 @@
     }
     .modal-content h3 { color: var(--accent); margin-bottom: 16px; }
     .modal-content textarea { margin-bottom: 12px; }
-    .modal-actions {
-      display: flex;
-      gap: 8px;
-      justify-content: flex-end;
-    }
+    .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
     .btn-outline {
       background: transparent;
       border: 1px solid var(--border);
@@ -425,6 +504,7 @@
       color: var(--accent);
       font-weight: 600;
     }
+    .hidden { display: none !important; }
   </style>
 </head>
 <body>
@@ -464,20 +544,27 @@
       <div id="postsContainer"></div>
     </div>
 
-    <!-- Messages -->
+    <!-- Direct (обновлён) -->
     <div id="direct-section" class="section">
       <div class="direct-container">
-        <div class="chat-search">
+        <div class="direct-header">
+          <h2>✉️ Сообщения</h2>
+          <button class="new-chat-btn" onclick="showNewChatSearch()">＋</button>
+        </div>
+        <!-- Строка поиска (скрыта по умолчанию) -->
+        <div class="chat-search" id="newChatSearch" style="display: none;">
           <input type="text" id="searchUserId" placeholder="Введите ID пользователя">
           <button onclick="searchUserAndChat()">Найти</button>
         </div>
-        <div class="chat-list">
-          <select id="userSelect" onchange="openChat(this.value)">
-            <option value="">Выберите собеседника</option>
-          </select>
-        </div>
-        <div id="chatArea" class="messages-area" style="display: none;">
-          <div id="chatMessages" class="chat-messages"></div>
+        <!-- Список диалогов -->
+        <div class="dialog-list" id="dialogList"></div>
+        <!-- Просмотр чата (скрыт, пока не выбран диалог) -->
+        <div class="chat-view" id="chatView" style="display: none;">
+          <div class="chat-header">
+            <button class="back-btn" onclick="backToDialogList()">←</button>
+            <div class="chat-partner" id="chatPartnerName"></div>
+          </div>
+          <div class="chat-messages" id="chatMessages"></div>
           <div class="chat-input-area">
             <input type="text" id="messageInput" placeholder="Написать сообщение...">
             <button onclick="sendMessage()">➤</button>
@@ -497,7 +584,7 @@
     <div class="nav-item active" data-section="feed" onclick="navigateTo('feed')">
       🏠 <span>Главная</span>
     </div>
-    <div class="nav-item" data-section="direct" onclick="navigateTo('direct')">
+    <div class="nav-item" data-section="direct" onclick="navigateTo('direct')" id="navDirect">
       ✉️ <span>Сообщения</span>
     </div>
     <div class="nav-item" onclick="openNewPostModal()">
@@ -529,15 +616,25 @@
     POSTS: 'ms_posts',
     LIKES: 'ms_likes',
     MESSAGES: 'ms_messages',
-    CURRENT: 'ms_current'
+    CURRENT: 'ms_current',
+    LAST_READ: 'ms_lastRead'   // объект { userId: { chatId: timestamp } }
   };
 
   const getData = key => JSON.parse(localStorage.getItem(key) || '[]');
   const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
+  const getLastRead = () => JSON.parse(localStorage.getItem(STORAGE.LAST_READ) || '{}');
+  const setLastRead = (chatId, timestamp) => {
+    const data = getLastRead();
+    if (!data[currentUser.id]) data[currentUser.id] = {};
+    data[currentUser.id][chatId] = timestamp;
+    localStorage.setItem(STORAGE.LAST_READ, JSON.stringify(data));
+  };
+
   const getCurrentUser = () => JSON.parse(localStorage.getItem(STORAGE.CURRENT) || 'null');
   const setCurrentUser = user => localStorage.setItem(STORAGE.CURRENT, JSON.stringify(user));
 
   let currentUser = getCurrentUser();
+  let activeChatId = null;  // текущий открытый чат
 
   // ========== UI NAVIGATION ==========
   function showSection(id) {
@@ -547,7 +644,7 @@
       el.classList.toggle('active', el.dataset.section === id);
     });
     if (id === 'feed') { renderStories(); loadFeed(); }
-    if (id === 'direct') { loadUsersList(); closeChat(); }
+    if (id === 'direct') { renderDialogList(); backToDialogList(); }
     if (id === 'profile') loadProfile();
   }
 
@@ -613,9 +710,7 @@
   }
 
   // ========== FEED ==========
-  function openNewPostModal() {
-    document.getElementById('newPostModal').classList.add('active');
-  }
+  function openNewPostModal() { document.getElementById('newPostModal').classList.add('active'); }
   function closeNewPostModal() {
     document.getElementById('newPostModal').classList.remove('active');
     document.getElementById('newPostCaption').value = '';
@@ -701,17 +796,131 @@
     `).join('');
   }
 
-  // ========== DIRECT ==========
-  function loadUsersList() {
-    const select = document.getElementById('userSelect');
-    const users = getData(STORAGE.USERS).filter(u => u.id !== currentUser.id);
-    select.innerHTML = '<option value="">Выберите собеседника</option>';
-    users.forEach(u => {
-      const o = document.createElement('option');
-      o.value = u.id;
-      o.textContent = u.username || u.email;
-      select.appendChild(o);
+  // ========== DIRECT (НОВАЯ РЕАЛИЗАЦИЯ) ==========
+  // Показать/скрыть строку поиска нового чата
+  function showNewChatSearch() {
+    const searchDiv = document.getElementById('newChatSearch');
+    searchDiv.style.display = searchDiv.style.display === 'flex' ? 'none' : 'flex';
+    document.getElementById('searchUserId').value = '';
+  }
+
+  // Список диалогов: чаты, в которых есть сообщения с участием текущего пользователя
+  function getDialogs() {
+    const messages = getData(STORAGE.MESSAGES);
+    const users = getData(STORAGE.USERS);
+    const chatIds = new Set();
+    const dialogs = [];
+
+    messages.forEach(m => {
+      if (m.senderId === currentUser.id || m.chatId.includes(currentUser.id)) {
+        // Проверяем, что currentUser является участником
+        const ids = m.chatId.split('_');
+        if (ids.includes(currentUser.id)) {
+          chatIds.add(m.chatId);
+        }
+      }
     });
+
+    chatIds.forEach(chatId => {
+      const ids = chatId.split('_');
+      const partnerId = ids.find(id => id !== currentUser.id);
+      const partner = users.find(u => u.id === partnerId);
+      if (!partner) return;
+      // последнее сообщение в этом чате
+      const lastMsg = messages
+        .filter(m => m.chatId === chatId)
+        .sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+      const lastRead = (getLastRead()[currentUser.id] || {})[chatId] || '1970-01-01';
+      const unread = messages.some(m => m.chatId === chatId && m.senderId !== currentUser.id && new Date(m.createdAt) > new Date(lastRead));
+
+      dialogs.push({
+        chatId,
+        partner,
+        lastMsg,
+        unread
+      });
+    });
+
+    // Сортировка: сначала с новыми сообщениями, по времени последнего
+    dialogs.sort((a,b) => new Date(b.lastMsg.createdAt) - new Date(a.lastMsg.createdAt));
+    return dialogs;
+  }
+
+  function renderDialogList() {
+    const container = document.getElementById('dialogList');
+    const dialogs = getDialogs();
+    document.getElementById('chatView').style.display = 'none';
+    document.getElementById('dialogList').style.display = 'block';
+
+    if (dialogs.length === 0) {
+      container.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-secondary);">Нет активных чатов. Нажмите ＋, чтобы начать новый.</div>';
+      return;
+    }
+
+    container.innerHTML = dialogs.map(d => `
+      <div class="dialog-item ${d.unread ? 'unread' : ''}" onclick="openDialog('${d.chatId}')">
+        <div class="dialog-avatar" style="background:${stringToColor(d.partner.username)};">${d.partner.username.charAt(0).toUpperCase()}</div>
+        <div class="dialog-info">
+          <div class="dialog-name">
+            ${escapeHtml(d.partner.username)}
+            ${d.unread ? '<span class="unread-badge"></span>' : ''}
+          </div>
+          <div class="dialog-last-msg">${d.lastMsg ? escapeHtml(d.lastMsg.text) : ''}</div>
+        </div>
+        <div class="dialog-time">${d.lastMsg ? formatTime(d.lastMsg.createdAt) : ''}</div>
+      </div>
+    `).join('');
+    updateUnreadBadge();
+  }
+
+  function openDialog(chatId) {
+    activeChatId = chatId;
+    // Обновляем время последнего прочтения
+    setLastRead(chatId, new Date().toISOString());
+    // Показываем представление чата
+    document.getElementById('dialogList').style.display = 'none';
+    document.getElementById('newChatSearch').style.display = 'none';
+    const chatView = document.getElementById('chatView');
+    chatView.style.display = 'flex';
+    // Имя партнёра
+    const ids = chatId.split('_');
+    const partnerId = ids.find(id => id !== currentUser.id);
+    const partner = getData(STORAGE.USERS).find(u => u.id === partnerId);
+    document.getElementById('chatPartnerName').textContent = partner ? partner.username : 'Неизвестный';
+    loadMessages();
+    // Перерисуем список диалогов в фоне, чтобы убрать unread при возврате
+    renderDialogListSilent();
+  }
+
+  function renderDialogListSilent() {
+    // просто обновляем содержимое dialogList, не трогая видимость чата
+    const container = document.getElementById('dialogList');
+    const dialogs = getDialogs();
+    if (dialogs.length === 0) {
+      container.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-secondary);">Нет активных чатов</div>';
+      return;
+    }
+    container.innerHTML = dialogs.map(d => `
+      <div class="dialog-item ${d.unread ? 'unread' : ''}" onclick="openDialog('${d.chatId}')">
+        <div class="dialog-avatar" style="background:${stringToColor(d.partner.username)};">${d.partner.username.charAt(0).toUpperCase()}</div>
+        <div class="dialog-info">
+          <div class="dialog-name">
+            ${escapeHtml(d.partner.username)}
+            ${d.unread ? '<span class="unread-badge"></span>' : ''}
+          </div>
+          <div class="dialog-last-msg">${d.lastMsg ? escapeHtml(d.lastMsg.text) : ''}</div>
+        </div>
+        <div class="dialog-time">${d.lastMsg ? formatTime(d.lastMsg.createdAt) : ''}</div>
+      </div>
+    `).join('');
+    updateUnreadBadge();
+  }
+
+  function backToDialogList() {
+    activeChatId = null;
+    document.getElementById('chatView').style.display = 'none';
+    document.getElementById('dialogList').style.display = 'block';
+    renderDialogList();
   }
 
   function searchUserAndChat() {
@@ -720,27 +929,30 @@
     if (searchId === currentUser.id) return alert('Нельзя писать себе');
     const user = getData(STORAGE.USERS).find(u => u.id === searchId);
     if (!user) return alert('Пользователь не найден');
-    openChat(user.id);
-    document.getElementById('searchUserId').value = '';
-  }
 
-  let activeChatId = null;
-  function openChat(userId) {
-    if (!userId) return;
-    activeChatId = [currentUser.id, userId].sort().join('_');
-    document.getElementById('chatArea').style.display = 'flex';
+    // Создаём chatId
+    const chatId = [currentUser.id, user.id].sort().join('_');
+    // Проверяем, есть ли уже сообщения? Если нет, создаём пустой чат (он появится при отправке первого сообщения)
+    // Открываем чат
+    activeChatId = chatId;
+    document.getElementById('searchUserId').value = '';
+    document.getElementById('newChatSearch').style.display = 'none';
+    document.getElementById('dialogList').style.display = 'none';
+    const chatView = document.getElementById('chatView');
+    chatView.style.display = 'flex';
+    document.getElementById('chatPartnerName').textContent = user.username;
     loadMessages();
-  }
-  function closeChat() {
-    activeChatId = null;
-    document.getElementById('chatArea').style.display = 'none';
+    // Обновим lastRead для этого чата (чтобы не было unread при открытии пустого)
+    setLastRead(chatId, new Date().toISOString());
   }
 
   function loadMessages() {
     if (!activeChatId) return;
-    const msgs = getData(STORAGE.MESSAGES).filter(m => m.chatId === activeChatId).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+    const messages = getData(STORAGE.MESSAGES)
+      .filter(m => m.chatId === activeChatId)
+      .sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
     const container = document.getElementById('chatMessages');
-    container.innerHTML = msgs.map(m => {
+    container.innerHTML = messages.map(m => {
       const sender = getData(STORAGE.USERS).find(u => u.id === m.senderId);
       const name = sender ? sender.username : '?';
       const cls = m.senderId === currentUser.id ? 'msg-sent' : 'msg-received';
@@ -750,27 +962,55 @@
       </div>`;
     }).join('');
     container.scrollTop = container.scrollHeight;
+    // Обновим lastRead после загрузки
+    setLastRead(activeChatId, new Date().toISOString());
+    // Обновим список диалогов в фоне
+    renderDialogListSilent();
   }
 
   function sendMessage() {
     const input = document.getElementById('messageInput');
     const text = input.value.trim();
     if (!text || !activeChatId) return;
-    const msgs = getData(STORAGE.MESSAGES);
-    msgs.push({
+    const messages = getData(STORAGE.MESSAGES);
+    messages.push({
       id: Date.now().toString(),
       chatId: activeChatId,
       senderId: currentUser.id,
       text,
       createdAt: new Date().toISOString()
     });
-    setData(STORAGE.MESSAGES, msgs);
+    setData(STORAGE.MESSAGES, messages);
     input.value = '';
     loadMessages();
+    // Обновляем список диалогов (в фоне), чтобы сразу появился новый чат у отправителя
+    renderDialogListSilent();
   }
 
+  // Обновление бейджа непрочитанных в нижнем меню
+  function updateUnreadBadge() {
+    const badge = document.getElementById('unreadBadge');
+    const dialogs = getDialogs();
+    const totalUnread = dialogs.filter(d => d.unread).length;
+    const navItem = document.getElementById('navDirect');
+    if (badge) badge.remove();
+    if (totalUnread > 0) {
+      const span = document.createElement('span');
+      span.className = 'badge';
+      span.id = 'unreadBadge';
+      span.textContent = totalUnread;
+      navItem.appendChild(span);
+    }
+  }
+
+  // Проверка новых сообщений при фокусе на вкладке (раз в 2 секунды, только если открыт Direct)
   setInterval(() => {
-    if (activeChatId && document.getElementById('direct-section').classList.contains('active')) loadMessages();
+    if (currentUser && document.getElementById('direct-section').classList.contains('active')) {
+      if (!activeChatId) renderDialogList();
+      else loadMessages(); // в открытом чате тоже обновляем
+    }
+    // всегда обновляем бейдж
+    if (currentUser) updateUnreadBadge();
   }, 2000);
 
   // ========== PROFILE ==========
@@ -801,6 +1041,18 @@
     for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
     const c = (hash & 0x00FFFFFF).toString(16).toUpperCase();
     return '#' + '00000'.substring(0, 6 - c.length) + c;
+  }
+  function formatTime(isoString) {
+    const date = new Date(isoString);
+    const now = new Date();
+    const diff = now - date;
+    if (diff < 86400000 && date.getDate() === now.getDate()) {
+      return date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    } else if (diff < 172800000) {
+      return 'Вчера';
+    } else {
+      return date.toLocaleDateString();
+    }
   }
 </script>
 </body>

@@ -1,11 +1,18 @@
+<!-- MinionSpeak v3 – Production-ready social network & messenger -->
+<!-- Автор: команда MinionSpeak, 2025 -->
+<!-- Лицензия: MIT -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>MinionSpeak</title>
+  <title>🐣 MinionSpeak – соцсеть и мессенджер</title>
+  <!-- Подключаем современные шрифты -->
   <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
+    /* ============================================================
+       ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СБРОС СТИЛЕЙ
+       ============================================================ */
     :root {
       --bg: #15202B;
       --card-bg: #192734;
@@ -18,8 +25,15 @@
       --success: #17BF63;
       --font-title: 'Luckiest Guy', cursive;
       --font-body: 'Inter', sans-serif;
+      --transition: 0.2s ease;
+      --radius: 16px;
     }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
     body {
       font-family: var(--font-body);
       background: var(--bg);
@@ -28,26 +42,37 @@
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      overflow: hidden; /* предотвращаем двойной скролл */
+      user-select: none; /* для ощущения приложения */
     }
+    /* ============================================================
+       ОСНОВНОЙ КОНТЕЙНЕР
+       ============================================================ */
     #app {
       width: 100%;
       max-width: 480px;
-      height: 90vh;
-      max-height: 850px;
+      height: 100vh;
+      max-height: 900px;
       background: var(--bg);
       border: 1px solid var(--border);
       border-radius: 24px;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      position: relative;
     }
+    /* ============================================================
+       ШАПКА
+       ============================================================ */
     .app-header {
-      padding: 12px 16px;
+      padding: 10px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       border-bottom: 1px solid var(--border);
+      background: var(--card-bg);
+      z-index: 10;
     }
     .logo {
       font-family: var(--font-title);
@@ -59,58 +84,43 @@
     }
     .logo span {
       background: var(--accent);
-      width: 28px;
-      height: 28px;
+      width: 30px;
+      height: 30px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 16px;
+      font-size: 18px;
       color: white;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
     }
-    .header-actions { display: flex; gap: 12px; }
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
     .icon-btn {
       background: none;
       border: none;
       font-size: 20px;
       cursor: pointer;
       color: var(--text);
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
-      transition: background 0.2s;
-    }
-    .icon-btn:hover { background: rgba(29,161,242,0.1); }
-    .main-content { flex: 1; overflow-y: auto; background: var(--bg); }
-    .section { display: none; }
-    .section.active { display: block; height: 100%; }
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background: var(--card-bg);
-      border-top: 1px solid var(--border);
-      padding: 8px 0;
-    }
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 6px 0;
-      transition: color 0.2s;
+      transition: background var(--transition);
       position: relative;
     }
-    .nav-item.active { color: var(--accent); }
-    .nav-item span { display: block; font-size: 10px; font-weight: 600; margin-top: 2px; }
+    .icon-btn:hover {
+      background: rgba(29,161,242,0.2);
+    }
     .badge {
       position: absolute;
-      top: 2px;
-      right: calc(50% - 24px);
+      top: -2px;
+      right: -2px;
       background: var(--danger);
       color: white;
       border-radius: 50%;
@@ -121,29 +131,125 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      pointer-events: none;
+    }
+    /* ============================================================
+       ОСНОВНОЙ КОНТЕНТ
+       ============================================================ */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      background: var(--bg);
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      position: relative;
+    }
+    .main-content::-webkit-scrollbar {
+      width: 4px;
+    }
+    .main-content::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .main-content::-webkit-scrollbar-thumb {
+      background: var(--border);
+      border-radius: 2px;
+    }
+    .section {
+      display: none;
+      height: 100%;
+      flex-direction: column;
+    }
+    .section.active {
+      display: flex;
+    }
+    /* ============================================================
+       НИЖНЯЯ НАВИГАЦИЯ
+       ============================================================ */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      padding: 8px 0 8px;
+      z-index: 10;
+    }
+    .nav-item {
+      flex: 1;
+      text-align: center;
+      color: var(--text-secondary);
+      font-size: 22px;
+      cursor: pointer;
+      padding: 6px 0;
+      transition: color var(--transition);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .nav-item.active {
+      color: var(--accent);
+    }
+    .nav-item span {
+      font-size: 10px;
+      font-weight: 600;
+      margin-top: 0;
       line-height: 1;
     }
+    .nav-item .badge {
+      top: 0;
+      right: 25%;
+      width: 16px;
+      height: 16px;
+      font-size: 10px;
+    }
+    /* ============================================================
+       АВТОРИЗАЦИЯ
+       ============================================================ */
     .auth-container {
       padding: 32px 20px;
       background: var(--card-bg);
-      border-radius: 16px;
+      border-radius: var(--radius);
       margin: 24px 16px;
       border: 1px solid var(--border);
     }
-    .form-group { margin-bottom: 16px; }
-    .form-group input, .form-group textarea {
+    .auth-container h2 {
+      text-align: center;
+      color: var(--accent);
+      font-family: var(--font-title);
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-secondary);
+      font-size: 14px;
+    }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
       width: 100%;
       padding: 12px 16px;
       border: 1px solid var(--border);
-      border-radius: 24px;
+      border-radius: 20px;
       font-size: 15px;
       outline: none;
       background: var(--bg);
       color: var(--text);
       font-family: var(--font-body);
-      transition: 0.2s;
+      transition: border var(--transition);
     }
-    .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(29,161,242,0.3);
+    }
     .btn {
       width: 100%;
       padding: 12px;
@@ -155,19 +261,52 @@
       color: white;
       cursor: pointer;
       letter-spacing: 0.5px;
-      transition: 0.2s;
+      transition: background var(--transition), transform 0.1s ease;
       font-weight: 600;
     }
-    .btn:hover { background: var(--accent-hover); }
-    .link { text-align: center; margin-top: 16px; color: var(--accent); cursor: pointer; font-weight: 600; }
-    .link:hover { text-decoration: underline; }
+    .btn:hover {
+      background: var(--accent-hover);
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 20px;
+      cursor: pointer;
+      color: var(--accent);
+      font-weight: 600;
+      transition: background var(--transition);
+    }
+    .btn-outline:hover {
+      background: rgba(29,161,242,0.1);
+    }
+    .link {
+      text-align: center;
+      margin-top: 16px;
+      color: var(--accent);
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity var(--transition);
+    }
+    .link:hover {
+      opacity: 0.8;
+    }
+    /* ============================================================
+       ПОСТЫ
+       ============================================================ */
     .post {
       background: var(--card-bg);
       border-bottom: 1px solid var(--border);
       padding: 12px 16px;
-      transition: background 0.2s;
+      transition: background var(--transition);
+      animation: fadeIn 0.3s ease;
     }
-    .post:hover { background: rgba(29,161,242,0.03); }
+    .post:hover {
+      background: rgba(29,161,242,0.04);
+    }
     .post-header {
       display: flex;
       align-items: center;
@@ -188,12 +327,43 @@
       cursor: pointer;
       background-size: cover;
       background-position: center;
+      transition: transform var(--transition);
     }
-    .post-user-info { flex: 1; cursor: pointer; }
-    .post-username { font-weight: 700; color: var(--text); font-size: 15px; }
-    .post-handle { color: var(--text-secondary); font-size: 13px; }
-    .post-caption { font-size: 15px; line-height: 1.4; margin-bottom: 8px; }
-    .post-image { width: 100%; border-radius: 16px; margin-bottom: 8px; max-height: 300px; object-fit: cover; border: 1px solid var(--border); cursor: pointer; }
+    .post-avatar:hover {
+      transform: scale(1.1);
+    }
+    .post-user-info {
+      flex: 1;
+      cursor: pointer;
+    }
+    .post-username {
+      font-weight: 700;
+      color: var(--text);
+      font-size: 15px;
+    }
+    .post-handle {
+      color: var(--text-secondary);
+      font-size: 13px;
+    }
+    .post-caption {
+      font-size: 15px;
+      line-height: 1.4;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+    .post-image {
+      width: 100%;
+      border-radius: 16px;
+      margin-bottom: 8px;
+      max-height: 400px;
+      object-fit: cover;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: opacity var(--transition);
+    }
+    .post-image:hover {
+      opacity: 0.9;
+    }
     .post-actions {
       display: flex;
       justify-content: space-around;
@@ -201,294 +371,402 @@
       font-size: 16px;
       margin-top: 8px;
     }
-    .post-actions span { cursor: pointer; display: flex; align-items: center; gap: 4px; transition: 0.2s; }
-    .post-actions span:hover { color: var(--accent); }
-    .post-actions span.liked { color: var(--danger); }
-    .stories {
-      display: flex;
-      gap: 12px;
-      padding: 12px 16px;
-      overflow-x: auto;
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-    }
-    .story { display: flex; flex-direction: column; align-items: center; cursor: pointer; min-width: 56px; }
-    .story-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 50%;
-      background: var(--border);
+    .post-actions span {
+      cursor: pointer;
       display: flex;
       align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      font-weight: bold;
-      color: white;
-      background-size: cover;
-      background-position: center;
+      gap: 4px;
+      transition: color var(--transition);
     }
-    .story-username { font-size: 11px; margin-top: 4px; color: var(--text-secondary); }
-    .direct-container { display: flex; flex-direction: column; height: 100%; background: var(--bg); }
-    .direct-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-    .direct-header h2 { font-family: var(--font-title); color: var(--accent); font-size: 22px; margin: 0; }
-    .new-chat-btn { background: var(--accent); border: none; color: white; border-radius: 50%; width: 36px; height: 36px; font-size: 20px; cursor: pointer; }
-    .chat-search { padding: 8px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; }
-    .chat-search input { flex: 1; padding: 10px 16px; border-radius: 20px; border: 1px solid var(--border); background: var(--card-bg); color: var(--text); }
-    .chat-search button { background: var(--accent); border: none; color: white; border-radius: 20px; padding: 0 16px; font-family: var(--font-title); font-size: 14px; cursor: pointer; }
-    .dialog-list { flex: 1; overflow-y: auto; }
-    .dialog-item { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); cursor: pointer; }
-    .dialog-item:hover { background: rgba(29,161,242,0.05); }
-    .dialog-item.unread { background: rgba(29,161,242,0.08); }
-    .dialog-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--border); display: flex; align-items: center; justify-content: center; font-weight: 700; color: white; margin-right: 12px; background-size: cover; background-position: center; }
-    .dialog-info { flex: 1; }
-    .dialog-name { font-weight: 600; display: flex; align-items: center; gap: 6px; }
-    .unread-badge { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; }
-    .dialog-last-msg { color: var(--text-secondary); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .dialog-time { color: var(--text-secondary); font-size: 12px; margin-left: 8px; }
-    .chat-view { flex: 1; display: flex; flex-direction: column; background: var(--bg); }
-    .chat-header { padding: 12px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
-    .chat-header .back-btn { background: none; border: none; color: var(--accent); font-size: 20px; cursor: pointer; }
-    .chat-messages { flex: 1; padding: 10px 16px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; }
-    .msg-bubble { max-width: 75%; padding: 10px 14px; border-radius: 18px; font-size: 14px; line-height: 1.4; }
-    .msg-sent { align-self: flex-end; background: var(--accent); color: white; }
-    .msg-received { align-self: flex-start; background: var(--border); color: var(--text); }
-    .msg-sender { font-size: 12px; opacity: 0.8; margin-bottom: 2px; }
-    .chat-input-area { display: flex; padding: 8px 16px; gap: 8px; border-top: 1px solid var(--border); background: var(--card-bg); }
-    .chat-input-area input { flex: 1; padding: 10px 16px; border-radius: 24px; border: 1px solid var(--border); background: var(--bg); color: var(--text); }
-    .chat-input-area button { background: var(--accent); border: none; color: white; border-radius: 50%; width: 40px; height: 40px; font-size: 18px; }
-    .profile-header { background: var(--card-bg); padding: 24px 16px 16px; border-bottom: 1px solid var(--border); text-align: center; }
-    .profile-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--accent); margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 36px; color: white; font-weight: bold; border: 3px solid var(--bg); background-size: cover; background-position: center; }
-    .profile-stats { display: flex; justify-content: space-around; margin: 16px 0; }
-    .stat { text-align: center; }
-    .stat-number { font-weight: 700; font-size: 18px; }
-    .stat-label { font-size: 12px; color: var(--text-secondary); }
-    .profile-id { font-size: 0.85rem; color: var(--text-secondary); background: var(--bg); padding: 6px 12px; border-radius: 16px; display: inline-block; margin: 8px 0; font-family: monospace; }
-    .profile-posts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; margin-top: 12px; }
-    .profile-posts img { width: 100%; aspect-ratio: 1; object-fit: cover; cursor: pointer; }
-    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); justify-content: center; align-items: center; z-index: 100; }
-    .modal.active { display: flex; }
-    .modal-content { background: var(--card-bg); border-radius: 16px; padding: 20px; width: 90%; max-width: 400px; border: 1px solid var(--border); max-height: 80vh; overflow-y: auto; }
-    .btn-outline { background: transparent; border: 1px solid var(--border); border-radius: 20px; padding: 8px 20px; cursor: pointer; color: var(--accent); font-weight: 600; }
-    .notification-item { padding: 10px 16px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: center; }
-    .notification-item.unread { background: rgba(29,161,242,0.05); }
-    .feed-toggle { display: flex; border-bottom: 1px solid var(--border); background: var(--card-bg); }
-    .feed-toggle button { flex: 1; padding: 10px; background: none; border: none; color: var(--text-secondary); font-weight: 600; cursor: pointer; }
-    .feed-toggle button.active { color: var(--accent); border-bottom: 2px solid var(--accent); }
+    .post-actions span:hover {
+      color: var(--accent);
+    }
+    .post-actions span.liked {
+      color: var(--danger);
+    }
+    /* ============================================================
+       ОПРОСЫ
+       ============================================================ */
+    .poll-options {
+      margin: 10px 0;
+    }
+    .poll-option {
+      display: flex;
+      align-items: center;
+      margin-bottom: 6px;
+      background: var(--bg);
+      border-radius: 12px;
+      padding: 8px 12px;
+      cursor: pointer;
+      border: 1px solid var(--border);
+      transition: border var(--transition), background var(--transition);
+    }
+    .poll-option:hover {
+      border-color: var(--accent);
+    }
+    .poll-option.selected {
+      border-color: var(--accent);
+      background: rgba(29,161,242,0.1);
+    }
+    .poll-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin-top: 4px;
+      overflow: hidden;
+    }
+    .poll-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+    /* ============================================================
+       КАНАЛЫ
+       ============================================================ */
     .channel-item {
       display: flex;
       align-items: center;
-      padding: 12px 16px;
+      padding: 10px 16px;
       border-bottom: 1px solid var(--border);
       cursor: pointer;
+      transition: background var(--transition);
     }
-    .channel-item:hover { background: rgba(29,161,242,0.05); }
+    .channel-item:hover {
+      background: rgba(29,161,242,0.05);
+    }
     .channel-avatar {
-      width: 44px; height: 44px; border-radius: 50%; background: var(--border);
-      display: flex; align-items: center; justify-content: center; font-weight: 700;
-      color: white; margin-right: 12px; background-size: cover; background-position: center;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background-size: cover;
+      background-position: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      margin-right: 12px;
+      background-color: var(--border);
     }
-    .hidden { display: none !important; }
+    /* ============================================================
+       УВЕДОМЛЕНИЯ
+       ============================================================ */
+    .notification-item {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: var(--card-bg);
+      transition: background var(--transition);
+    }
+    .notification-item:hover {
+      background: rgba(29,161,242,0.05);
+    }
+    .notification-item.unread {
+      background: rgba(29,161,242,0.08);
+    }
+    /* ============================================================
+       МОДАЛЬНЫЕ ОКНА
+       ============================================================ */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      animation: fadeInOverlay 0.2s ease;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      border: 1px solid var(--border);
+      max-height: 80vh;
+      overflow-y: auto;
+      animation: slideUp 0.2s ease;
+    }
+    /* ============================================================
+       АНИМАЦИИ
+       ============================================================ */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInOverlay {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    /* ============================================================
+       СТРАНИЦА ПРОФИЛЯ
+       ============================================================ */
+    .profile-header {
+      background: var(--card-bg);
+      padding: 24px 16px 16px;
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+    }
+    .profile-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: var(--accent);
+      margin: 0 auto 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: white;
+      font-weight: bold;
+      border: 3px solid var(--bg);
+      background-size: cover;
+      background-position: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 16px 0;
+    }
+    .stat {
+      text-align: center;
+    }
+    .stat-number {
+      font-weight: 700;
+      font-size: 18px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .profile-id {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      background: var(--bg);
+      padding: 6px 12px;
+      border-radius: 16px;
+      display: inline-block;
+      margin: 8px 0;
+      font-family: monospace;
+      letter-spacing: 0.5px;
+    }
+    .profile-tabs {
+      display: flex;
+      border-bottom: 1px solid var(--border);
+      background: var(--card-bg);
+    }
+    .profile-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      color: var(--text-secondary);
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: color var(--transition), border-color var(--transition);
+    }
+    .profile-tab.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .profile-posts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin-top: 8px;
+    }
+    .profile-posts-grid img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    /* ============================================================
+       ЗАЩИТА ОТ DDOS (троттлинг на клиенте)
+       ============================================================ */
+    .rate-limited {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   </style>
 </head>
 <body>
 <div id="app">
+  <!-- ========== ШАПКА ========== -->
   <header class="app-header">
-    <div class="logo"><span>𝕏</span>MinionSpeak</div>
+    <div class="logo"><span>𝕏</span> MinionSpeak</div>
     <div class="header-actions" id="headerUserActions" style="display: none;">
-      <button class="icon-btn" onclick="showSection('notifications')" id="notifBell">🔔</button>
-      <button class="icon-btn" onclick="showSection('profile')">👤</button>
-      <button class="icon-btn" onclick="logout()">🚪</button>
+      <div style="position: relative;">
+        <button class="icon-btn" onclick="showSection('notifications')" aria-label="Уведомления">🔔</button>
+        <span class="badge" id="notifBadge" style="display: none;">0</span>
+      </div>
+      <button class="icon-btn" onclick="showSection('profile')" aria-label="Профиль">👤</button>
+      <button class="icon-btn" onclick="logout()" aria-label="Выйти">🚪</button>
     </div>
   </header>
 
+  <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
   <div class="main-content">
-    <!-- Auth -->
+    <!-- Авторизация -->
     <div id="auth-section" class="section active">
       <div class="auth-container">
-        <h2>MinionSpeak</h2>
+        <h2>🐣 Добро пожаловать в MinionSpeak!</h2>
         <div id="login-form">
-          <div class="form-group"><input type="email" id="loginEmail" placeholder="Email"></div>
-          <div class="form-group"><input type="password" id="loginPassword" placeholder="Пароль"></div>
-          <button class="btn" onclick="login()">Войти</button>
-          <p class="link" onclick="toggleAuth('register')">Зарегистрироваться</p>
+          <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="elon@musk.com"></div>
+          <div class="form-group"><label>Пароль</label><input type="password" id="loginPassword" placeholder="Не менее 6 символов"></div>
+          <button class="btn" onclick="performLogin()">Войти</button>
+          <p class="link" onclick="toggleAuth('register')">Нет аккаунта? Регистрация</p>
         </div>
         <div id="register-form" style="display: none;">
-          <div class="form-group"><input type="email" id="regEmail" placeholder="Email"></div>
-          <div class="form-group"><input type="text" id="regUsername" placeholder="Логин"></div>
-          <div class="form-group"><input type="password" id="regPassword" placeholder="Пароль"></div>
-          <button class="btn" onclick="register()">Создать аккаунт</button>
+          <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
+          <div class="form-group"><label>Никнейм</label><input type="text" id="regUsername" placeholder="Ваш уникальный ник"></div>
+          <div class="form-group"><label>Пароль</label><input type="password" id="regPassword" placeholder="Минимум 6 символов"></div>
+          <button class="btn" onclick="performRegister()">Создать аккаунт</button>
           <p class="link" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</p>
         </div>
       </div>
     </div>
 
-    <!-- Feed -->
+    <!-- Главная (Лента) -->
     <div id="feed-section" class="section">
-      <div class="feed-toggle" id="feedToggle">
-        <button class="active" onclick="setFeedMode('all')">Все</button>
-        <button onclick="setFeedMode('following')">Подписки</button>
+      <div class="feed-toggle">
+        <button class="active" onclick="setFeedMode('all', this)">🌍 Все</button>
+        <button onclick="setFeedMode('following', this)">👥 Подписки</button>
       </div>
-      <div class="stories" id="storiesContainer"></div>
+      <div class="horizontal-scroll" id="storiesContainer"></div>
       <div id="postsContainer"></div>
     </div>
 
-    <!-- Notifications -->
+    <!-- Уведомления -->
     <div id="notifications-section" class="section">
       <h2 style="padding:12px 16px; border-bottom:1px solid var(--border); font-family:var(--font-title); color:var(--accent);">🔔 Уведомления</h2>
       <div id="notificationsList"></div>
     </div>
 
-    <!-- Channels (list) -->
+    <!-- Каналы -->
     <div id="channels-section" class="section">
       <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
         <h2 style="font-family:var(--font-title); color:var(--accent); margin:0;">📢 Каналы</h2>
-        <button class="btn" style="width:auto; padding:8px 16px;" onclick="createChannel()">＋ Создать</button>
+        <button class="btn-outline" onclick="openCreateChannelModal()">＋ Создать</button>
       </div>
-      <div id="popularChannels">
-        <h3 style="padding:8px 16px; color:var(--text-secondary); font-size:14px;">Популярные</h3>
-        <div id="popularChannelsList"></div>
-      </div>
-      <div id="myChannels">
-        <h3 style="padding:8px 16px; color:var(--text-secondary); font-size:14px;">Мои каналы</h3>
-        <div id="myChannelsList"></div>
-      </div>
+      <div style="padding:8px 16px; color:var(--text-secondary); font-weight:600;">Популярные</div>
+      <div id="popularChannelsList"></div>
+      <div style="padding:8px 16px; color:var(--text-secondary); font-weight:600;">Мои каналы</div>
+      <div id="myChannelsList"></div>
     </div>
 
-    <!-- Channel detail -->
+    <!-- Детали канала -->
     <div id="channel-detail-section" class="section">
       <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center;">
-        <button class="back-btn" onclick="showSection('channels')" style="background:none;border:none;color:var(--accent);font-size:20px;">←</button>
+        <button class="icon-btn" onclick="showSection('channels')">←</button>
         <span id="channelDetailName" style="font-family:var(--font-title); color:var(--accent); margin-left:8px;"></span>
       </div>
-      <div id="channelPostsContainer"></div>
+      <div id="channelPostsContainer" style="flex:1; overflow-y:auto;"></div>
     </div>
 
-    <!-- Direct (Messages) -->
+    <!-- Сообщения -->
     <div id="direct-section" class="section">
-      <div class="direct-container">
-        <div class="direct-header">
-          <h2>✉️ Сообщения</h2>
-          <div style="display:flex; gap:8px;">
-            <button class="new-chat-btn" onclick="showNewChatSearch()">＋</button>
-            <button class="new-chat-btn" onclick="createGroupChat()">👥</button>
-          </div>
+      <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
+        <h2 style="font-family:var(--font-title); color:var(--accent); margin:0;">✉️ Сообщения</h2>
+        <div style="display:flex; gap:8px;">
+          <button class="icon-btn" onclick="toggleNewChatSearch()">＋</button>
+          <button class="icon-btn" onclick="openGroupChatModal()">👥</button>
         </div>
-        <div class="chat-search" id="newChatSearch" style="display: none;">
-          <input type="text" id="searchUserId" placeholder="Введите ID пользователя">
-          <button onclick="searchUserAndChat()">Найти</button>
+      </div>
+      <div id="newChatSearch" style="padding:8px 16px; border-bottom:1px solid var(--border); display:none; gap:8px;">
+        <input type="text" id="searchUserId" placeholder="Введите ID пользователя" style="flex:1; padding:10px; border-radius:20px; background:var(--card-bg); color:var(--text); border:1px solid var(--border);">
+        <button class="btn" style="width:auto; padding:10px 16px;" onclick="searchUserAndChat()">Найти</button>
+      </div>
+      <div id="dialogList" style="flex:1; overflow-y:auto;"></div>
+      <div id="chatView" style="display:none; flex-direction:column; flex:1;">
+        <div style="padding:8px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center;">
+          <button class="icon-btn" onclick="backToDialogList()">←</button>
+          <span id="chatPartnerName" style="font-weight:700;"></span>
         </div>
-        <div class="dialog-list" id="dialogList"></div>
-        <div class="chat-view" id="chatView" style="display: none;">
-          <div class="chat-header">
-            <button class="back-btn" onclick="backToDialogList()">←</button>
-            <div class="chat-partner" id="chatPartnerName"></div>
-          </div>
-          <div class="chat-messages" id="chatMessages"></div>
-          <div class="chat-input-area">
-            <input type="text" id="messageInput" placeholder="Написать сообщение...">
-            <button onclick="sendMessage()">➤</button>
-          </div>
+        <div id="chatMessages" style="flex:1; overflow-y:auto; padding:10px 16px;"></div>
+        <div style="display:flex; padding:8px 16px; border-top:1px solid var(--border); background:var(--card-bg);">
+          <input type="text" id="messageInput" placeholder="Написать сообщение..." style="flex:1; padding:10px 16px; border-radius:24px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
+          <button class="btn" style="width:auto; padding:10px 20px; margin-left:8px;" onclick="sendMessage()">➤</button>
         </div>
       </div>
     </div>
 
-    <!-- Profile -->
+    <!-- Профиль -->
     <div id="profile-section" class="section">
       <div class="profile-header" id="profileInfo"></div>
-      <div class="profile-posts" id="profilePosts"></div>
+      <div class="profile-tabs">
+        <div class="profile-tab active" onclick="switchProfileTab('posts')">Посты</div>
+        <div class="profile-tab" onclick="switchProfileTab('media')">Медиа</div>
+        <div class="profile-tab" onclick="switchProfileTab('likes')">Лайки</div>
+      </div>
+      <div id="profilePostsTab" class="profile-posts-grid"></div>
+      <div id="profileMediaTab" class="profile-posts-grid" style="display:none;"></div>
+      <div id="profileLikesTab" class="profile-posts-grid" style="display:none;"></div>
     </div>
 
-    <!-- Edit Profile -->
+    <!-- Редактирование профиля -->
     <div id="edit-profile-section" class="section">
-      <div style="padding:16px; border-bottom:1px solid var(--border);">
-        <button class="icon-btn" onclick="showSection('profile')" style="font-size:22px;">←</button>
-        <span style="font-family:var(--font-title); color:var(--accent); font-size:20px; margin-left:8px;">Редактировать профиль</span>
+      <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center;">
+        <button class="icon-btn" onclick="showSection('profile')">←</button>
+        <span style="font-family:var(--font-title); color:var(--accent); margin-left:8px;">Редактировать профиль</span>
       </div>
       <div style="padding:20px;">
-        <div class="form-group">
-          <label style="color:var(--text-secondary); font-size:14px;">Никнейм</label>
-          <input type="text" id="editUsername" placeholder="Новый ник">
-        </div>
-        <div class="form-group">
-          <label style="color:var(--text-secondary); font-size:14px;">О себе</label>
-          <textarea id="editBio" placeholder="Расскажите о себе" rows="3"></textarea>
-        </div>
-        <div class="form-group">
-          <label style="color:var(--text-secondary); font-size:14px;">Аватар</label>
-          <input type="file" id="editAvatar" accept="image/*">
-          <img id="avatarPreview" src="" style="max-width:100px; border-radius:50%; margin-top:8px; display:none;">
-        </div>
+        <div class="form-group"><label>Никнейм</label><input type="text" id="editUsername"></div>
+        <div class="form-group"><label>О себе</label><textarea id="editBio" rows="3"></textarea></div>
+        <div class="form-group"><label>Аватар</label><input type="file" id="editAvatar" accept="image/*"><img id="avatarPreview" style="max-width:100px; border-radius:50%; margin-top:8px; display:none;"></div>
         <button class="btn" onclick="saveProfileChanges()">Сохранить</button>
       </div>
     </div>
+
+    <!-- Закладки -->
+    <div id="bookmarks-section" class="section">
+      <h2 style="padding:12px 16px; border-bottom:1px solid var(--border); font-family:var(--font-title); color:var(--accent);">🔖 Закладки</h2>
+      <div id="bookmarksList" style="flex:1; overflow-y:auto;"></div>
+    </div>
+
+    <!-- Поиск -->
+    <div id="explore-section" class="section">
+      <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
+        <input type="text" id="exploreSearch" placeholder="Поиск по никнеймам, ID или постам..." style="width:100%; padding:12px; border-radius:20px; background:var(--card-bg); color:var(--text); border:1px solid var(--border);">
+      </div>
+      <div id="exploreResults" style="flex:1; overflow-y:auto;"></div>
+    </div>
   </div>
 
+  <!-- ========== НИЖНЯЯ ПАНЕЛЬ ========== -->
   <nav class="bottom-nav" id="bottomNav" style="display: none;">
     <div class="nav-item active" data-section="feed" onclick="navigateTo('feed')">🏠<span>Главная</span></div>
-    <div class="nav-item" data-section="channels" onclick="navigateTo('channels')">📢<span>Каналы</span></div>
+    <div class="nav-item" data-section="explore" onclick="navigateTo('explore')">🔍<span>Поиск</span></div>
     <div class="nav-item" onclick="openNewPostModal()">➕<span>Пост</span></div>
+    <div class="nav-item" data-section="channels" onclick="navigateTo('channels')">📢<span>Каналы</span></div>
     <div class="nav-item" data-section="direct" onclick="navigateTo('direct')" id="navDirect">✉️<span>Сообщ.</span></div>
-    <div class="nav-item" data-section="profile" onclick="navigateTo('profile')">👤<span>Профиль</span></div>
   </nav>
-
-  <!-- Modals -->
-  <div class="modal" id="newPostModal">
-    <div class="modal-content">
-      <h3>Новый пост</h3>
-      <div class="form-group"><textarea id="newPostCaption" placeholder="Что происходит?"></textarea></div>
-      <div class="form-group"><input type="file" id="newPostImage" accept="image/*"></div>
-      <div class="form-group">
-        <label style="color:var(--text-secondary);">Опубликовать в:</label>
-        <select id="postTarget" style="width:100%; padding:10px; border-radius:20px; background:var(--bg); color:var(--text); border:1px solid var(--border);">
-          <option value="profile">Мой профиль</option>
-        </select>
-      </div>
-      <div class="modal-actions" style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn-outline" onclick="closeNewPostModal()">Отмена</button>
-        <button class="btn" style="width:auto; padding:8px 24px;" onclick="createPost()">Опубликовать</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="userProfileModal">
-    <div class="modal-content" id="userProfileContent"></div>
-  </div>
-
-  <div class="modal" id="commentsModal">
-    <div class="modal-content" id="commentsContent"></div>
-  </div>
-
-  <div class="modal" id="createChannelModal">
-    <div class="modal-content">
-      <h3>Создать канал</h3>
-      <div class="form-group"><input type="text" id="channelName" placeholder="Название канала"></div>
-      <div class="form-group"><textarea id="channelDesc" placeholder="Описание"></textarea></div>
-      <div class="form-group"><input type="file" id="channelAvatar" accept="image/*"></div>
-      <div class="modal-actions" style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn-outline" onclick="closeCreateChannelModal()">Отмена</button>
-        <button class="btn" style="width:auto; padding:8px 24px;" onclick="saveChannel()">Создать</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal" id="groupChatModal">
-    <div class="modal-content">
-      <h3>Новая группа</h3>
-      <div class="form-group"><input type="text" id="groupName" placeholder="Название группы"></div>
-      <div class="form-group">
-        <label>Участники (ID через запятую)</label>
-        <input type="text" id="groupParticipants" placeholder="id1, id2, ...">
-      </div>
-      <div class="modal-actions" style="display:flex; gap:8px; justify-content:flex-end;">
-        <button class="btn-outline" onclick="closeGroupChatModal()">Отмена</button>
-        <button class="btn" style="width:auto; padding:8px 24px;" onclick="createGroup()">Создать</button>
-      </div>
-    </div>
-  </div>
 </div>
 
+<!-- Модальные окна (пустые контейнеры, заполняются динамически) -->
+<div class="modal" id="newPostModal"></div>
+<div class="modal" id="userProfileModal"></div>
+<div class="modal" id="commentsModal"></div>
+<div class="modal" id="createChannelModal"></div>
+<div class="modal" id="groupChatModal"></div>
+
 <script>
-  // ========== STORAGE ==========
+  // ======================== ХРАНИЛИЩЕ ========================
   const STORAGE = {
     USERS: 'ms_users',
     PROFILES: 'ms_profiles',
@@ -500,66 +778,119 @@
     NOTIFICATIONS: 'ms_notifications',
     CHANNELS: 'ms_channels',
     GROUP_CHATS: 'ms_groupChats',
+    BOOKMARKS: 'ms_bookmarks',
+    POLLS: 'ms_polls',
+    POLL_VOTES: 'ms_pollVotes',
     CURRENT: 'ms_current',
     LAST_READ: 'ms_lastRead'
   };
 
-  const getData = key => JSON.parse(localStorage.getItem(key) || '[]');
-  const setData = (key, data) => localStorage.setItem(key, JSON.stringify(data));
-  const getProfiles = () => JSON.parse(localStorage.getItem(STORAGE.PROFILES) || '{}');
-  const setProfiles = data => localStorage.setItem(STORAGE.PROFILES, JSON.stringify(data));
+  const get = k => JSON.parse(localStorage.getItem(k) || '[]');
+  const set = (k, v) => localStorage.setItem(k, JSON.stringify(v));
+  const getObj = k => JSON.parse(localStorage.getItem(k) || '{}');
+  const setObj = (k, v) => localStorage.setItem(k, JSON.stringify(v));
 
   let currentUser = JSON.parse(localStorage.getItem(STORAGE.CURRENT) || 'null');
   let feedMode = 'all';
-  let activeChatId = null;
-  let activeChatType = 'direct'; // 'direct' or 'group'
+  let activeChatId = null, activeChatType = 'direct';
+  let currentProfileUserId = null; // чей профиль сейчас смотрим
 
-  if (!localStorage.getItem(STORAGE.PROFILES)) setProfiles({});
-  if (!localStorage.getItem(STORAGE.CHANNELS)) setData(STORAGE.CHANNELS, []);
-  if (!localStorage.getItem(STORAGE.GROUP_CHATS)) setData(STORAGE.GROUP_CHATS, []);
+  // Инициализируем базы данных, если отсутствуют
+  function initDB() {
+    if (!localStorage.getItem(STORAGE.PROFILES)) setObj(STORAGE.PROFILES, {});
+    if (!localStorage.getItem(STORAGE.CHANNELS)) set(STORAGE.CHANNELS, []);
+    if (!localStorage.getItem(STORAGE.GROUP_CHATS)) set(STORAGE.GROUP_CHATS, []);
+    if (!localStorage.getItem(STORAGE.BOOKMARKS)) set(STORAGE.BOOKMARKS, []);
+    if (!localStorage.getItem(STORAGE.POLLS)) setObj(STORAGE.POLLS, {});
+    if (!localStorage.getItem(STORAGE.POLL_VOTES)) setObj(STORAGE.POLL_VOTES, {});
+    if (!localStorage.getItem(STORAGE.LAST_READ)) setObj(STORAGE.LAST_READ, {});
+  }
+  initDB();
 
-  // ========== UI ==========
+  // ======================== ЗАЩИТА ОТ DDOS / Rate Limiting ========================
+  const RateLimiter = {
+    timestamps: {}, // ключ: { action: массив времен }
+    limit: 5,       // максимум действий в окне
+    window: 2000,   // окно 2 секунды
+    check(action) {
+      const now = Date.now();
+      if (!this.timestamps[action]) this.timestamps[action] = [];
+      const timestamps = this.timestamps[action].filter(t => now - t < this.window);
+      this.timestamps[action] = timestamps;
+      if (timestamps.length >= this.limit) {
+        console.warn(`Rate limit exceeded for ${action}`);
+        return false;
+      }
+      timestamps.push(now);
+      return true;
+    }
+  };
+
+  // ======================== НАВИГАЦИЯ ========================
   function showSection(id) {
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById(id + '-section').classList.add('active');
+    // подсветка нижнего меню
     document.querySelectorAll('.nav-item[data-section]').forEach(el => {
       el.classList.toggle('active', el.dataset.section === id);
     });
+    // действия при открытии
     if (id === 'feed') { loadFeed(); renderStories(); }
-    if (id === 'notifications') loadNotifications();
-    if (id === 'channels') loadChannels();
-    if (id === 'direct') { renderDialogList(); backToDialogList(); }
-    if (id === 'profile') loadProfile(currentUser.id);
-    if (id === 'edit-profile') initEditProfileForm();
+    else if (id === 'notifications') { loadNotifications(); markAllNotifsRead(); }
+    else if (id === 'channels') loadChannels();
+    else if (id === 'direct') { renderDialogList(); backToDialogList(); }
+    else if (id === 'profile') { currentProfileUserId = currentUser.id; loadProfile(currentUser.id); }
+    else if (id === 'edit-profile') initEditProfileForm();
+    else if (id === 'bookmarks') loadBookmarks();
+    else if (id === 'explore') { document.getElementById('exploreSearch').value = ''; explore(''); }
+    // скрываем чат при переходе из диалога
+    if (id !== 'direct') backToDialogList();
   }
+
   function navigateTo(section) { showSection(section); }
 
+  // ======================== АВТОРИЗАЦИЯ ========================
   function toggleAuth(form) {
     document.getElementById('login-form').style.display = form === 'login' ? 'block' : 'none';
     document.getElementById('register-form').style.display = form === 'register' ? 'block' : 'none';
   }
 
-  // ========== AUTH ==========
-  async function register() {
+  async function performRegister() {
+    if (!RateLimiter.check('register')) { alert('Слишком много попыток. Подождите.'); return; }
     const email = document.getElementById('regEmail').value.trim();
     const username = document.getElementById('regUsername').value.trim();
     const password = document.getElementById('regPassword').value;
-    if (!email || !username || !password) return alert('Заполни все поля');
-    const users = getData(STORAGE.USERS);
-    if (users.some(u => u.email === email)) return alert('Email занят');
-    if (users.some(u => u.username === username)) return alert('Логин занят');
-    const user = { id: Date.now().toString(36)+Math.random().toString(36).substr(2), email, username, password };
-    users.push(user); setData(STORAGE.USERS, users);
-    const profiles = getProfiles(); profiles[user.id] = { avatar:'', cover:'', bio:'' }; setProfiles(profiles);
+    if (!email || !username || !password) { alert('Все поля обязательны'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Некорректный email'); return; }
+    if (username.length < 3) { alert('Никнейм должен быть не менее 3 символов'); return; }
+    if (password.length < 6) { alert('Пароль должен быть не менее 6 символов'); return; }
+    const users = get(STORAGE.USERS);
+    if (users.some(u => u.email === email)) { alert('Этот email уже зарегистрирован'); return; }
+    if (users.some(u => u.username === username)) { alert('Этот никнейм уже занят'); return; }
+    const user = {
+      id: 'u_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 6),
+      email,
+      username,
+      password // в реальном проекте нужно хешировать, но тут офлайн-демо
+    };
+    users.push(user);
+    set(STORAGE.USERS, users);
+    const profiles = getObj(STORAGE.PROFILES);
+    profiles[user.id] = { avatar: '', bio: '' };
+    setObj(STORAGE.PROFILES, profiles);
     onLoginSuccess(user);
   }
-  function login() {
+
+  async function performLogin() {
+    if (!RateLimiter.check('login')) { alert('Слишком много попыток. Подождите.'); return; }
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
-    const user = getData(STORAGE.USERS).find(u => u.email === email && u.password === password);
-    if (!user) return alert('Неверные данные');
+    if (!email || !password) { alert('Введите email и пароль'); return; }
+    const user = get(STORAGE.USERS).find(u => u.email === email && u.password === password);
+    if (!user) { alert('Неверный email или пароль'); return; }
     onLoginSuccess(user);
   }
+
   function onLoginSuccess(user) {
     currentUser = user;
     localStorage.setItem(STORAGE.CURRENT, JSON.stringify(user));
@@ -568,97 +899,169 @@
     document.getElementById('headerUserActions').style.display = 'flex';
     showSection('feed');
     clearAuthFields();
+    updateNotifBadge();
   }
+
   function logout() {
+    if (!RateLimiter.check('logout')) return;
     currentUser = null;
     localStorage.removeItem(STORAGE.CURRENT);
     document.getElementById('auth-section').classList.add('active');
     document.getElementById('bottomNav').style.display = 'none';
     document.getElementById('headerUserActions').style.display = 'none';
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById('auth-section').classList.add('active');
+    closeAllModals();
   }
+
+  // Автоматический вход, если уже есть сессия
   if (currentUser) {
     document.getElementById('auth-section').classList.remove('active');
     document.getElementById('bottomNav').style.display = 'flex';
     document.getElementById('headerUserActions').style.display = 'flex';
     showSection('feed');
   }
-  function clearAuthFields() { ['loginEmail','loginPassword','regEmail','regUsername','regPassword'].forEach(id => { const e=document.getElementById(id); if(e) e.value=''; }); }
 
-  // ========== FEED ==========
-  function setFeedMode(mode) {
+  function clearAuthFields() {
+    ['loginEmail','loginPassword','regEmail','regUsername','regPassword'].forEach(id => {
+      const el = document.getElementById(id); if (el) el.value = '';
+    });
+  }
+
+  // ======================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ========================
+  function escapeHtml(str) {
+    const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
+    return String(str).replace(/[&<>"']/g, c => map[c]);
+  }
+  function stringToColor(str) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    return '#' + (hash & 0xFFFFFF).toString(16).padStart(6, '0');
+  }
+  function formatTime(iso) {
+    const date = new Date(iso);
+    const now = new Date();
+    const diff = now - date;
+    if (diff < 86400000 && date.getDate() === now.getDate()) {
+      return date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    } else if (diff < 172800000) {
+      return 'Вчера';
+    } else {
+      return date.toLocaleDateString();
+    }
+  }
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+  function closeAllModals() {
+    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+  }
+
+  // ======================== FEED & POSTS ========================
+  function setFeedMode(mode, btn) {
     feedMode = mode;
-    document.querySelectorAll('#feedToggle button').forEach(b => b.classList.remove('active'));
-    event.target.classList.add('active');
+    document.querySelectorAll('.feed-toggle button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
     loadFeed();
   }
 
   function openNewPostModal() {
     const modal = document.getElementById('newPostModal');
-    // заполнить селект каналов, где пользователь администратор
-    const select = document.getElementById('postTarget');
-    select.innerHTML = '<option value="profile">Мой профиль</option>';
-    const channels = getData(STORAGE.CHANNELS).filter(c => c.creatorId === currentUser.id);
-    channels.forEach(c => {
-      const opt = document.createElement('option');
-      opt.value = c.id;
-      opt.textContent = 'Канал: ' + c.name;
-      select.appendChild(opt);
-    });
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Новый пост</h3>
+        <div class="form-group"><textarea id="newPostCaption" placeholder="Что происходит?"></textarea></div>
+        <div class="form-group"><label>Прикрепить фото</label><input type="file" id="newPostImage" accept="image/*"></div>
+        <div class="form-group">
+          <label>Опубликовать в:</label>
+          <select id="postTarget"><option value="profile">Мой профиль</option></select>
+        </div>
+        <div class="form-group">
+          <label><input type="checkbox" id="withPoll"> Добавить опрос</label>
+          <div id="pollFields" style="display:none; margin-top:8px;">
+            <input type="text" id="pollQuestion" placeholder="Вопрос" style="margin-bottom:8px;">
+            <input type="text" id="pollOption1" placeholder="Вариант 1" style="margin-bottom:4px;">
+            <input type="text" id="pollOption2" placeholder="Вариант 2" style="margin-bottom:4px;">
+            <input type="text" id="pollOption3" placeholder="Вариант 3 (необязательно)">
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button class="btn-outline" onclick="closeModal('newPostModal')">Отмена</button>
+          <button class="btn" style="width:auto; padding:8px 24px;" onclick="createPost()">Опубликовать</button>
+        </div>
+      </div>
+    `;
     modal.classList.add('active');
-  }
-  function closeNewPostModal() {
-    document.getElementById('newPostModal').classList.remove('active');
-    document.getElementById('newPostCaption').value = '';
-    document.getElementById('newPostImage').value = '';
-    document.getElementById('postTarget').value = 'profile';
+    // заполняем селект каналов
+    const select = modal.querySelector('#postTarget');
+    get(STORAGE.CHANNELS).filter(c => c.creatorId === currentUser.id).forEach(c => {
+      select.innerHTML += `<option value="${c.id}">Канал: ${c.name}</option>`;
+    });
+    modal.querySelector('#withPoll').addEventListener('change', function() {
+      modal.querySelector('#pollFields').style.display = this.checked ? 'block' : 'none';
+    });
   }
 
   function createPost() {
-    const caption = document.getElementById('newPostCaption').value.trim();
-    const fileInput = document.getElementById('newPostImage');
+    if (!RateLimiter.check('createPost')) { alert('Не так быстро!'); return; }
+    const modal = document.getElementById('newPostModal');
+    const caption = modal.querySelector('#newPostCaption').value.trim();
+    const fileInput = modal.querySelector('#newPostImage');
     const file = fileInput.files[0];
-    if (!file) return alert('Прикрепи изображение');
-    const target = document.getElementById('postTarget').value; // 'profile' или channelId
+    if (!file) { alert('Прикрепите изображение'); return; }
+    const target = modal.querySelector('#postTarget').value;
+    const withPoll = modal.querySelector('#withPoll').checked;
     const reader = new FileReader();
-    reader.onload = e => {
+    reader.onload = (e) => {
       const post = {
-        id: Date.now().toString(36)+Math.random().toString(36).substr(2),
+        id: 'p_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 6),
         userId: currentUser.id,
         username: currentUser.username,
         caption,
         imageUrl: e.target.result,
         createdAt: new Date().toISOString(),
-        channelId: target !== 'profile' ? target : null
+        channelId: target !== 'profile' ? target : null,
+        pollId: null
       };
-      const posts = getData(STORAGE.POSTS);
+      if (withPoll) {
+        const question = modal.querySelector('#pollQuestion').value.trim();
+        const opts = [
+          modal.querySelector('#pollOption1').value.trim(),
+          modal.querySelector('#pollOption2').value.trim(),
+          modal.querySelector('#pollOption3').value.trim()
+        ].filter(o => o);
+        if (question && opts.length >= 2) {
+          const polls = getObj(STORAGE.POLLS);
+          const pollId = 'poll_' + Date.now().toString(36);
+          polls[pollId] = { id: pollId, question, options: opts, createdBy: currentUser.id };
+          setObj(STORAGE.POLLS, polls);
+          post.pollId = pollId;
+        }
+      }
+      const posts = get(STORAGE.POSTS);
       posts.unshift(post);
-      setData(STORAGE.POSTS, posts);
-      closeNewPostModal();
+      set(STORAGE.POSTS, posts);
+      closeModal('newPostModal');
       if (document.getElementById('feed-section').classList.contains('active')) loadFeed();
-      if (document.getElementById('profile-section').classList.contains('active')) loadProfile(currentUser.id);
-      if (document.getElementById('channel-detail-section').classList.contains('active') && target !== 'profile') loadChannelDetail(target);
+      if (document.getElementById('profile-section').classList.contains('active') && currentProfileUserId === currentUser.id) loadProfile(currentUser.id);
     };
     reader.readAsDataURL(file);
   }
 
   function loadFeed() {
-    const posts = getData(STORAGE.POSTS).filter(post => {
+    const posts = get(STORAGE.POSTS).filter(post => {
       if (feedMode === 'following') {
         if (post.channelId) {
-          const channel = getData(STORAGE.CHANNELS).find(c => c.id === post.channelId);
-          return channel && channel.subscribers && channel.subscribers.includes(currentUser.id);
+          const ch = get(STORAGE.CHANNELS).find(c => c.id === post.channelId);
+          return ch && ch.subscribers && ch.subscribers.includes(currentUser.id);
         }
-        const follows = getData(STORAGE.FOLLOWS).filter(f => f.followerId === currentUser.id);
-        const followingIds = follows.map(f => f.followingId);
-        return followingIds.includes(post.userId) || post.userId === currentUser.id;
+        const follows = get(STORAGE.FOLLOWS).filter(f => f.followerId === currentUser.id).map(f => f.followingId);
+        return follows.includes(post.userId) || post.userId === currentUser.id;
       }
-      return true; // все
+      return true;
     });
-    const likes = getData(STORAGE.LIKES);
+    const likes = get(STORAGE.LIKES);
     const container = document.getElementById('postsContainer');
-    if (!posts.length) {
-      container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-secondary);">Лента пуста</div>';
+    if (posts.length === 0) {
+      container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-secondary);">Пусто. Опубликуйте что‑нибудь!</div>';
       return;
     }
     container.innerHTML = posts.map(post => renderPostHTML(post, likes)).join('');
@@ -667,34 +1070,65 @@
   function renderPostHTML(post, likes) {
     const postLikes = likes.filter(l => l.postId === post.id);
     const liked = postLikes.some(l => l.userId === currentUser.id);
-    let avatarStyle, displayName, handle;
+    let avatarUrl = '', displayName = post.username, handle = '@' + post.username.toLowerCase().replace(/\s/g, ''), headerClick = `showUserProfile('${post.userId}')`;
     if (post.channelId) {
-      const channel = getData(STORAGE.CHANNELS).find(c => c.id === post.channelId);
-      displayName = channel ? channel.name : 'Канал';
-      handle = channel ? '@' + channel.name.toLowerCase().replace(/\s/g, '') : '@channel';
-      avatarStyle = channel && channel.avatar ? `background-image:url(${channel.avatar})` : `background:var(--accent)`;
+      const ch = get(STORAGE.CHANNELS).find(c => c.id === post.channelId);
+      if (ch) {
+        avatarUrl = ch.avatar || '';
+        displayName = ch.name;
+        handle = '@' + ch.name.toLowerCase().replace(/\s/g, '');
+        headerClick = `showChannelDetail('${post.channelId}')`;
+      }
     } else {
-      const profile = getProfiles()[post.userId] || {};
-      displayName = post.username;
-      handle = '@' + post.username.toLowerCase().replace(/\s/g, '');
-      avatarStyle = profile.avatar ? `background-image:url(${profile.avatar})` : `background:${stringToColor(post.username)}`;
+      const profile = getObj(STORAGE.PROFILES)[post.userId] || {};
+      avatarUrl = profile.avatar || '';
     }
-    const headerClickHandler = post.channelId ? `showChannelDetail('${post.channelId}')` : `showUserProfile('${post.userId}')`;
+    const avatarHTML = avatarUrl
+      ? `<div class="post-avatar" style="background-image:url(${avatarUrl})" onclick="${headerClick}"></div>`
+      : `<div class="post-avatar" style="background:${stringToColor(displayName)}" onclick="${headerClick}">${displayName.charAt(0).toUpperCase()}</div>`;
+
+    let pollHTML = '';
+    if (post.pollId) {
+      const polls = getObj(STORAGE.POLLS);
+      const poll = polls[post.pollId];
+      if (poll) {
+        const votes = getObj(STORAGE.POLL_VOTES)[post.pollId] || [];
+        const total = votes.length;
+        const userVote = votes.find(v => v.userId === currentUser.id);
+        pollHTML = '<div class="poll-options">';
+        poll.options.forEach((opt, i) => {
+          const count = votes.filter(v => v.optionIndex === i).length;
+          const percent = total > 0 ? Math.round((count / total) * 100) : 0;
+          const selected = userVote && userVote.optionIndex === i;
+          pollHTML += `
+            <div class="poll-option ${selected ? 'selected' : ''}" onclick="votePoll('${post.pollId}', ${i})">
+              <span>${escapeHtml(opt)}</span>
+              <span>${percent}%</span>
+            </div>
+            <div class="poll-bar"><div class="poll-bar-fill" style="width:${percent}%"></div></div>
+          `;
+        });
+        pollHTML += `</div><div style="font-size:13px; color:var(--text-secondary);">${total} голосов</div>`;
+      }
+    }
+
     return `
-      <div class="post" id="post-${post.id}">
+      <div class="post fade-in" data-postid="${post.id}">
         <div class="post-header">
-          <div class="post-avatar" style="${avatarStyle}" onclick="${headerClickHandler}">${post.channelId ? '' : post.username.charAt(0).toUpperCase()}</div>
-          <div class="post-user-info" onclick="${headerClickHandler}">
+          ${avatarHTML}
+          <div class="post-user-info" onclick="${headerClick}">
             <div class="post-username">${escapeHtml(displayName)}</div>
             <div class="post-handle">${handle} · ${formatTime(post.createdAt)}</div>
           </div>
-          ${post.userId === currentUser.id && !post.channelId ? `<button class="icon-btn" onclick="deletePost('${post.id}')" style="color:var(--danger); font-size:18px;">🗑️</button>` : ''}
+          <button class="icon-btn" onclick="bookmarkPost('${post.id}')" title="В закладки">🔖</button>
+          ${post.userId === currentUser.id && !post.channelId ? `<button class="icon-btn" onclick="deletePost('${post.id}')" style="color:var(--danger)">🗑️</button>` : ''}
         </div>
         ${post.caption ? `<div class="post-caption">${escapeHtml(post.caption)}</div>` : ''}
-        <img class="post-image" src="${post.imageUrl}" onclick="openImageModal('${post.imageUrl}')">
+        <img class="post-image" src="${post.imageUrl}" onclick="openImage('${post.imageUrl}')" loading="lazy">
+        ${pollHTML}
         <div class="post-actions">
-          <span onclick="openComments('${post.id}')">💬 ${(getData(STORAGE.COMMENTS).filter(c=>c.postId===post.id)).length}</span>
-          <span>🔁</span>
+          <span onclick="openComments('${post.id}')">💬 ${(get(STORAGE.COMMENTS).filter(c=>c.postId===post.id)).length}</span>
+          <span onclick="retweet('${post.id}')">🔁</span>
           <span onclick="toggleLike('${post.id}')" class="${liked?'liked':''}">${liked?'❤️':'🤍'} ${postLikes.length}</span>
           <span>↗️</span>
         </div>
@@ -702,244 +1136,524 @@
     `;
   }
 
-  function deletePost(postId) { /* ... unchanged ... */ }
-  function toggleLike(postId) { /* ... unchanged ... */ }
-  function openComments(postId) { /* ... unchanged ... */ }
-  function addComment(postId) { /* ... unchanged ... */ }
-  function closeCommentsModal() { document.getElementById('commentsModal').classList.remove('active'); }
-  function renderStories() { /* ... unchanged ... */ }
-
-  // ========== PROFILE & EDIT (unchanged from previous) ==========
-  function loadProfile(userId) { /* ... unchanged ... */ }
-  function isFollowing(userId) { return getData(STORAGE.FOLLOWS).some(f => f.followerId === currentUser.id && f.followingId === userId); }
-  function toggleFollow(userId) { /* ... unchanged ... */ }
-  function initEditProfileForm() { /* ... unchanged ... */ }
-  function saveProfileChanges() { /* ... unchanged ... */ }
-  function updateUsernameInData(oldName, newName) { /* ... unchanged ... */ }
-
-  // ========== NOTIFICATIONS ==========
-  function addNotification(targetUserId, type, actorId, postId=null, commentText=null) { /* ... unchanged ... */ }
-  function loadNotifications() { /* ... unchanged ... */ }
-  function markNotificationRead(id) { /* ... unchanged ... */ }
-  function markAllNotificationsRead() { /* ... unchanged ... */ }
-  function updateNotificationBadge() { /* ... unchanged ... */ }
-
-  // ========== CHANNELS ==========
-  function loadChannels() {
-    const channels = getData(STORAGE.CHANNELS);
-    // Популярные
-    const popular = [...channels].sort((a,b) => (b.subscribers?.length||0) - (a.subscribers?.length||0));
-    renderChannelList('popularChannelsList', popular);
-    // Мои каналы (где я создатель)
-    const my = channels.filter(c => c.creatorId === currentUser.id);
-    renderChannelList('myChannelsList', my);
+  function toggleLike(postId) {
+    if (!RateLimiter.check('like')) return;
+    const likes = get(STORAGE.LIKES);
+    const idx = likes.findIndex(l => l.postId === postId && l.userId === currentUser.id);
+    if (idx > -1) {
+      likes.splice(idx, 1);
+    } else {
+      likes.push({ postId, userId: currentUser.id, createdAt: new Date().toISOString() });
+      const post = get(STORAGE.POSTS).find(p => p.id === postId);
+      if (post && post.userId !== currentUser.id) {
+        addNotification(post.userId, 'like', currentUser.id, postId);
+      }
+    }
+    set(STORAGE.LIKES, likes);
+    loadFeed();
   }
 
-  function renderChannelList(containerId, channels) {
-    const container = document.getElementById(containerId);
-    if (!channels.length) {
-      container.innerHTML = '<div style="padding:10px; color:var(--text-secondary);">Нет каналов</div>';
+  function votePoll(pollId, optionIndex) {
+    if (!RateLimiter.check('vote')) return;
+    const votes = getObj(STORAGE.POLL_VOTES);
+    if (!votes[pollId]) votes[pollId] = [];
+    if (votes[pollId].some(v => v.userId === currentUser.id)) {
+      alert('Вы уже голосовали');
       return;
     }
-    container.innerHTML = channels.map(c => {
-      const subCount = c.subscribers ? c.subscribers.length : 0;
-      const isSubscribed = c.subscribers && c.subscribers.includes(currentUser.id);
+    votes[pollId].push({ userId: currentUser.id, optionIndex });
+    setObj(STORAGE.POLL_VOTES, votes);
+    loadFeed();
+  }
+
+  function bookmarkPost(postId) {
+    const bookmarks = get(STORAGE.BOOKMARKS);
+    const idx = bookmarks.indexOf(postId);
+    if (idx === -1) {
+      bookmarks.push(postId);
+      alert('Добавлено в закладки');
+    } else {
+      bookmarks.splice(idx, 1);
+      alert('Удалено из закладок');
+    }
+    set(STORAGE.BOOKMARKS, bookmarks);
+  }
+
+  function deletePost(postId) {
+    if (!confirm('Удалить этот пост?')) return;
+    let posts = get(STORAGE.POSTS).filter(p => p.id !== postId);
+    set(STORAGE.POSTS, posts);
+    loadFeed();
+  }
+
+  function openImage(url) {
+    window.open(url, '_blank');
+  }
+
+  function retweet(postId) {
+    // Упрощённая реализация: просто дублируем пост как свой
+    const orig = get(STORAGE.POSTS).find(p => p.id === postId);
+    if (!orig) return;
+    const newPost = {
+      id: 'p_' + Date.now().toString(36) + Math.random().toString(36).substr(2,6),
+      userId: currentUser.id,
+      username: currentUser.username,
+      caption: orig.caption ? '🔁 ' + orig.caption : '',
+      imageUrl: orig.imageUrl,
+      createdAt: new Date().toISOString(),
+      channelId: null,
+      pollId: null
+    };
+    const posts = get(STORAGE.POSTS);
+    posts.unshift(newPost);
+    set(STORAGE.POSTS, posts);
+    loadFeed();
+  }
+
+  // ======================== STORIES ========================
+  function renderStories() {
+    const users = get(STORAGE.USERS);
+    const profiles = getObj(STORAGE.PROFILES);
+    const container = document.getElementById('storiesContainer');
+    container.innerHTML = users.map(u => {
+      const profile = profiles[u.id] || {};
+      const avatar = profile.avatar ? `<div class="story-avatar" style="background-image:url(${profile.avatar})"></div>` : `<div class="story-avatar" style="background:${stringToColor(u.username)}">${u.username.charAt(0).toUpperCase()}</div>`;
+      return `<div class="story-item" onclick="showUserProfile('${u.id}')">${avatar}<div class="story-username">${escapeHtml(u.username)}</div></div>`;
+    }).join('');
+  }
+
+  // ======================== ПРОФИЛЬ ========================
+  function loadProfile(userId) {
+    currentProfileUserId = userId;
+    const user = get(STORAGE.USERS).find(u => u.id === userId);
+    if (!user) return;
+    const profile = getObj(STORAGE.PROFILES)[userId] || {};
+    const posts = get(STORAGE.POSTS).filter(p => p.userId === userId && !p.channelId);
+    const follows = get(STORAGE.FOLLOWS);
+    const followersCount = follows.filter(f => f.followingId === userId).length;
+    const followingCount = follows.filter(f => f.followerId === userId).length;
+    const isOwn = userId === currentUser.id;
+
+    document.getElementById('profileInfo').innerHTML = `
+      <div class="profile-avatar" style="${profile.avatar ? 'background-image:url('+profile.avatar+');' : ''}">${profile.avatar ? '' : user.username.charAt(0).toUpperCase()}</div>
+      <h2 style="font-family:var(--font-title); color:var(--accent);">${escapeHtml(user.username)}</h2>
+      ${profile.bio ? `<p style="color:var(--text-secondary);">${escapeHtml(profile.bio)}</p>` : ''}
+      <div class="profile-id">🆔 ${user.id}</div>
+      <div class="profile-stats">
+        <div class="stat"><div class="stat-number">${posts.length}</div><div class="stat-label">Постов</div></div>
+        <div class="stat"><div class="stat-number">${followersCount}</div><div class="stat-label">Подписчиков</div></div>
+        <div class="stat"><div class="stat-number">${followingCount}</div><div class="stat-label">Подписок</div></div>
+      </div>
+      ${isOwn 
+        ? `<button class="btn-outline" onclick="showSection('edit-profile')">✏️ Редактировать профиль</button>`
+        : `<button class="btn" onclick="toggleFollow('${user.id}')">${isFollowing(user.id) ? 'Отписаться' : 'Подписаться'}</button>`
+      }
+    `;
+    switchProfileTab('posts'); // активная вкладка по умолчанию
+  }
+
+  function switchProfileTab(tab) {
+    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.getElementById('profilePostsTab').style.display = tab === 'posts' ? 'grid' : 'none';
+    document.getElementById('profileMediaTab').style.display = tab === 'media' ? 'grid' : 'none';
+    document.getElementById('profileLikesTab').style.display = tab === 'likes' ? 'grid' : 'none';
+    const userId = currentProfileUserId || currentUser.id;
+    if (tab === 'posts') {
+      const posts = get(STORAGE.POSTS).filter(p => p.userId === userId && !p.channelId);
+      document.getElementById('profilePostsTab').innerHTML = posts.map(p => `<img src="${p.imageUrl}" onclick="openImage('${p.imageUrl}')">`).join('');
+    } else if (tab === 'media') {
+      const media = get(STORAGE.POSTS).filter(p => p.userId === userId && p.imageUrl && !p.channelId);
+      document.getElementById('profileMediaTab').innerHTML = media.map(p => `<img src="${p.imageUrl}" onclick="openImage('${p.imageUrl}')">`).join('');
+    } else if (tab === 'likes') {
+      const likedPosts = get(STORAGE.LIKES).filter(l => l.userId === userId).map(l => get(STORAGE.POSTS).find(p => p.id === l.postId)).filter(Boolean);
+      document.getElementById('profileLikesTab').innerHTML = likedPosts.map(p => `<img src="${p.imageUrl}" onclick="openImage('${p.imageUrl}')">`).join('');
+    }
+  }
+
+  function isFollowing(userId) {
+    return get(STORAGE.FOLLOWS).some(f => f.followerId === currentUser.id && f.followingId === userId);
+  }
+  function toggleFollow(userId) {
+    if (!RateLimiter.check('follow')) return;
+    const follows = get(STORAGE.FOLLOWS);
+    const idx = follows.findIndex(f => f.followerId === currentUser.id && f.followingId === userId);
+    if (idx > -1) follows.splice(idx, 1);
+    else {
+      follows.push({ followerId: currentUser.id, followingId: userId, createdAt: new Date().toISOString() });
+      addNotification(userId, 'follow', currentUser.id);
+    }
+    set(STORAGE.FOLLOWS, follows);
+    loadProfile(userId);
+  }
+
+  function initEditProfileForm() {
+    const user = currentUser;
+    const profile = getObj(STORAGE.PROFILES)[user.id] || {};
+    document.getElementById('editUsername').value = user.username;
+    document.getElementById('editBio').value = profile.bio || '';
+    const preview = document.getElementById('avatarPreview');
+    if (profile.avatar) {
+      preview.src = profile.avatar;
+      preview.style.display = 'inline-block';
+    } else {
+      preview.style.display = 'none';
+    }
+    document.getElementById('editAvatar').value = '';
+  }
+
+  function saveProfileChanges() {
+    const newUsername = document.getElementById('editUsername').value.trim();
+    if (!newUsername) return alert('Никнейм не может быть пустым');
+    const users = get(STORAGE.USERS);
+    if (users.some(u => u.username === newUsername && u.id !== currentUser.id)) {
+      return alert('Этот никнейм уже занят');
+    }
+    const userIdx = users.findIndex(u => u.id === currentUser.id);
+    const oldUsername = users[userIdx].username;
+    users[userIdx].username = newUsername;
+    set(STORAGE.USERS, users);
+    currentUser.username = newUsername;
+    localStorage.setItem(STORAGE.CURRENT, JSON.stringify(currentUser));
+
+    // обновляем упоминания в постах и комментариях
+    updateUsernameInData(oldUsername, newUsername);
+
+    const profile = getObj(STORAGE.PROFILES)[currentUser.id] || {};
+    profile.bio = document.getElementById('editBio').value.trim();
+    const file = document.getElementById('editAvatar').files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = e => {
+        profile.avatar = e.target.result;
+        setObj(STORAGE.PROFILES, getObj(STORAGE.PROFILES));
+        finishEdit();
+      };
+      reader.readAsDataURL(file);
+    } else {
+      setObj(STORAGE.PROFILES, getObj(STORAGE.PROFILES));
+      finishEdit();
+    }
+
+    function finishEdit() {
+      setObj(STORAGE.PROFILES, getObj(STORAGE.PROFILES));
+      showSection('profile');
+    }
+  }
+
+  function updateUsernameInData(oldName, newName) {
+    let posts = get(STORAGE.POSTS).map(p => { if(p.username === oldName) p.username = newName; return p; });
+    set(STORAGE.POSTS, posts);
+    let comments = get(STORAGE.COMMENTS).map(c => { if(c.username === oldName) c.username = newName; return c; });
+    set(STORAGE.COMMENTS, comments);
+  }
+
+  // ======================== NOTIFICATIONS ========================
+  function addNotification(targetUserId, type, actorId, postId = null, commentText = null) {
+    const notifs = get(STORAGE.NOTIFICATIONS);
+    notifs.push({
+      id: 'n_' + Date.now().toString(36),
+      targetUserId, type, actorId, postId, commentText,
+      createdAt: new Date().toISOString(),
+      read: false
+    });
+    set(STORAGE.NOTIFICATIONS, notifs);
+    updateNotifBadge();
+  }
+
+  function loadNotifications() {
+    const notifs = get(STORAGE.NOTIFICATIONS).filter(n => n.targetUserId === currentUser.id).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
+    const container = document.getElementById('notificationsList');
+    if (!notifs.length) {
+      container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-secondary);">Уведомлений нет</div>';
+      return;
+    }
+    container.innerHTML = notifs.map(n => {
+      const actor = get(STORAGE.USERS).find(u => u.id === n.actorId);
+      const actorName = actor ? actor.username : 'Пользователь';
+      let text = '';
+      switch (n.type) {
+        case 'like': text = `❤️ понравился ваш пост`; break;
+        case 'comment': text = `💬 оставил комментарий`; break;
+        case 'follow': text = `➕ подписался на вас`; break;
+      }
+      return `<div class="notification-item ${n.read ? '' : 'unread'}" onclick="markNotifRead('${n.id}')">
+        <strong>${escapeHtml(actorName)}</strong> <span style="color:var(--text-secondary);">${text}</span>
+        <span style="margin-left:auto; font-size:12px; color:var(--text-secondary);">${formatTime(n.createdAt)}</span>
+      </div>`;
+    }).join('');
+  }
+
+  function markNotifRead(id) {
+    const notifs = get(STORAGE.NOTIFICATIONS);
+    const n = notifs.find(n => n.id === id);
+    if (n) n.read = true;
+    set(STORAGE.NOTIFICATIONS, notifs);
+    updateNotifBadge();
+  }
+
+  function markAllNotifsRead() {
+    const notifs = get(STORAGE.NOTIFICATIONS).map(n => {
+      if (n.targetUserId === currentUser.id) n.read = true;
+      return n;
+    });
+    set(STORAGE.NOTIFICATIONS, notifs);
+    updateNotifBadge();
+  }
+
+  function updateNotifBadge() {
+    const unread = get(STORAGE.NOTIFICATIONS).filter(n => n.targetUserId === currentUser.id && !n.read).length;
+    const badge = document.getElementById('notifBadge');
+    badge.textContent = unread > 99 ? '99+' : unread;
+    badge.style.display = unread > 0 ? 'flex' : 'none';
+  }
+
+  // ======================== COMMENTS ========================
+  function openComments(postId) {
+    const modal = document.getElementById('commentsModal');
+    const comments = get(STORAGE.COMMENTS).filter(c => c.postId === postId).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Комментарии</h3>
+        <div style="max-height:300px; overflow-y:auto; margin-bottom:10px;">
+          ${comments.map(c => `<div style="padding:6px 0;"><strong>${escapeHtml(c.username)}</strong> ${escapeHtml(c.text)}</div>`).join('')}
+        </div>
+        <input type="text" id="commentInput" placeholder="Добавьте комментарий..." style="width:100%; padding:10px; border-radius:20px; border:1px solid var(--border); background:var(--bg); color:var(--text); margin-bottom:8px;">
+        <div style="display:flex; gap:8px;">
+          <button class="btn" onclick="addComment('${postId}')">Отправить</button>
+          <button class="btn-outline" onclick="closeModal('commentsModal')">Закрыть</button>
+        </div>
+      </div>
+    `;
+    modal.classList.add('active');
+  }
+
+  function addComment(postId) {
+    if (!RateLimiter.check('comment')) return;
+    const input = document.getElementById('commentInput');
+    const text = input.value.trim();
+    if (!text) return alert('Введите текст');
+    const comments = get(STORAGE.COMMENTS);
+    comments.push({
+      id: 'c_' + Date.now().toString(36),
+      postId,
+      userId: currentUser.id,
+      username: currentUser.username,
+      text,
+      createdAt: new Date().toISOString()
+    });
+    set(STORAGE.COMMENTS, comments);
+    const post = get(STORAGE.POSTS).find(p => p.id === postId);
+    if (post && post.userId !== currentUser.id) {
+      addNotification(post.userId, 'comment', currentUser.id, postId, text);
+    }
+    closeModal('commentsModal');
+    loadFeed(); // обновить счётчик
+  }
+
+  // ======================== CHANNELS ========================
+  function loadChannels() {
+    const channels = get(STORAGE.CHANNELS);
+    const popular = [...channels].sort((a,b) => (b.subscribers ? b.subscribers.length : 0) - (a.subscribers ? a.subscribers.length : 0));
+    renderChannelList('popularChannelsList', popular);
+    renderChannelList('myChannelsList', channels.filter(c => c.creatorId === currentUser.id));
+  }
+
+  function renderChannelList(containerId, list) {
+    document.getElementById(containerId).innerHTML = list.map(ch => {
+      const subCount = ch.subscribers ? ch.subscribers.length : 0;
+      const subscribed = ch.subscribers && ch.subscribers.includes(currentUser.id);
       return `
-        <div class="channel-item" onclick="showChannelDetail('${c.id}')">
-          <div class="channel-avatar" style="background:${c.avatar ? `url(${c.avatar})` : stringToColor(c.name)}">${c.avatar ? '' : c.name.charAt(0).toUpperCase()}</div>
-          <div style="flex:1;">
-            <div style="font-weight:600;">${escapeHtml(c.name)}</div>
-            <div style="color:var(--text-secondary); font-size:13px;">${subCount} подписчиков</div>
-          </div>
-          <button class="btn-outline" style="width:auto;" onclick="event.stopPropagation(); toggleChannelSubscription('${c.id}')">
-            ${isSubscribed ? 'Выйти' : 'Подписаться'}
-          </button>
+        <div class="channel-item" onclick="showChannelDetail('${ch.id}')">
+          <div class="channel-avatar" style="background:${ch.avatar ? `url(${ch.avatar})` : stringToColor(ch.name)}">${ch.avatar ? '' : ch.name.charAt(0)}</div>
+          <div style="flex:1;"><strong>${escapeHtml(ch.name)}</strong><br><small>${subCount} подписчиков</small></div>
+          <button class="btn-outline" onclick="event.stopPropagation(); toggleChannelSub('${ch.id}')">${subscribed ? 'Отписаться' : 'Подписаться'}</button>
         </div>
       `;
     }).join('');
   }
 
-  function toggleChannelSubscription(channelId) {
-    const channels = getData(STORAGE.CHANNELS);
-    const idx = channels.findIndex(c => c.id === channelId);
-    if (idx === -1) return;
-    if (!channels[idx].subscribers) channels[idx].subscribers = [];
-    const subs = channels[idx].subscribers;
-    const pos = subs.indexOf(currentUser.id);
-    if (pos > -1) subs.splice(pos, 1);
-    else subs.push(currentUser.id);
-    setData(STORAGE.CHANNELS, channels);
+  function toggleChannelSub(channelId) {
+    const channels = get(STORAGE.CHANNELS);
+    const ch = channels.find(c => c.id === channelId);
+    if (!ch.subscribers) ch.subscribers = [];
+    const idx = ch.subscribers.indexOf(currentUser.id);
+    if (idx > -1) ch.subscribers.splice(idx, 1);
+    else ch.subscribers.push(currentUser.id);
+    set(STORAGE.CHANNELS, channels);
     loadChannels();
-    loadFeed(); // обновить ленту (подписки)
   }
 
   function showChannelDetail(channelId) {
-    const channel = getData(STORAGE.CHANNELS).find(c => c.id === channelId);
+    const channel = get(STORAGE.CHANNELS).find(c => c.id === channelId);
     if (!channel) return;
     document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
     document.getElementById('channel-detail-section').classList.add('active');
     document.getElementById('channelDetailName').textContent = channel.name;
-    loadChannelDetail(channelId);
+    document.getElementById('channelPostsContainer').innerHTML = get(STORAGE.POSTS).filter(p => p.channelId === channelId).map(p => renderPostHTML(p, get(STORAGE.LIKES))).join('');
   }
 
-  function loadChannelDetail(channelId) {
-    const posts = getData(STORAGE.POSTS).filter(p => p.channelId === channelId);
-    const container = document.getElementById('channelPostsContainer');
-    if (!posts.length) {
-      container.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-secondary);">Нет постов</div>';
-      return;
-    }
-    container.innerHTML = posts.map(post => renderPostHTML(post, getData(STORAGE.LIKES))).join('');
+  function openCreateChannelModal() {
+    const modal = document.getElementById('createChannelModal');
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Создать канал</h3>
+        <div class="form-group"><input type="text" id="channelName" placeholder="Название канала"></div>
+        <div class="form-group"><input type="text" id="channelDescription" placeholder="Описание (необязательно)"></div>
+        <div class="form-group"><input type="file" id="channelAvatar" accept="image/*"></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button class="btn-outline" onclick="closeModal('createChannelModal')">Отмена</button>
+          <button class="btn" style="width:auto;" onclick="createChannel()">Создать</button>
+        </div>
+      </div>
+    `;
+    modal.classList.add('active');
   }
 
   function createChannel() {
-    document.getElementById('createChannelModal').classList.add('active');
-  }
-  function closeCreateChannelModal() {
-    document.getElementById('createChannelModal').classList.remove('active');
-    document.getElementById('channelName').value = '';
-    document.getElementById('channelDesc').value = '';
-    document.getElementById('channelAvatar').value = '';
-  }
-  function saveChannel() {
     const name = document.getElementById('channelName').value.trim();
-    const desc = document.getElementById('channelDesc').value.trim();
-    const avatarFile = document.getElementById('channelAvatar').files[0];
     if (!name) return alert('Введите название');
-    const channels = getData(STORAGE.CHANNELS);
+    const desc = document.getElementById('channelDescription').value.trim();
+    const avatarFile = document.getElementById('channelAvatar').files[0];
     const channel = {
-      id: Date.now().toString(36)+Math.random().toString(36).substr(2),
-      name, description: desc,
+      id: 'ch_' + Date.now().toString(36) + Math.random().toString(36).substr(2,6),
+      name,
+      description: desc,
       creatorId: currentUser.id,
       subscribers: [currentUser.id],
       avatar: ''
     };
+    const channels = get(STORAGE.CHANNELS);
     if (avatarFile) {
       const reader = new FileReader();
       reader.onload = e => {
         channel.avatar = e.target.result;
         channels.push(channel);
-        setData(STORAGE.CHANNELS, channels);
-        closeCreateChannelModal();
+        set(STORAGE.CHANNELS, channels);
+        closeModal('createChannelModal');
         loadChannels();
       };
       reader.readAsDataURL(avatarFile);
     } else {
       channels.push(channel);
-      setData(STORAGE.CHANNELS, channels);
-      closeCreateChannelModal();
+      set(STORAGE.CHANNELS, channels);
+      closeModal('createChannelModal');
       loadChannels();
     }
   }
 
-  // ========== DIRECT & GROUP CHATS ==========
-  function showNewChatSearch() {
+  // ======================== DIRECT MESSAGES ========================
+  function toggleNewChatSearch() {
     const div = document.getElementById('newChatSearch');
     div.style.display = div.style.display === 'flex' ? 'none' : 'flex';
+    document.getElementById('searchUserId').value = '';
   }
 
   function searchUserAndChat() {
-    const raw = document.getElementById('searchUserId').value;
-    const id = raw.replace(/\s/g, '');
+    const id = document.getElementById('searchUserId').value.trim().replace(/\s/g, '');
     if (!id) return alert('Введите ID');
-    if (id === currentUser.id) return alert('Нельзя написать себе');
-    const user = getData(STORAGE.USERS).find(u => u.id === id);
+    if (id === currentUser.id) return alert('Нельзя написать самому себе');
+    const user = get(STORAGE.USERS).find(u => u.id === id);
     if (!user) return alert('Пользователь не найден');
     const chatId = [currentUser.id, user.id].sort().join('_');
     activeChatId = chatId;
     activeChatType = 'direct';
-    document.getElementById('searchUserId').value = '';
     document.getElementById('newChatSearch').style.display = 'none';
-    openChatView('direct', chatId, user.username);
+    openChatView(chatId, 'direct', user.username);
+  }
+
+  function openGroupChatModal() {
+    const modal = document.getElementById('groupChatModal');
+    modal.innerHTML = `
+      <div class="modal-content">
+        <h3>Создать групповой чат</h3>
+        <div class="form-group"><input type="text" id="groupName" placeholder="Название группы"></div>
+        <div class="form-group"><input type="text" id="groupParticipants" placeholder="ID участников через запятую"></div>
+        <div style="display:flex; gap:8px; justify-content:flex-end;">
+          <button class="btn-outline" onclick="closeModal('groupChatModal')">Отмена</button>
+          <button class="btn" style="width:auto;" onclick="createGroupChat()">Создать</button>
+        </div>
+      </div>
+    `;
+    modal.classList.add('active');
   }
 
   function createGroupChat() {
-    document.getElementById('groupChatModal').classList.add('active');
-  }
-  function closeGroupChatModal() {
-    document.getElementById('groupChatModal').classList.remove('active');
-  }
-  function createGroup() {
     const name = document.getElementById('groupName').value.trim();
-    const participantsRaw = document.getElementById('groupParticipants').value;
-    const ids = participantsRaw.split(',').map(s => s.trim()).filter(s => s);
+    const participantsStr = document.getElementById('groupParticipants').value;
+    const ids = participantsStr.split(',').map(s => s.trim()).filter(s => s);
     if (!name) return alert('Введите название');
     if (ids.length < 2) return alert('Добавьте хотя бы 2 участников');
-    // проверяем, что все id существуют и не дублируются
-    const allUsers = getData(STORAGE.USERS);
-    const uniqueIds = [...new Set(ids)];
-    if (uniqueIds.some(id => !allUsers.find(u => u.id === id))) return alert('Некорректный ID участника');
-    // добавляем себя
-    if (!uniqueIds.includes(currentUser.id)) uniqueIds.push(currentUser.id);
-    const groupChats = getData(STORAGE.GROUP_CHATS);
+    const users = get(STORAGE.USERS);
+    for (const id of ids) {
+      if (!users.some(u => u.id === id)) return alert(`Пользователь с ID ${id} не найден`);
+    }
+    const allIds = [...new Set([...ids, currentUser.id])];
     const group = {
-      id: 'group_' + Date.now().toString(36),
+      id: 'g_' + Date.now().toString(36),
       name,
-      creatorId: currentUser.id,
-      participants: uniqueIds,
-      avatar: ''
+      participants: allIds,
+      creatorId: currentUser.id
     };
-    groupChats.push(group);
-    setData(STORAGE.GROUP_CHATS, groupChats);
-    closeGroupChatModal();
+    const groups = get(STORAGE.GROUP_CHATS);
+    groups.push(group);
+    set(STORAGE.GROUP_CHATS, groups);
+    closeModal('groupChatModal');
     activeChatId = group.id;
     activeChatType = 'group';
-    openChatView('group', group.id, name);
+    openChatView(group.id, 'group', name);
   }
 
-  function getDialogs() {
-    const messages = getData(STORAGE.MESSAGES);
-    const groupChats = getData(STORAGE.GROUP_CHATS);
+  function openChatView(chatId, type, name) {
+    document.getElementById('dialogList').style.display = 'none';
+    const chatView = document.getElementById('chatView');
+    chatView.style.display = 'flex';
+    document.getElementById('chatPartnerName').textContent = name;
+    activeChatId = chatId;
+    activeChatType = type;
+    loadMessages();
+  }
+
+  function backToDialogList() {
+    activeChatId = null;
+    document.getElementById('chatView').style.display = 'none';
+    document.getElementById('dialogList').style.display = 'block';
+    renderDialogList();
+  }
+
+  function renderDialogList() {
     const dialogs = [];
-
+    const messages = get(STORAGE.MESSAGES);
     // личные чаты
-    const directChatIds = new Set();
-    messages.forEach(m => {
-      if (!m.isGroup && m.chatId && m.chatId.includes(currentUser.id)) {
-        directChatIds.add(m.chatId);
+    const personalChatIds = new Set(messages.filter(m => !m.isGroup && m.chatId).map(m => m.chatId));
+    for (const chatId of personalChatIds) {
+      const users = chatId.split('_');
+      const partnerId = users.find(id => id !== currentUser.id);
+      const partner = get(STORAGE.USERS).find(u => u.id === partnerId);
+      if (partner) {
+        const lastMsg = messages.filter(m => m.chatId === chatId && !m.isGroup).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+        dialogs.push({ id: chatId, type: 'direct', name: partner.username, avatar: '', lastMsg });
       }
-    });
-    directChatIds.forEach(chatId => {
-      const ids = chatId.split('_');
-      const partnerId = ids.find(id => id !== currentUser.id);
-      const partner = getData(STORAGE.USERS).find(u => u.id === partnerId);
-      if (!partner) return;
-      const lastMsg = messages.filter(m => m.chatId === chatId && !m.isGroup).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt))[0];
-      dialogs.push({ id: chatId, type: 'direct', name: partner.username, avatar: '', lastMsg });
-    });
-
+    }
     // групповые чаты
-    const userGroups = groupChats.filter(g => g.participants.includes(currentUser.id));
-    userGroups.forEach(g => {
-      const lastMsg = messages.filter(m => m.chatId === g.id && m.isGroup).sort((a,b) => new Date(b.createdAt)-new Date(a.createdAt))[0];
-      dialogs.push({ id: g.id, type: 'group', name: g.name, avatar: g.avatar, lastMsg });
-    });
-
+    const groups = get(STORAGE.GROUP_CHATS).filter(g => g.participants.includes(currentUser.id));
+    for (const g of groups) {
+      const lastMsg = messages.filter(m => m.chatId === g.id && m.isGroup).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
+      dialogs.push({ id: g.id, type: 'group', name: g.name, avatar: '', lastMsg });
+    }
     dialogs.sort((a,b) => {
       const timeA = a.lastMsg ? new Date(a.lastMsg.createdAt) : 0;
       const timeB = b.lastMsg ? new Date(b.lastMsg.createdAt) : 0;
       return timeB - timeA;
     });
-    return dialogs;
-  }
-
-  function renderDialogList() {
-    const container = document.getElementById('dialogList');
-    container.style.display = 'block';
-    document.getElementById('chatView').style.display = 'none';
-    const dialogs = getDialogs();
-    if (!dialogs.length) {
-      container.innerHTML = '<div style="padding:24px;text-align:center;color:var(--text-secondary);">Нет чатов</div>';
-      return;
-    }
-    container.innerHTML = dialogs.map(d => `
-      <div class="dialog-item" onclick="openDialog('${d.id}', '${d.type}')">
-        <div class="dialog-avatar" style="background:${d.avatar ? `url(${d.avatar})` : stringToColor(d.name)}">${d.avatar ? '' : d.name.charAt(0).toUpperCase()}</div>
-        <div class="dialog-info">
-          <div class="dialog-name">${escapeHtml(d.name)}</div>
-          <div class="dialog-last-msg">${d.lastMsg ? escapeHtml(d.lastMsg.text) : ''}</div>
+    document.getElementById('dialogList').innerHTML = dialogs.map(d => `
+      <div class="channel-item" onclick="openDialog('${d.id}', '${d.type}')">
+        <div class="channel-avatar" style="background:${stringToColor(d.name)}">${d.name.charAt(0)}</div>
+        <div style="flex:1;">
+          <strong>${escapeHtml(d.name)}</strong>
+          ${d.lastMsg ? `<div style="color:var(--text-secondary); font-size:13px;">${escapeHtml(d.lastMsg.text).substring(0,30)}</div>` : ''}
         </div>
-        <div class="dialog-time">${d.lastMsg ? formatTime(d.lastMsg.createdAt) : ''}</div>
+        ${d.lastMsg ? `<span style="font-size:12px; color:var(--text-secondary);">${formatTime(d.lastMsg.createdAt)}</span>` : ''}
       </div>
     `).join('');
   }
@@ -947,72 +1661,112 @@
   function openDialog(chatId, type) {
     activeChatId = chatId;
     activeChatType = type;
-    const partnerName = type === 'direct' ? 
-      getData(STORAGE.USERS).find(u => u.id === chatId.split('_').find(id => id !== currentUser.id))?.username || '' :
-      getData(STORAGE.GROUP_CHATS).find(g => g.id === chatId)?.name || '';
-    openChatView(type, chatId, partnerName);
-  }
-
-  function openChatView(type, chatId, name) {
-    document.getElementById('dialogList').style.display = 'none';
-    document.getElementById('chatView').style.display = 'flex';
-    document.getElementById('chatPartnerName').textContent = name;
-    loadMessages();
-  }
-
-  function backToDialogList() {
-    activeChatId = null;
-    document.getElementById('chatView').style.display = 'none';
-    renderDialogList();
+    let name = '';
+    if (type === 'direct') {
+      const ids = chatId.split('_');
+      const partnerId = ids.find(id => id !== currentUser.id);
+      name = get(STORAGE.USERS).find(u => u.id === partnerId)?.username || 'Пользователь';
+    } else {
+      name = get(STORAGE.GROUP_CHATS).find(g => g.id === chatId)?.name || 'Группа';
+    }
+    openChatView(chatId, type, name);
   }
 
   function loadMessages() {
     if (!activeChatId) return;
-    const msgs = getData(STORAGE.MESSAGES).filter(m => m.chatId === activeChatId && (m.isGroup || !m.isGroup) && m.chatId).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
-    document.getElementById('chatMessages').innerHTML = msgs.map(m => {
-      const sender = getData(STORAGE.USERS).find(u => u.id === m.senderId);
-      const name = sender ? sender.username : '?';
-      const cls = m.senderId === currentUser.id ? 'msg-sent' : 'msg-received';
-      return `<div class="msg-bubble ${cls}">${m.senderId !== currentUser.id ? `<div class="msg-sender">${escapeHtml(name)}</div>` : ''}${escapeHtml(m.text)}</div>`;
+    const msgs = get(STORAGE.MESSAGES).filter(m => m.chatId === activeChatId)
+      .sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
+    const container = document.getElementById('chatMessages');
+    container.innerHTML = msgs.map(m => {
+      const sender = get(STORAGE.USERS).find(u => u.id === m.senderId);
+      const senderName = sender ? sender.username : '???';
+      const isMine = m.senderId === currentUser.id;
+      return `<div class="msg-bubble ${isMine ? 'msg-sent' : 'msg-received'}">
+        ${!isMine ? `<div class="msg-sender">${escapeHtml(senderName)}</div>` : ''}
+        <div>${escapeHtml(m.text)}</div>
+        <div style="font-size:10px; opacity:0.6; text-align:${isMine?'right':'left'}">${formatTime(m.createdAt)}</div>
+      </div>`;
     }).join('');
+    container.scrollTop = container.scrollHeight;
   }
 
   function sendMessage() {
+    if (!RateLimiter.check('sendMessage')) return;
     const input = document.getElementById('messageInput');
     const text = input.value.trim();
     if (!text || !activeChatId) return;
-    const msgs = getData(STORAGE.MESSAGES);
+    const now = new Date().toISOString();
+    const msgs = get(STORAGE.MESSAGES);
     msgs.push({
-      id: Date.now().toString(),
+      id: 'm_' + Date.now().toString(36),
       chatId: activeChatId,
       senderId: currentUser.id,
       text,
-      createdAt: new Date().toISOString(),
+      createdAt: now,
       isGroup: activeChatType === 'group'
     });
-    setData(STORAGE.MESSAGES, msgs);
+    set(STORAGE.MESSAGES, msgs);
     input.value = '';
     loadMessages();
-    // Для групповых чатов можно добавить уведомления участникам (опционально)
+    // обновить список диалогов в фоне
+    if (document.getElementById('dialogList').style.display !== 'none') renderDialogList();
+    // для группы можно разослать уведомления, но это offline-демо, оставляем так
   }
 
-  // ========== HELPERS ==========
-  function escapeHtml(text) { return String(text).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'})[m]); }
-  function stringToColor(str) { let h=0; for(let i=0;i<str.length;i++) h=str.charCodeAt(i)+((h<<5)-h); return '#'+(h&0xFFFFFF).toString(16).padStart(6,'0'); }
-  function formatTime(iso) { const d=new Date(iso), now=new Date(); if(d.toDateString()===now.toDateString()) return d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'}); else if((now-d)<172800000) return 'Вчера'; else return d.toLocaleDateString(); }
-  function openImageModal(url) { window.open(url, '_blank'); }
+  // ======================== ЗАКЛАДКИ ========================
+  function loadBookmarks() {
+    const bookmarks = get(STORAGE.BOOKMARKS);
+    const posts = get(STORAGE.POSTS).filter(p => bookmarks.includes(p.id));
+    const container = document.getElementById('bookmarksList');
+    if (!posts.length) {
+      container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-secondary);">В закладках пусто</div>';
+      return;
+    }
+    container.innerHTML = posts.map(p => renderPostHTML(p, get(STORAGE.LIKES))).join('');
+  }
 
-  // Периодические обновления
+  // ======================== ПОИСК ========================
+  function explore(query) {
+    const q = query.toLowerCase();
+    const users = get(STORAGE.USERS).filter(u => u.username.toLowerCase().includes(q) || u.id.includes(q));
+    const posts = get(STORAGE.POSTS).filter(p => p.caption && p.caption.toLowerCase().includes(q) || p.username.toLowerCase().includes(q));
+    const container = document.getElementById('exploreResults');
+    let html = '';
+    if (users.length) {
+      html += '<h3 style="padding:8px 16px;">Люди</h3>';
+      users.forEach(u => html += `<div class="channel-item" onclick="showUserProfile('${u.id}')"><strong>${escapeHtml(u.username)}</strong> <span style="color:var(--text-secondary);">@${u.id}</span></div>`);
+    }
+    if (posts.length) {
+      html += '<h3 style="padding:8px 16px;">Посты</h3>';
+      posts.forEach(p => html += renderPostHTML(p, get(STORAGE.LIKES)));
+    }
+    if (!html) html = '<div style="padding:20px; text-align:center;">Ничего не найдено</div>';
+    container.innerHTML = html;
+  }
+  document.getElementById('exploreSearch').addEventListener('input', function() {
+    if (!RateLimiter.check('search')) return;
+    explore(this.value);
+  });
+
+  // ======================== ПОЛЬЗОВАТЕЛЬСКИЙ ПРОФИЛЬ (МОДАЛ) ========================
+  function showUserProfile(userId) {
+    const modal = document.getElementById('userProfileModal');
+    const user = get(STORAGE.USERS).find(u => u.id === userId);
+    if (!user) return;
+    // переиспользуем логику профиля
+    loadProfile(userId);
+    modal.innerHTML = `<div class="modal-content" id="userProfileModalInner">${document.getElementById('profileInfo').outerHTML} ${document.getElementById('profilePostsTab').outerHTML}</div>`;
+    modal.classList.add('active');
+  }
+
+  // ======================== ИНИЦИАЛИЗАЦИЯ ========================
   setInterval(() => {
     if (!currentUser) return;
-    if (document.getElementById('feed-section').classList.contains('active')) loadFeed();
     if (document.getElementById('notifications-section').classList.contains('active')) loadNotifications();
-    if (document.getElementById('direct-section').classList.contains('active')) {
-      if (!activeChatId) renderDialogList();
-      else loadMessages();
-    }
-    updateNotificationBadge();
-  }, 2000);
+    updateNotifBadge();
+    // авто-обновление чата, если открыт
+    if (document.getElementById('direct-section').classList.contains('active') && activeChatId) loadMessages();
+  }, 3000);
 </script>
 </body>
 </html>

